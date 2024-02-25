@@ -1,8 +1,9 @@
-# React + Vite
+# tabColab - frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## how to start
+1. ```npm run dev``` 
+2. go to chrome extension dev mode. 
+3.  click Load unpacked , path is to the project folder.
+4.  go to [chrome-extension://gfledkccocicmdgnjeafbnffcimdfonb/index.html]\
+   ** check if extension ID is different
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
