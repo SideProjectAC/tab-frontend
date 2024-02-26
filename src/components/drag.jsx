@@ -1,52 +1,63 @@
 import { useEffect, useState } from 'react';
 import { useActiveTabs } from './activeTabsContext'
+import { useGroups } from './groupContext';
 import TabItem from './tabItem';
+import '../styles/drag.css'
 
 function DragDropComponent() {
-    
+    const {groups} = useGroups()
     const {tabs} = useActiveTabs()
-    const [items, setItems] = useState([]);
+    const [activeTabs, setActiveTabs] = useState([]);
+    const [droppedTabs, setDroppedTabs] = useState([]);
 
     useEffect(() => {
-        setItems(tabs)
-    },[tabs])
+        setActiveTabs(tabs)
+        setDroppedTabs(groups)
+    },[tabs,groups])
 
-    const [droppedItems, setDroppedItems] = useState({ zone1: [], zone2: [] ,zone3:[]});
 
-    const handleDragStart = (e, itemId, originZone) => {
-        e.dataTransfer.setData("itemId", itemId);
-        e.dataTransfer.setData("originZone", originZone);
+    const handleDragStart = (e, tabId, originGroupId) => {
+        e.dataTransfer.setData("tabId", tabId.toString());
+        e.dataTransfer.setData("originGroupId",originGroupId.toString());
     };
 
-    const handleDrop = (e, targetZone) => {
-        e.preventDefault();
-        // const itemId = e.dataTransfer.getData("itemId");
-        const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
-        const originZone = e.dataTransfer.getData("originZone");
 
-        if (originZone === targetZone) {
+    const handleDrop = (e, targetGroupId) => {
+        e.preventDefault();
+        const tabId = parseInt(e.dataTransfer.getData("tabId"), 10);
+        const originGroupId = e.dataTransfer.getData("originGroupId");
+
+        if (originGroupId === targetGroupId) {
             return; // Item dropped in the same zone it was dragged from
         }
 
         // Moving item from one zone to another (or back to the original list)
-        let draggedItem;
-        if (originZone === 'items') {
-            draggedItem = items.find(item => item.id === itemId);
-            setItems(prev => prev.filter(item => item.id !== itemId));
+        let draggedTab;
+        let originGroupIndex;
+// 刪除原本的位置
+        if (originGroupId === '0') {
+            draggedTab = activeTabs.find(item => item.id === tabId);
+            setActiveTabs(prev => prev.filter(item => item.id !== tabId));
         } else {
-            draggedItem = droppedItems[originZone].find(item => item.id === itemId);
-            setDroppedItems(prev => ({
-                ...prev,
-                [originZone]: prev[originZone].filter(item => item.id !== itemId)
+            originGroupIndex = droppedTabs.findIndex(group => group.id.toString() === originGroupId);
+            draggedTab = droppedTabs[originGroupIndex].tabs.find(item => item.id === tabId);
+            setDroppedTabs(prev => prev.map(group => {
+                if (group.id.toString() === originGroupId) {
+                return { ...group, tabs: group.tabs.filter(item => item.id !== tabId) };
+                }
+                return group;
             }));
         }
-
-        if (targetZone === 'items') {
-            setItems(prev => [...prev, draggedItem]);
+//新增到新的地方
+        if (targetGroupId === '0') {
+            setActiveTabs(prev => [...prev, draggedTab]);
         } else {
-            setDroppedItems(prev => ({
-                ...prev,
-                [targetZone]: [...prev[targetZone], draggedItem]
+            const targetGroupIndex = droppedTabs.findIndex(group => group.id.toString() === targetGroupId);
+            setDroppedTabs(prev => prev.map((group, index) => {
+                if (index === targetGroupIndex) {
+                return { ...group, tabs: [...group.tabs, draggedTab] };
+                }
+                return group;
             }));
         }
     };
@@ -55,39 +66,47 @@ function DragDropComponent() {
         e.preventDefault();
     };
 
+    const handleAddGroup = () => {
+        const newGroupId = groups.length + 1; 
+        
+        setDroppedTabs(prev => [
+            ...prev,
+            { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+        ]);
+    };
+
     return (
-        <div>
-            <div style={{ marginBottom: '20px' }} 
-            onDrop={(e) => handleDrop(e, 'items')} 
-            onDragOver={handleDragOver}
+        <>
+        <div className='wrapper'>
+            <div className='activeList'
+                onDrop={(e) => handleDrop(e, 'items')} 
+                onDragOver={handleDragOver}
             >
-                {items.map((item) => (
-                    <div
+                {activeTabs.map((item) => (
+                    <div className='activeTab'
                         key={item.id}
-                        id={item.id}
                         draggable
-                        onDragStart={(e) => handleDragStart(e, item.id, 'items')}
+                        onDragStart={(e) => handleDragStart(e, item.id, '0')}
                     >
                         <TabItem tab={item} /> 
                      </div>
                 ))}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                {['zone1', 'zone2','zone3'].map(zone => (
+            <div className='groups'>
+                {droppedTabs.map(group => (
                     <div
-                        key={zone}
-                        onDrop={(e) => handleDrop(e, zone)}
+                        className='group'
+                        key={group.id}
+                        onDrop={(e) => handleDrop(e, group.id.toString())}
                         onDragOver={handleDragOver}
-                        style={{ width: '40%', minHeight: '100px', padding: '10px', border: '2px dashed blue' }}
                     >
-                        Drop items here ({zone})
+                        Drop items here ({group.name})
                         <div>
-                            {droppedItems[zone].map(item => (
+                            {group.tabs.map(item => (
                                 <div 
                                     key={item.id} 
                                     draggable 
-                                    onDragStart={(e) => handleDragStart(e, item.id, zone)}
-                                    style={{ margin: '10px', padding: '10px', border: '1px solid green' }}
+                                    onDragStart={(e) => handleDragStart(e, item.id, group.id)}
                                 >
                                     <TabItem tab={item} /> 
                                 </div>
@@ -97,6 +116,8 @@ function DragDropComponent() {
                 ))}
             </div>
         </div>
+        <button onClick={handleAddGroup}>add group</button>
+        </>
     );
 }
 

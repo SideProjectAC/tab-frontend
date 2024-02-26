@@ -1,0 +1,26 @@
+.wrapper{
+  display: flex;
+}
+
+li {
+  list-style-type: none;
+}
+
+.activeList{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+.activeTab {
+  border: 2px solid blue;
+}
+.groups {
+  display :flex;
+  width:60%
+}
+.group {
+  width: 40%;
+  padding: 10px;
+  border: 2px dashed blue;
+}
