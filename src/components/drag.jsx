@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useChromeTabs } from './activeTabsContext'
+import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
-import TabItem from './tabItem';
+import ActiveTabs from './activeTab';
+import Groups from './groups';
 import '../styles/drag.css'
 
 function closeTab(tabId) {
@@ -13,9 +14,10 @@ function openTab(url) {
 }
 
 function DragDropComponent() {
-    const {groups , setGroups,handleAddGroup} = useGroups()
+    const {groups , setGroups} = useGroups()
     const {chromeTabs} = useChromeTabs()
     const [activeTabs, setActiveTabs] = useState([]);
+    const newGroupId = groups.length + 1; 
 
 
     useEffect(() => {
@@ -35,9 +37,7 @@ function DragDropComponent() {
         const tabId = parseInt(e.dataTransfer.getData("tabId"), 10);
         const originGroupId =  parseInt(e.dataTransfer.getData("originGroupId"), 10);
 
-        if (originGroupId === targetGroupId) {
-            return; // Item dropped in the same zone it was dragged from
-        }
+        if (originGroupId === targetGroupId) return; 
 
         // Moving item from one zone to another (or back to the original list)
         let draggedTab;
@@ -89,67 +89,33 @@ function DragDropComponent() {
         e.dataTransfer.dropEffect = 'move';
     };
     
-    const newGroupId = groups.length + 1; 
-
-    // const handleAddGroup = () => {
-    //     setGroups(prev => [
-    //         ...prev,
-    //         { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-    //     ]);
-    // };
+    const handleAddGroup = (newGroupId) => {
+      setGroups(prev => [
+        ...prev,
+        { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+      ]);
+    }; 
 
     return (
-        <>
+    <>
         <div className='wrapper'>
-            <div className='activeList'
-                onDrop={(e) => handleDrop(e, 0)} 
-                onDragOver={handleDragOver}
-            >
-                {activeTabs.map((item) => (
-                    <div className='activeTab'
-                        key={item.id}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, item.id, 0)}
-                    >
-                        <TabItem tab={item} /> 
-                     </div>
-                ))}
-            </div>
-            <div className='groups'>
-                {groups.map(group => (
-                    <div
-                        className='group'
-                        key={group.id}
-                        onDrop={(e) => handleDrop(e, group.id)}
-                        onDragOver={handleDragOver}
-                    >
-                        Drop items here ({group.name})
-                        <div>
-                            {group.tabs.map(item => (
-                                <div 
-                                    key={item.id} 
-                                    draggable 
-                                    onDragStart={(e) => handleDragStart(e, item.id, group.id)}
-                                >
-                                    <TabItem tab={item} /> 
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <div className='newGroup'
-                onDrop={(e) => {
-                    handleAddGroup(newGroupId)
-                    handleDrop(e, newGroupId)
-                }} 
-                onDragOver={handleDragOver}
-
-            ></div>
+            <ActiveTabs
+                activeTabs={activeTabs}
+                handleDrop={handleDrop}
+                handleDragStart={handleDragStart}
+                handleDragOver={handleDragOver}
+            />
+            <Groups
+                groups={groups}
+                handleDrop={handleDrop}
+                handleDragOver={handleDragOver}
+                handleDragStart={handleDragStart}
+                newGroupId={newGroupId}
+                handleAddGroup={handleAddGroup}
+            />
         </div>
-        <button onClick={() => handleAddGroup(newGroupId)}>add group</button>
-
-        </>
+        <button onClick={() => handleAddGroup(newGroupId)} > add group</button>
+    </>
     );
 }
 

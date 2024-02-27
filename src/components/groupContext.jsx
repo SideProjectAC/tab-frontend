@@ -8,15 +8,15 @@ export const GroupsProvider = ({ children }) => {
       // {id:1 ,name: 'group1' , tabs:[] }
     ]);
 
-    const handleAddGroup = (newGroupId) => {
-        setGroups(prev => [
-            ...prev,
-            { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-        ]);
-    };
+    // const handleAddGroup = (newGroupId) => {
+    //     setGroups(prev => [
+    //         ...prev,
+    //         { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+    //     ]);
+    // };
   
   return (
-    <GroupsContext.Provider value={{ groups, setGroups,handleAddGroup }}>
+    <GroupsContext.Provider value={{ groups, setGroups }}>
       {children}
     </GroupsContext.Provider>
   );
