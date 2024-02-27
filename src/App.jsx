@@ -1,7 +1,7 @@
 import './App.css'
 // import ActiveTab from './components/activeTab';
 import DragDropComponent from './components/drag'
-import { ActiveTabsProvider } from './components/activeTabsContext';
+import { ChromeTabsProvider } from './components/activeTabsContext';
 import { GroupsProvider } from './components/groupContext';
 
 const App = () => {
@@ -9,10 +9,10 @@ const App = () => {
   return (
     <>
       <GroupsProvider>
-        <ActiveTabsProvider>
+        <ChromeTabsProvider>
           {/* <ActiveTab/> */}
           <DragDropComponent/>
-        </ActiveTabsProvider>
+        </ChromeTabsProvider>
       </GroupsProvider>
     </>
   );

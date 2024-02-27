@@ -17,10 +17,14 @@ li {
 }
 .groups {
   display :flex;
-  width:60%
 }
 .group {
   width: 40%;
   padding: 10px;
   border: 2px dashed blue;
+}
+ 
+.newGroup {
+  background-color: lightblue;
+  width:50%;
 }

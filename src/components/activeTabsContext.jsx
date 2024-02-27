@@ -1,15 +1,15 @@
 import  { createContext, useState, useEffect, useContext } from 'react';
 
-const ActiveTabsContext = createContext();
+const ChromeTabsContext = createContext();
 
-export const ActiveTabsProvider = ({ children }) => {
-  const [tabs, setTabs] = useState([]);
+export const ChromeTabsProvider = ({ children }) => {
+  const [chromeTabs, setChromeTabs] = useState([]);
 
     useEffect(() => {
 //首次先一次抓
-    if (tabs.length === 0) {
+    if (chromeTabs.length === 0) {
       chrome.tabs.query({ currentWindow: true }, (fetchedTabs) => {
-        setTabs(fetchedTabs);
+        setChromeTabs(fetchedTabs);
       });
     }
 
@@ -18,16 +18,16 @@ export const ActiveTabsProvider = ({ children }) => {
     port.onMessage.addListener((message) => {
 //新增＋更新
       if ( message.action === "tabUpdated" ) {
-        setTabs((prevTabs) => {
+        setChromeTabs((prevTabs) => {
           const filteredTabs = prevTabs.filter(t => t.id !== message.tab.id);
           return [...filteredTabs, message.tab];
         });
 //刪除
       } else if (message.action === "tabRemoved") {
-        setTabs((currentTabs) => currentTabs.filter(tab => tab.id !== message.tabId));
+        setChromeTabs((currentTabs) => currentTabs.filter(tab => tab.id !== message.tabId));
       } else if (message.action === "tabMoved") {
 //移動位置
-        setTabs((prevTabs) => {
+        setChromeTabs((prevTabs) => {
           const movedTab = prevTabs.find((tab) => tab.id === message.tabId)
           const filteredTabs = prevTabs.filter(tab => tab.id !== message.tabId);
           return [
@@ -44,10 +44,10 @@ export const ActiveTabsProvider = ({ children }) => {
   },[]);
 
   return (
-    <ActiveTabsContext.Provider value={{ tabs, setTabs }}>
+    <ChromeTabsContext.Provider value={{ chromeTabs, setChromeTabs }}>
       {children}
-    </ActiveTabsContext.Provider>
+    </ChromeTabsContext.Provider>
   );
 }
  
-export const useActiveTabs = () => useContext(ActiveTabsContext);
+export const useChromeTabs = () => useContext(ChromeTabsContext);

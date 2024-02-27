@@ -1,31 +1,30 @@
 import { useEffect, useState } from 'react';
-import { useActiveTabs } from './activeTabsContext'
+import { useChromeTabs } from './activeTabsContext'
 import { useGroups } from './groupContext';
 import TabItem from './tabItem';
 import '../styles/drag.css'
 
 function DragDropComponent() {
-    const {groups} = useGroups()
-    const {tabs} = useActiveTabs()
+    const {groups , setGroups} = useGroups()
+    const {chromeTabs} = useChromeTabs()
     const [activeTabs, setActiveTabs] = useState([]);
-    const [droppedTabs, setDroppedTabs] = useState([]);
+
 
     useEffect(() => {
-        setActiveTabs(tabs)
-        setDroppedTabs(groups)
-    },[tabs,groups])
+        setActiveTabs(chromeTabs)
+    },[chromeTabs])
 
 
     const handleDragStart = (e, tabId, originGroupId) => {
-        e.dataTransfer.setData("tabId", tabId.toString());
-        e.dataTransfer.setData("originGroupId",originGroupId.toString());
+        e.dataTransfer.setData("tabId", tabId);
+        e.dataTransfer.setData("originGroupId",originGroupId);
     };
 
 
     const handleDrop = (e, targetGroupId) => {
         e.preventDefault();
         const tabId = parseInt(e.dataTransfer.getData("tabId"), 10);
-        const originGroupId = e.dataTransfer.getData("originGroupId");
+        const originGroupId =  parseInt(e.dataTransfer.getData("originGroupId"), 10);
 
         if (originGroupId === targetGroupId) {
             return; // Item dropped in the same zone it was dragged from
@@ -34,42 +33,56 @@ function DragDropComponent() {
         // Moving item from one zone to another (or back to the original list)
         let draggedTab;
         let originGroupIndex;
+
 // 刪除原本的位置
-        if (originGroupId === '0') {
+        if (originGroupId === 0) {
             draggedTab = activeTabs.find(item => item.id === tabId);
             setActiveTabs(prev => prev.filter(item => item.id !== tabId));
         } else {
-            originGroupIndex = droppedTabs.findIndex(group => group.id.toString() === originGroupId);
-            draggedTab = droppedTabs[originGroupIndex].tabs.find(item => item.id === tabId);
-            setDroppedTabs(prev => prev.map(group => {
-                if (group.id.toString() === originGroupId) {
+            originGroupIndex = groups.findIndex(group => group.id === originGroupId);
+            draggedTab = groups[originGroupIndex].tabs.find(item => item.id === tabId);
+            setGroups(prev => prev.map(group => {
+                if (group.id === originGroupId) {
                 return { ...group, tabs: group.tabs.filter(item => item.id !== tabId) };
                 }
                 return group;
             }));
         }
+
 //新增到新的地方
-        if (targetGroupId === '0') {
+        if (targetGroupId === 0) {
             setActiveTabs(prev => [...prev, draggedTab]);
-        } else {
-            const targetGroupIndex = droppedTabs.findIndex(group => group.id.toString() === targetGroupId);
-            setDroppedTabs(prev => prev.map((group, index) => {
+
+            return
+        } else if (targetGroupId > 0 && targetGroupId !== newGroupId ){
+            const targetGroupIndex = groups.findIndex(group => group.id === targetGroupId);
+            setGroups(prev => prev.map((group, index) => {
                 if (index === targetGroupIndex) {
-                return { ...group, tabs: [...group.tabs, draggedTab] };
+                    return { ...group, tabs: [...group.tabs, draggedTab] };
                 }
                 return group;
             }));
+
+        } else if (targetGroupId === newGroupId){
+            setGroups(prev => prev.map((group, index) => {
+                const newGroupIndex = newGroupId - 1
+                if (index === newGroupIndex ) {
+                 return { ...group, tabs: [...group.tabs, draggedTab] };
+                }
+                return group;
+            }));
+
         }
     };
 
     const handleDragOver = (e) => {
         e.preventDefault();
     };
+    
+    const newGroupId = groups.length + 1; 
 
     const handleAddGroup = () => {
-        const newGroupId = groups.length + 1; 
-        
-        setDroppedTabs(prev => [
+        setGroups(prev => [
             ...prev,
             { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
         ]);
@@ -79,25 +92,25 @@ function DragDropComponent() {
         <>
         <div className='wrapper'>
             <div className='activeList'
-                onDrop={(e) => handleDrop(e, 'items')} 
+                onDrop={(e) => handleDrop(e, 0)} 
                 onDragOver={handleDragOver}
             >
                 {activeTabs.map((item) => (
                     <div className='activeTab'
                         key={item.id}
                         draggable
-                        onDragStart={(e) => handleDragStart(e, item.id, '0')}
+                        onDragStart={(e) => handleDragStart(e, item.id, 0)}
                     >
                         <TabItem tab={item} /> 
                      </div>
                 ))}
             </div>
             <div className='groups'>
-                {droppedTabs.map(group => (
+                {groups.map(group => (
                     <div
                         className='group'
                         key={group.id}
-                        onDrop={(e) => handleDrop(e, group.id.toString())}
+                        onDrop={(e) => handleDrop(e, group.id)}
                         onDragOver={handleDragOver}
                     >
                         Drop items here ({group.name})
@@ -115,6 +128,14 @@ function DragDropComponent() {
                     </div>
                 ))}
             </div>
+            <div className='newGroup'
+                onDrop={(e) => {
+                    handleAddGroup()
+                    handleDrop(e, newGroupId)
+                }} 
+                onDragOver={handleDragOver}
+
+            ></div>
         </div>
         <button onClick={handleAddGroup}>add group</button>
         </>
