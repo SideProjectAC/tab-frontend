@@ -7,9 +7,10 @@ export const ChromeTabsProvider = ({ children }) => {
 
     useEffect(() => {
 //首次先一次抓
-    if (chromeTabs.length === 0) {
+    if (chromeTabs.length === 0 ) {
       chrome.tabs.query({ currentWindow: true }, (fetchedTabs) => {
-        setChromeTabs(fetchedTabs);
+        const filteredTabs = fetchedTabs.filter(tab => tab.url !== 'chrome-extension://gfledkccocicmdgnjeafbnffcimdfonb/index.html');
+        setChromeTabs(filteredTabs);
       });
     }
 

@@ -10,6 +10,7 @@ li {
   display: flex;
   flex-direction: column;
   width: 30%;
+  margin-right: 10px;
 }
 
 .activeTab {
@@ -19,7 +20,7 @@ li {
   display :flex;
 }
 .group {
-  width: 40%;
+  margin: 5px;
   padding: 10px;
   border: 2px dashed blue;
 }

@@ -4,8 +4,16 @@ import { useGroups } from './groupContext';
 import TabItem from './tabItem';
 import '../styles/drag.css'
 
+function closeTab(tabId) {
+  chrome.tabs.remove(tabId);
+}
+
+function openTab(url) {
+    chrome.tabs.create({url:url, active: false })
+}
+
 function DragDropComponent() {
-    const {groups , setGroups} = useGroups()
+    const {groups , setGroups,handleAddGroup} = useGroups()
     const {chromeTabs} = useChromeTabs()
     const [activeTabs, setActiveTabs] = useState([]);
 
@@ -18,6 +26,7 @@ function DragDropComponent() {
     const handleDragStart = (e, tabId, originGroupId) => {
         e.dataTransfer.setData("tabId", tabId);
         e.dataTransfer.setData("originGroupId",originGroupId);
+        e.dataTransfer.effectAllowed = 'move';
     };
 
 
@@ -52,7 +61,7 @@ function DragDropComponent() {
 //新增到新的地方
         if (targetGroupId === 0) {
             setActiveTabs(prev => [...prev, draggedTab]);
-
+            openTab(draggedTab.url)
             return
         } else if (targetGroupId > 0 && targetGroupId !== newGroupId ){
             const targetGroupIndex = groups.findIndex(group => group.id === targetGroupId);
@@ -62,7 +71,7 @@ function DragDropComponent() {
                 }
                 return group;
             }));
-
+            closeTab(draggedTab.id) 
         } else if (targetGroupId === newGroupId){
             setGroups(prev => prev.map((group, index) => {
                 const newGroupIndex = newGroupId - 1
@@ -71,22 +80,23 @@ function DragDropComponent() {
                 }
                 return group;
             }));
-
+            closeTab(draggedTab.id)
         }
     };
 
     const handleDragOver = (e) => {
         e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
     };
     
     const newGroupId = groups.length + 1; 
 
-    const handleAddGroup = () => {
-        setGroups(prev => [
-            ...prev,
-            { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-        ]);
-    };
+    // const handleAddGroup = () => {
+    //     setGroups(prev => [
+    //         ...prev,
+    //         { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+    //     ]);
+    // };
 
     return (
         <>
@@ -130,14 +140,15 @@ function DragDropComponent() {
             </div>
             <div className='newGroup'
                 onDrop={(e) => {
-                    handleAddGroup()
+                    handleAddGroup(newGroupId)
                     handleDrop(e, newGroupId)
                 }} 
                 onDragOver={handleDragOver}
 
             ></div>
         </div>
-        <button onClick={handleAddGroup}>add group</button>
+        <button onClick={() => handleAddGroup(newGroupId)}>add group</button>
+
         </>
     );
 }

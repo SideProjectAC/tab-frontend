@@ -5,25 +5,23 @@ const GroupsContext = createContext();
 export const GroupsProvider = ({ children }) => {
 
     const [groups, setGroups] = useState([
-      {id:1 ,name: 'group1' , tabs:[] }
+      // {id:1 ,name: 'group1' , tabs:[] }
     ]);
-    
-    // const handleAddGroup = () => {
-    //     const newGroupId = groups.length + 1; 
-        
-    //     setGroups(prev => [
-    //         ...prev,
-    //         { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-    //     ]);
-    //     console.log('groups',groups)
-    // };
 
-
+    const handleAddGroup = (newGroupId) => {
+        setGroups(prev => [
+            ...prev,
+            { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+        ]);
+    };
+  
   return (
-    <GroupsContext.Provider value={{ groups, setGroups }}>
+    <GroupsContext.Provider value={{ groups, setGroups,handleAddGroup }}>
       {children}
     </GroupsContext.Provider>
   );
 }
+
+
  
 export const useGroups = () => useContext(GroupsContext);
