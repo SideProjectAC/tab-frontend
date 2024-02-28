@@ -3,7 +3,7 @@ import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
-import '../styles/drag.css'
+import '../../styles/main/drag.css'
 
 function closeTab(tabId) {
   chrome.tabs.remove(tabId);
@@ -43,7 +43,7 @@ function DragDropComponent() {
         let draggedTab;
         let originGroupIndex;
 
-// 刪除原本的位置
+// 先刪除原本的位置
         if (originGroupId === 0) {
             draggedTab = activeTabs.find(item => item.id === tabId);
             setActiveTabs(prev => prev.filter(item => item.id !== tabId));

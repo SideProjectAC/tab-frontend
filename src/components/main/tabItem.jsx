@@ -1,4 +1,4 @@
-import '../styles/tabItem.css'
+import '../../styles/main/tabItem.css'
 
 const TabItem = ({tab}) => {
 
