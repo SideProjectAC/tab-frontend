@@ -5,13 +5,13 @@ const GroupsContext = createContext();
 export const GroupsProvider = ({ children }) => {
 
     const [groups, setGroups] = useState([
-      // {id:1 ,name: 'group1' , tabs:[] }
+      // {group_id:1 ,group_icon:"🍔",group_title: 'group1' , items:[] }
     ]);
 
     // const handleAddGroup = (newGroupId) => {
     //     setGroups(prev => [
     //         ...prev,
-    //         { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
+    //         { group_id: newGroupId,group_icon:"🍔", group_title: `group${newGroupId}`, items: [] }
     //     ]);
     // };
   

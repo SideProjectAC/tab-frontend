@@ -15,7 +15,7 @@ export const ChromeTabsProvider = ({ children }) => {
     }
 
     const port = chrome.runtime.connect({ name: "tabsUpdate" });
-
+//message的資料貼夠：{action:"",tab:{一堆tab info}} (因background.js)
     port.onMessage.addListener((message) => {
 //新增＋更新
       if ( message.action === "tabUpdated" ) {
@@ -23,6 +23,7 @@ export const ChromeTabsProvider = ({ children }) => {
           const filteredTabs = prevTabs.filter(t => t.id !== message.tab.id);
           return [...filteredTabs, message.tab];
         });
+
 //刪除
       } else if (message.action === "tabRemoved") {
         setChromeTabs((currentTabs) => currentTabs.filter(tab => tab.id !== message.tabId));

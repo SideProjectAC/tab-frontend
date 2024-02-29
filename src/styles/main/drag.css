@@ -11,6 +11,7 @@ li {
   flex-direction: column;
   width: 30%;
   margin-right: 10px;
+  background-color: rgb(205, 228, 247);
 }
 
 .activeTab {
@@ -26,6 +27,6 @@ li {
 }
  
 .newGroup {
-  background-color: lightblue;
+  background-color: rgb(233, 230, 230);
   width:50%;
 }

@@ -1,4 +1,5 @@
 import TabItem from "./tabItem"
+import "../../styles/main/activeTab.css"
 
 function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver }) {
 

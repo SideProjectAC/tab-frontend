@@ -13,11 +13,7 @@ chrome.runtime.onConnect.addListener((port) => {
   const tabUpdatedListener = (tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
       chrome.tabs.get(tabId, (updatedTab) => {
-        // try {
           port.postMessage({ action: "tabUpdated", tab: updatedTab });
-        // } catch (error) {
-          // console.error('Error posting message:', error);
-        // }
       });
     }
   };

@@ -25,8 +25,8 @@ function DragDropComponent() {
     },[chromeTabs])
 
 
-    const handleDragStart = (e, tabId, originGroupId) => {
-        e.dataTransfer.setData("tabId", tabId);
+    const handleDragStart = (e, itemId, originGroupId) => {
+        e.dataTransfer.setData("itemId", itemId);
         e.dataTransfer.setData("originGroupId",originGroupId);
         e.dataTransfer.effectAllowed = 'move';
     };
@@ -34,7 +34,7 @@ function DragDropComponent() {
 
     const handleDrop = (e, targetGroupId) => {
         e.preventDefault();
-        const tabId = parseInt(e.dataTransfer.getData("tabId"), 10);
+        const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId =  parseInt(e.dataTransfer.getData("originGroupId"), 10);
 
         if (originGroupId === targetGroupId) return; 
@@ -45,14 +45,14 @@ function DragDropComponent() {
 
 // 先刪除原本的位置
         if (originGroupId === 0) {
-            draggedTab = activeTabs.find(item => item.id === tabId);
-            setActiveTabs(prev => prev.filter(item => item.id !== tabId));
+            draggedTab = activeTabs.find(item => item.id === itemId);
+            setActiveTabs(prev => prev.filter(item => item.id !== itemId));
         } else {
             originGroupIndex = groups.findIndex(group => group.id === originGroupId);
-            draggedTab = groups[originGroupIndex].tabs.find(item => item.id === tabId);
+            draggedTab = groups[originGroupIndex].tabs.find(item => item.id === itemId);
             setGroups(prev => prev.map(group => {
                 if (group.id === originGroupId) {
-                return { ...group, tabs: group.tabs.filter(item => item.id !== tabId) };
+                return { ...group, tabs: group.tabs.filter(item => item.id !== itemId) };
                 }
                 return group;
             }));
