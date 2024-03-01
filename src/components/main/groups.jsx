@@ -1,9 +1,14 @@
-
 import { useState } from "react";
 import { useGroups } from "./groupContext"
 import Group from "./group";
 
-function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, handleAddGroup }) {
+function Groups ({
+  handleDrop,
+  handleDragOver,
+  handleDragStart,
+  newGroupId,
+  handleAddGroup
+}) {
 
   const {groups, setGroups} = useGroups()
 
@@ -11,7 +16,7 @@ function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, hand
     setGroups(prev => prev.filter(group => group.group_id !== groupId))
     console.log(groups)
   }
-
+ 
   const handleSiteCount = (groupId) => {
     const group = groups.find(g => g.group_id === groupId);
     if (group) {

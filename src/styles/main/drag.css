@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   width: 20%;
-  height: 100%
+  height: 100%;
   margin-right: 10px;
   background-color: rgb(205, 228, 247);
 }
@@ -19,7 +19,7 @@
 }
 
 .group {
-  margin: 5px;
+  margin: 0px 5px;
   padding: 10px;
   border: 2px dashed blue;
   width: 300px;
@@ -50,12 +50,16 @@
   list-style-type: none;
   width: 100%;
   height: 70px;
-  margin: 5px auto;
+  margin: 5px;
   overflow: hidden;
   display: flex;
   align-items: center;
   border: 2px solid rgb(0, 0, 0);
   border-radius: 10px;
+}
+.tabTitle {
+  overflow: hidden;
+  padding-top:10px;
 }
 .tabIcon {
   margin:5px;

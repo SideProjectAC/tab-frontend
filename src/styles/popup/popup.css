@@ -13,14 +13,49 @@ body {
   text-align: center;
   cursor: move;
   width:300px;
-  height:200px;
+  height:210px;
   box-sizing: border-box;
 }
 
-#mydivheader {
-  padding: 10px;
+#header {
   cursor: move;
   z-index: 10;
   background-color: #2196F3;
   color: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.tabItem {
+  list-style-type: none;
+  margin: 0px 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.tabTitle {
+  overflow: hidden;
+  text-align: left;
+  margin-left: 10px;
+  margin-bottom: -5px;
+}
+
+.tabIcon {
+  width: 1 rem;
+  height: 1 rem;
+}
+.tabUrl {
+  text-align: left;
+  margin-left: 10px;
+}
+.buttons{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+.button{
+  font-size: 1rem;
 }

@@ -1,33 +1,38 @@
+import { useState, useEffect } from 'react';
+import TabItem from '../main/tabItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleHalfStroke, faList, faPalette, faMapPin, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-function PopupContent () {
 
-  let currentTab
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    currentTab = tabs[0];
-    console.log('currentTab',currentTab)
-  })
+function PopupContent() {
+  const [currentTab, setCurrentTab] = useState(null);
+
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const activeTab = tabs[0];
+      setCurrentTab(activeTab); 
+    });
+  }, []); 
+
+
   return (
     <>
-    <div id="mydivheader">Click here to move</div>
-        <div className='tabInfo'>
-          <div>{currentTab}</div>
-          <div>tab icon</div>
-          <h2>currentTab.title</h2>
-          <div>currentTab.url</div>
-        </div>
-        <form>
-          <textarea placeholder='New note'></textarea>
-        </form>
-        <div className='buttons'>
-          <i className="fa-solid fa-circle-half-stroke" id='darkLight'></i>
-          <i className="fa-solid fa-list" id='changeMode'></i>
-          <i className="fa-solid fa-palette" id='changeColor'></i>
-          <i className="fa-solid fa-map-pin" id='pinTab'></i>
-          <button>Save</button>
-        </div>
+      <div id="header">
+        <p>Click here to move</p>
+        <FontAwesomeIcon icon={faXmark} className='button'/>
+      </div>
+      {currentTab && <TabItem tab={currentTab} />}
+      <form>
+        <textarea placeholder='New note'></textarea>
+      </form>
+      <div className='buttons'>
+        <FontAwesomeIcon icon={faCircleHalfStroke} className='button' />
+        <FontAwesomeIcon icon={faList} className='button' />
+        <FontAwesomeIcon icon={faPalette} className='button' />
+        <FontAwesomeIcon icon={faMapPin} className='button' />
+        <button className='button'>Save</button>
+      </div>
     </>
-        
-  )
+  );
 }
-
 export default PopupContent
