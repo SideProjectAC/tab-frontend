@@ -1,13 +1,11 @@
-import TabItem from "./tabItem"
+
 import { useState } from "react";
 import { useGroups } from "./groupContext"
-import EmojiPicker from "emoji-picker-react";
+import Group from "./group";
 
 function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, handleAddGroup }) {
 
   const {groups, setGroups} = useGroups()
-
-
 
   const handleDeleteGroup = (groupId) => {
     setGroups(prev => prev.filter(group => group.group_id !== groupId))
@@ -25,10 +23,6 @@ function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, hand
     }
   };
 
-  const getSiteCount = (groupId) => {
-    const group = groups.find(g => g.group_id === groupId);
-    return group ? group.items.length : 0;
-  };
   
   const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
   function handleToggleEmojiPicker(groupId) { 
@@ -48,46 +42,20 @@ function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, hand
     <>
       <div className='groups'>
         {groups.slice(1).map(group => (
-          <div
-            className='group'
-            key={group.group_id}
-            onDrop={(e) => handleDrop(e, group.group_id)}
-            onDragOver={handleDragOver}
-          >
-
-            <div className="groupInfo">
-              <div className="groupIcon" onClick={() =>handleToggleEmojiPicker(group.group_id)}>  
-                {group.group_icon}
-              </div> 
-              <h2 className="groupTitle">{group.group_title}</h2>
-              <button  
-                onClick={() => handleSiteCount(group.group_id)}>
-                {getSiteCount(group.group_id)} Sites ➡️ </button>
-              <button className="deleteButton"
-                onClick={() => handleDeleteGroup(group.group_id)}>x</button>
-            </div>
-            
-            {showEmojiGroupId === group.group_id &&  <EmojiPicker 
-              onEmojiClick={(emojiData) => {
-                updateEmoji (emojiData,group.group_id);
-                setShowEmojiGroupId(null);
-              }}
-            />}
-
-            <div>
-              {group.items.map(item => (
-                <div 
-                  key={item.id} 
-                  draggable 
-                  onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
-                >
-                  <TabItem tab={item} /> 
-                </div>
-              ))}
-            </div>
-          </div>
+          <Group
+          key={group.group_id}
+          group={group}
+          handleDrop={handleDrop}
+          handleDragStart={handleDragStart}
+          handleSiteCount={handleSiteCount}
+          handleDeleteGroup={handleDeleteGroup}
+          handleDragOver={handleDragOver}
+          showEmojiPicker={showEmojiGroupId === group.group_id}
+          toggleEmojiPicker={handleToggleEmojiPicker}
+          updateEmoji={updateEmoji}
+          setShowEmojiGroupId={setShowEmojiGroupId}
+        />
         ))}
-
       </div>
         <div className='newGroup'
           onDrop={(e) => {
