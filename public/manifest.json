@@ -9,7 +9,8 @@
     "tabGroups",
     "tabs",
     "favicon",
-    "scripting"
+    "scripting",
+    "windows"
   ],
   "web_accessible_resources": [ 
     { 

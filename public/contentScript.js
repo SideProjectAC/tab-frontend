@@ -1,26 +1,33 @@
-// // Example of dynamically creating an HTML structure
-// const container = document.createElement('div');
-// container.style.position = 'fixed';
-// container.style.bottom = '20px';
-// container.style.right = '20px';
-// container.style.backgroundColor = 'white';
-// container.style.border = '1px solid black';
-// container.style.padding = '10px';
-// container.style.zIndex = '10000'; // Ensure it's above most other content
-// container.innerHTML = `
-//   <div>Your popup content here</div>
-//   <button id="close-btn">Close</button>
-// `;
+// // to append the popup
+// const appRoot = document.createElement('div');
+// appRoot.id = 'popup-app';
+// document.body.appendChild(appRoot);
 
-// document.body.appendChild(container);
 
-// // Optionally, add functionality to remove the popup
-// document.getElementById('close-btn').addEventListener('click', () => {
-//   container.remove();
-// });
+//emoji API
+// import axios from 'axios';
+// const emoji_all = 'https://emoji-api.com/emojis?access_key=fa981b410a078f14f3922425982f0551af30a5c7'; 
 
-// This code goes in a content script or is injected by your background script
-const appRoot = document.createElement('div');
-appRoot.id = 'popup-app';
-document.body.appendChild(appRoot);
+// export const fetchEmoji = async () => {
+//   try {
+//     const response = await axios.get(emoji_all); 
+//     return response.data;
+//   } catch (error) {
+//     console.error('error in fetching Emoji: ', error);
+//     throw error;
+//   }
+// };
 
+//在要執行的file:
+// const getRandomEmoji = async () => {
+//         try {
+//             const apiEmoji = await fetchEmoji();
+//             const randomIndex = Math.floor(Math.random() * apiEmoji.length);
+//             const emojiCodeHex = apiEmoji[randomIndex].codePoint;
+//             const emojiCode = parseInt(emojiCodeHex, 16)
+//             return  String.fromCodePoint(emojiCode)
+//         } catch (error) {
+//             console.error('emoji Error', error);
+//             throw error; 
+//         }
+//     };

@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
+
+
 
 function closeTab(tabId) {
   chrome.tabs.remove(tabId);
@@ -16,13 +18,17 @@ function openTab(url) {
 function DragDropComponent() {
     const {groups , setGroups} = useGroups()
     const {chromeTabs} = useChromeTabs()
-    const [activeTabs, setActiveTabs] = useState([]);
-    const newGroupId = groups.length + 1; 
+    const newGroupId = groups.length; 
 
 
     useEffect(() => {
-        setActiveTabs(chromeTabs)
-    },[chromeTabs])
+        setGroups(prev => prev.map(group => {
+            if (group.group_id === 0) {
+            return { ...group, items: chromeTabs };
+            }
+            return group;
+        }));
+    },[setGroups,chromeTabs])
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
@@ -38,75 +44,51 @@ function DragDropComponent() {
         const originGroupId =  parseInt(e.dataTransfer.getData("originGroupId"), 10);
 
         if (originGroupId === targetGroupId) return; 
+        
+        let draggedTab = groups[originGroupId].items.find(item => item.id === itemId)
 
-        // Moving item from one zone to another (or back to the original list)
-        let draggedTab;
-        let originGroupIndex;
+        setGroups(prev => prev.map(group => {
+            // Remove the dragged item from its origin group
+            if (group.group_id === originGroupId) {
+                return { ...group, items: group.items.filter(item => item.id !== itemId) };
+            }
+            // Add the dragged item to the target group
+            if (group.group_id === targetGroupId) {
+                return { ...group, items: [...group.items, draggedTab] };
+            }
+            // Return all other groups unmodified
+            return group;
+        }));
 
-// 先刪除原本的位置
-        if (originGroupId === 0) {
-            draggedTab = activeTabs.find(item => item.id === itemId);
-            setActiveTabs(prev => prev.filter(item => item.id !== itemId));
-        } else {
-            originGroupIndex = groups.findIndex(group => group.id === originGroupId);
-            draggedTab = groups[originGroupIndex].tabs.find(item => item.id === itemId);
-            setGroups(prev => prev.map(group => {
-                if (group.id === originGroupId) {
-                return { ...group, tabs: group.tabs.filter(item => item.id !== itemId) };
-                }
-                return group;
-            }));
-        }
-
-//新增到新的地方
-        if (targetGroupId === 0) {
-            setActiveTabs(prev => [...prev, draggedTab]);
-            openTab(draggedTab.url)
-            return
-        } else if (targetGroupId > 0 && targetGroupId !== newGroupId ){
-            const targetGroupIndex = groups.findIndex(group => group.id === targetGroupId);
-            setGroups(prev => prev.map((group, index) => {
-                if (index === targetGroupIndex) {
-                    return { ...group, tabs: [...group.tabs, draggedTab] };
-                }
-                return group;
-            }));
-            closeTab(draggedTab.id) 
-        } else if (targetGroupId === newGroupId){
-            setGroups(prev => prev.map((group, index) => {
-                const newGroupIndex = newGroupId - 1
-                if (index === newGroupIndex ) {
-                 return { ...group, tabs: [...group.tabs, draggedTab] };
-                }
-                return group;
-            }));
-            closeTab(draggedTab.id)
-        }
+        if (targetGroupId === 0) openTab(draggedTab.url)
+        if (originGroupId === 0) closeTab(draggedTab.id)
     };
+    
 
     const handleDragOver = (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     };
-    
-    const handleAddGroup = (newGroupId) => {
-      setGroups(prev => [
-        ...prev,
-        { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-      ]);
-    }; 
+       
 
+    const handleAddGroup = (newGroupId) =>{
+        const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"]
+        const emoji = emojiList[Math.floor(Math.random() * emojiList.length)]
+        setGroups(prev => [
+        ...prev,
+        { group_id: newGroupId, group_icon: emoji, group_title: `Group${newGroupId}`, items: [] }
+        ]);
+    };
     return (
     <>
         <div className='wrapper'>
             <ActiveTabs
-                activeTabs={activeTabs}
+                activeTabs={groups[0].items}
                 handleDrop={handleDrop}
                 handleDragStart={handleDragStart}
                 handleDragOver={handleDragOver}
             />
             <Groups
-                groups={groups}
                 handleDrop={handleDrop}
                 handleDragOver={handleDragOver}
                 handleDragStart={handleDragStart}

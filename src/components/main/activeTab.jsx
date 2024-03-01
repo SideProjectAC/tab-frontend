@@ -1,5 +1,5 @@
 import TabItem from "./tabItem"
-import "../../styles/main/activeTab.css"
+// import "../../styles/main/activeTab.css"
 
 function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver }) {
 
@@ -8,6 +8,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
       onDrop={(e) => handleDrop(e, 0)} 
       onDragOver={(e) => handleDragOver(e)}
     >
+      <h2 className="groupTitle">Active Tabs</h2>
       {activeTabs.map((item) => (
         <div className='activeTab'
           key={item.id}

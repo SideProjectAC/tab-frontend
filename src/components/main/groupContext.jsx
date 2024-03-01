@@ -5,8 +5,9 @@ const GroupsContext = createContext();
 export const GroupsProvider = ({ children }) => {
 
     const [groups, setGroups] = useState([
-      // {group_id:1 ,group_icon:"🍔",group_title: 'group1' , items:[] }
+      {group_id:0 ,group_icon:"",group_title: 'Active Tabs' , items:[]}
     ]);
+    // {group_id:1 ,group_icon:"🍔",group_title: 'group1' , items:[] }
 
     // const handleAddGroup = (newGroupId) => {
     //     setGroups(prev => [

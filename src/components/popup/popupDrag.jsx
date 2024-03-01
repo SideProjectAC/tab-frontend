@@ -1,8 +1,10 @@
 import  { useRef, useEffect, useState } from 'react';
+import PopupContent from './popupContent';
 
-function Popup() {
+function PopupDrag() {
   const mydivRef = useRef(null); // Reference to the main div
   const [position, setPosition] = useState({ top: 0, left: 0 }); // Position state
+  
 
   useEffect(() => {
     const elmnt = mydivRef.current;
@@ -58,13 +60,10 @@ function Popup() {
         ref={mydivRef}
         style={{ position: 'absolute', top: `${position.top}px`, left: `${position.left}px`, cursor: 'move' }}
       >
-        <div id="mydivheader">Click here to move</div>
-        <p>Move</p>
-        <p>this</p>
-        <p>DIV</p>
+      <PopupContent/>
       </div>
     </>
   );
 }
 
-export default Popup;
+export default PopupDrag;

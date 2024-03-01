@@ -1,34 +1,85 @@
 import TabItem from "./tabItem"
-// import { useGroups } from './groupContext';
+import { useState } from "react";
+import { useGroups } from "./groupContext"
+import EmojiPicker from "emoji-picker-react";
 
-function Groups ({groups , handleDrop, handleDragOver, handleDragStart, newGroupId, handleAddGroup}) {
+function Groups ( {handleDrop, handleDragOver, handleDragStart, newGroupId, handleAddGroup }) {
 
-  // const {setGroups} = useGroups()
-  // const handleAddGroup = (newGroupId) => {
-  //     setGroups(prev => [
-  //       ...prev,
-  //       { id: newGroupId, name: `group${newGroupId}`, tabs: [] }
-  //     ]);
-  //   };  
+  const {groups, setGroups} = useGroups()
 
 
+
+  const handleDeleteGroup = (groupId) => {
+    setGroups(prev => prev.filter(group => group.group_id !== groupId))
+    console.log(groups)
+  }
+
+  const handleSiteCount = (groupId) => {
+    const group = groups.find(g => g.group_id === groupId);
+    if (group) {
+      group.items.forEach(item => {
+        chrome.tabs.create({ url: item.url, active: false });
+      });
+    } else {
+      console.error('Group not found:', groupId);
+    }
+  };
+
+  const getSiteCount = (groupId) => {
+    const group = groups.find(g => g.group_id === groupId);
+    return group ? group.items.length : 0;
+  };
+  
+  const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
+  function handleToggleEmojiPicker(groupId) { 
+    setShowEmojiGroupId(prevGroupId => prevGroupId === groupId ? null : groupId);
+  }
+  
+  const updateEmoji = (emojiData,groupId) => {
+    setGroups(prevGroups => 
+      prevGroups.map(group => 
+        group.group_id === groupId ? { ...group, group_icon: emojiData.emoji } : group
+      )
+    );
+  };
+
+ 
   return (
     <>
       <div className='groups'>
-        {groups.map(group => (
+        {groups.slice(1).map(group => (
           <div
             className='group'
-            key={group.id}
-            onDrop={(e) => handleDrop(e, group.id)}
+            key={group.group_id}
+            onDrop={(e) => handleDrop(e, group.group_id)}
             onDragOver={handleDragOver}
           >
-            Drop items here ({group.name})
+
+            <div className="groupInfo">
+              <div className="groupIcon" onClick={() =>handleToggleEmojiPicker(group.group_id)}>  
+                {group.group_icon}
+              </div> 
+              <h2 className="groupTitle">{group.group_title}</h2>
+              <button  
+                onClick={() => handleSiteCount(group.group_id)}>
+                {getSiteCount(group.group_id)} Sites ➡️ </button>
+              <button className="deleteButton"
+                onClick={() => handleDeleteGroup(group.group_id)}>x</button>
+            </div>
+            
+            {showEmojiGroupId === group.group_id &&  <EmojiPicker 
+              onEmojiClick={(emojiData) => {
+                updateEmoji (emojiData,group.group_id);
+                setShowEmojiGroupId(null);
+              }}
+            />}
+
             <div>
-              {group.tabs.map(item => (
+              {group.items.map(item => (
                 <div 
                   key={item.id} 
                   draggable 
-                  onDragStart={(e) => handleDragStart(e, item.id, group.id)}
+                  onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
                 >
                   <TabItem tab={item} /> 
                 </div>
@@ -36,6 +87,7 @@ function Groups ({groups , handleDrop, handleDragOver, handleDragStart, newGroup
             </div>
           </div>
         ))}
+
       </div>
         <div className='newGroup'
           onDrop={(e) => {
@@ -44,11 +96,7 @@ function Groups ({groups , handleDrop, handleDragOver, handleDragStart, newGroup
           }} 
           onDragOver={handleDragOver}
         ></div>
-        {/* <button 
-          onClick={() => handleAddGroup(newGroupId)}
-        >
-          add group
-        </button> */}
+
     </>
   )
 }

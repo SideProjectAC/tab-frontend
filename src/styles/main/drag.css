@@ -1,32 +1,64 @@
 .wrapper{
   display: flex;
+  width: 100vw;
+  height: 90vh;
 }
 
-li {
-  list-style-type: none;
-}
 
 .activeList{
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 20%;
+  height: 100%
   margin-right: 10px;
   background-color: rgb(205, 228, 247);
 }
 
-.activeTab {
-  border: 2px solid blue;
-}
 .groups {
-  display :flex;
+  display :flex
 }
+
 .group {
   margin: 5px;
   padding: 10px;
   border: 2px dashed blue;
+  width: 300px;
 }
- 
+.groupInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+.groupIcon {
+  font-size: 2.5rem;
+  margin-right:10px;
+}
+.groupTitle{
+  color: blue;
+}
+
+.deleteButton{
+  border-radius: 50%;
+}
 .newGroup {
   background-color: rgb(233, 230, 230);
-  width:50%;
+  width: 100%;
+  margin-left: 10px;
+}
+.tabItem {
+  list-style-type: none;
+  width: 100%;
+  height: 70px;
+  margin: 5px auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 10px;
+}
+.tabIcon {
+  margin:5px;
+  width: 2.5rem;
+  height: 2.5rem;
 }

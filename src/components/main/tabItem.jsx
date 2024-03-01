@@ -1,4 +1,4 @@
-import '../../styles/main/tabItem.css'
+// import '../../styles/main/tabItem.css'
 
 const TabItem = ({tab}) => {
 
@@ -18,13 +18,15 @@ const TabItem = ({tab}) => {
   const favIconUrl = getFaviconURL(tab.url)
 
   return (
-     <li>
-      <a onClick={activateTab}>
-        <img src={favIconUrl} alt="Favicon" />
-        <h3 className="title">{tab.title}</h3>
-        <p className="pathname">{tab.url}</p>
-      </a>
-    </li>
+    <a onClick={activateTab}>
+      <li className="tabItem">
+        <img src={favIconUrl} alt="Favicon" className="tabIcon"/>
+        <div>
+          <h3 className="tabTitle">{tab.title}</h3>
+          <p className="tabUrl">{tab.url}</p>
+        </div>
+      </li>
+    </a>
   );
 }
 
