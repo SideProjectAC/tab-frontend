@@ -1,7 +1,20 @@
 import TabItem from "./tabItem"
-import EmojiPicker from "emoji-picker-react";
 
-function Group({ group, handleDrop, handleDragStart, handleSiteCount, handleDeleteGroup,handleDragOver, showEmojiPicker, toggleEmojiPicker, updateEmoji,setShowEmojiGroupId }) {
+import Emoji from "./emoji";
+import { useState } from "react";
+
+function Group({ 
+  group,
+  handleDrop,
+  handleDragStart,
+  handleSiteCount,
+  handleDeleteGroup,
+  handleDragOver,
+}) {
+
+  const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
+    
+
   return (
     <div
       className='group'
@@ -10,7 +23,7 @@ function Group({ group, handleDrop, handleDragStart, handleSiteCount, handleDele
       onDragOver={handleDragOver}
     >
       <div className="groupInfo">
-        <div className="groupIcon" onClick={() => toggleEmojiPicker(group.group_id)}>  
+        <div className="groupIcon" onClick={() => setShowEmojiGroupId(group.group_id)}>  
           {group.group_icon}
         </div> 
         <h2 className="groupTitle">{group.group_title}</h2>
@@ -21,12 +34,10 @@ function Group({ group, handleDrop, handleDragStart, handleSiteCount, handleDele
           onClick={() => handleDeleteGroup(group.group_id)}>x</button>
       </div>
       
-      {showEmojiPicker && <EmojiPicker 
-        onEmojiClick={(emojiData) => {
-          updateEmoji(emojiData, group.group_id);
-           setShowEmojiGroupId(null)
-        }}
-      />}
+      {showEmojiGroupId && 
+        <Emoji 
+          groupId={group.group_id}
+          setShowEmojiGroupId={setShowEmojiGroupId}/>}
 
       <div>
         {group.items.map(item => (

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useGroups } from "./groupContext"
 import Group from "./group";
 
@@ -28,21 +27,7 @@ function Groups ({
     }
   };
 
-  
-  const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
-  function handleToggleEmojiPicker(groupId) { 
-    setShowEmojiGroupId(prevGroupId => prevGroupId === groupId ? null : groupId);
-  }
-  
-  const updateEmoji = (emojiData,groupId) => {
-    setGroups(prevGroups => 
-      prevGroups.map(group => 
-        group.group_id === groupId ? { ...group, group_icon: emojiData.emoji } : group
-      )
-    );
-  };
-
- 
+   
   return (
     <>
       <div className='groups'>
@@ -55,10 +40,6 @@ function Groups ({
           handleSiteCount={handleSiteCount}
           handleDeleteGroup={handleDeleteGroup}
           handleDragOver={handleDragOver}
-          showEmojiPicker={showEmojiGroupId === group.group_id}
-          toggleEmojiPicker={handleToggleEmojiPicker}
-          updateEmoji={updateEmoji}
-          setShowEmojiGroupId={setShowEmojiGroupId}
         />
         ))}
       </div>
