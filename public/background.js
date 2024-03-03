@@ -12,8 +12,19 @@ chrome.runtime.onConnect.addListener((port) => {
 //更新
   const tabUpdatedListener = (tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
-      chrome.tabs.get(tabId, (updatedTab) => {
-          port.postMessage({ action: "tabUpdated", tab: updatedTab });
+      chrome.tabs.get(tabId, (tab) => {
+
+        // const tabInfo = {
+        //   browserTab_id : updatedTab.id,
+        //   browserTab_favIconUrl: updatedTab.favIconUrl,
+        //   browserTab_title: updatedTab.title,
+        //   browserTab_url: updatedTab.url,
+        //   browserTab_active: updatedTab.active,
+        //   browserTab_groupId: updatedTab.groupId,
+        //   browserTab_index: updatedTab.index,
+        //   browserTab_status: updatedTab.status,
+        // }
+          port.postMessage({ action: "tabUpdated", tab: tab});
       });
     }
   };

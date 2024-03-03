@@ -8,7 +8,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
       onDrop={(e) => handleDrop(e, 0)} 
       onDragOver={(e) => handleDragOver(e)}
     >
-      <h2 className="groupTitle">Active Tabs</h2>
+      <h1 className="activeTitle">Active Tabs</h1>
       {activeTabs.map((item) => (
         <div className='activeTab'
           key={item.id}

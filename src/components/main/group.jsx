@@ -1,7 +1,9 @@
+import {  useState } from "react";
+import { useGroups } from "./groupContext"
 import TabItem from "./tabItem"
-
 import Emoji from "./emoji";
-import { useState } from "react";
+import Note from "./note";
+import { updateGroupAPI } from "../../api/groupAPI";
 
 function Group({ 
   group,
@@ -13,8 +15,32 @@ function Group({
 }) {
 
   const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
-    
+  const [groupTitle, setGroupTitle] =useState('Untitled')
+  const { setGroups} = useGroups()
 
+
+  function handleTitleChange (e) {
+    setGroupTitle(e.target.value)
+  }
+  
+  function handleTitleUpdate(groupId) {
+    setGroups(prevGroups => 
+      prevGroups.map(group => 
+        group.group_id === groupId ? { ...group, group_title: groupTitle } : group
+      )
+    );
+    
+    const titleUpdate = {group_title: groupTitle}
+    updateGroupAPI(groupId, titleUpdate)
+    .then(response => {
+      console.log('Group Title updated successfully', response.data);
+    })
+    .catch(error => {
+      console.error('Error updating group Title', error);
+    });
+  }
+
+  
   return (
     <div
       className='group'
@@ -26,7 +52,12 @@ function Group({
         <div className="groupIcon" onClick={() => setShowEmojiGroupId(group.group_id)}>  
           {group.group_icon}
         </div> 
-        <h2 className="groupTitle">{group.group_title}</h2>
+        <input className="groupTitle" 
+          type="text"
+          placeholder={groupTitle}
+          onChange={handleTitleChange}
+          onBlur={() => handleTitleUpdate(group.group_id)}
+        />
         <button onClick={() => handleSiteCount(group.group_id)}>
           {group.items.length} Sites ➡️
         </button>
@@ -50,6 +81,7 @@ function Group({
           </div>
         ))}
       </div>
+      <Note/>
     </div>
   );
 }

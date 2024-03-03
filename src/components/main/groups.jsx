@@ -1,5 +1,6 @@
 import { useGroups } from "./groupContext"
 import Group from "./group";
+import { fetchGroupsAPI, deleteGroupAPI } from "../../api/groupAPI";
 
 function Groups ({
   handleDrop,
@@ -11,9 +12,17 @@ function Groups ({
 
   const {groups, setGroups} = useGroups()
 
+  fetchGroupsAPI()
+
   const handleDeleteGroup = (groupId) => {
     setGroups(prev => prev.filter(group => group.group_id !== groupId))
-    console.log(groups)
+    deleteGroupAPI(groupId)
+     .then(() => {
+      console.log('Group API deleted successfully',groupId);
+    })
+    .catch(error => {
+      console.error('Error deleting group', error);
+    });
   }
  
   const handleSiteCount = (groupId) => {
@@ -27,7 +36,8 @@ function Groups ({
     }
   };
 
-   
+  
+
   return (
     <>
       <div className='groups'>
@@ -40,6 +50,7 @@ function Groups ({
           handleSiteCount={handleSiteCount}
           handleDeleteGroup={handleDeleteGroup}
           handleDragOver={handleDragOver}
+
         />
         ))}
       </div>

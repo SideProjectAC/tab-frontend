@@ -36,8 +36,17 @@
   font-size: 2.5rem;
   margin-right:10px;
 }
-.groupTitle{
+.activeTitle{
   color: blue;
+  margin: 5px auto;
+}
+.groupTitle{
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color:gray;
+  width:35%;
+  margin:0px;
 }
 
 .deleteButton{
@@ -53,7 +62,7 @@
 }
 .tabItem {
   list-style-type: none;
-  width: 100%;
+  width: 95%;
   height: 70px;
   margin: 5px;
   overflow: hidden;

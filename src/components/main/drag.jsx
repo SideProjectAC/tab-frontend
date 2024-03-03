@@ -4,6 +4,7 @@ import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
+import { postNewGroupAPI } from '../../api/groupAPI';
 
 
 
@@ -46,7 +47,6 @@ function DragDropComponent() {
         if (originGroupId === targetGroupId) return; 
         
         let draggedTab = groups[originGroupId].items.find(item => item.id === itemId)
-
         setGroups(prev => prev.map(group => {
             // Remove the dragged item from its origin group
             if (group.group_id === originGroupId) {
@@ -76,8 +76,17 @@ function DragDropComponent() {
         const emoji = emojiList[Math.floor(Math.random() * emojiList.length)]
         setGroups(prev => [
         ...prev,
-        { group_id: newGroupId, group_icon: emoji, group_title: `Group${newGroupId}`, items: [] }
+        { group_id: newGroupId, group_icon: emoji, group_title: "Untitled", items: [] }
         ]);
+
+        //API
+        postNewGroupAPI({group_icon:emoji, group_title:"Untitled"})
+        .then(response => {
+            console.log('api post response',response)
+        })
+        .catch(error => {console.error('error adding Group',error)})
+
+        console.log(groups)
     };
     return (
     <>
