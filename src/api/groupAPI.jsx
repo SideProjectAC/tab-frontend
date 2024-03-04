@@ -11,8 +11,8 @@ const api = axios.create({
 export async function fetchGroupsAPI() {
   return api.get('/groups'); 
 }
-
-export function postNewGroupAPI(newGroupData) {
+  
+export function postNewGroupAPI(newGroupData) { 
   return api.post('/groups',newGroupData)
 }
 

@@ -30,13 +30,13 @@ function Group({
       )
     );
     
-    // const titleUpdate = {group_title: groupTitle}
-    // try {
-    //   const response = await updateGroupAPI(groupId, titleUpdate);
-    //   console.log('Group updated successfully', response.data);
-    // } catch (error) {
-    //   console.error('Error updating group', error);
-    // }
+    const titleUpdate = {group_title: groupTitle.toString()}
+    try {
+      const response = await updateGroupAPI(groupId, titleUpdate);
+      console.log('Group Title updated successfully', response.data);
+    } catch (error) {
+      console.error('Error updating groupTitle', error);
+    }
 
   }
 

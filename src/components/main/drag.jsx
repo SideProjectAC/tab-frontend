@@ -4,7 +4,7 @@ import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
-import { postNewGroupAPI } from '../../api/groupAPI';
+import { fetchGroupsAPI,postNewGroupAPI } from '../../api/groupAPI';
 
 
 
@@ -20,22 +20,28 @@ function DragDropComponent() {
     const [activeTabs, setActiveTabs] = useState([]);
     const {groups , setGroups} = useGroups()
     const {chromeTabs} = useChromeTabs()
-    const newGroupId = groups.length +1 ; 
+   const newGroupId = (groups.length + 1).toString();
 
-
-    // useEffect(() => {
-    //     setGroups(prev => prev.map((group, index) => {
-    //         if (index === 0) { 
-    //             return { ...group, items: chromeTabs };
-    //         }
-    //         return group;
-    //     }));
-    // },[setGroups,chromeTabs])
     
     useEffect(() => {
         setActiveTabs(chromeTabs)
-    },[chromeTabs])
+    },[chromeTabs,groups])
 
+
+    async function loadGroups() {
+        try {
+        const response = await fetchGroupsAPI();
+        console.log('Groups fetched: ', response.data);
+        setGroups(response.data)
+        } catch (error) {
+        console.error('Error fetching groups', error);
+        }
+    }
+    
+    function handleFetch(){
+        loadGroups();
+        console.log('groups frontEnd',groups)
+    }
 
     const handleDragStart = (e, itemId, originGroupId) => {
         e.dataTransfer.setData("itemId", itemId);
@@ -47,34 +53,19 @@ function DragDropComponent() {
     const handleDrop = (e, targetGroupId) => {
         e.preventDefault();
         const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
-        const originGroupId =  parseInt(e.dataTransfer.getData("originGroupId"), 10);
+        const originGroupId = e.dataTransfer.getData("originGroupId")
+        const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId);
 
         if (originGroupId === targetGroupId) return; 
-        
-        // let draggedTab = groups[originGroupId].items.find(item => item.id === itemId)
-        // setGroups(prev => prev.map(group => {
-        //     // Remove the dragged item from its origin group
-        //     if (group.group_id === originGroupId) {
-        //         return { ...group, items: group.items.filter(item => item.id !== itemId) };
-        //     }
-        //     // Add the dragged item to the target group
-        //     if (group.group_id === targetGroupId) {
-        //         return { ...group, items: [...group.items, draggedTab] };
-        //     }
-        //     // Return all other groups unmodified
-        //     return group;
-        // }));
-        // if (targetGroupId === 0) openTab(draggedTab.url)
-        // if (originGroupId === 0) closeTab(draggedTab.id)
 
         let draggedTab;
-        let originGroupIndex;
-
-         if (originGroupId === 0) {
+//先刪除原本在的地方
+         if (originGroupId === 'ActiveTabs') {
             draggedTab = activeTabs.find(item => item.id === itemId);
             setActiveTabs(prev => prev.filter(item => item.id !== itemId));
+            closeTab(draggedTab.id)
+
         } else {
-            originGroupIndex = groups.findIndex(group => group.group_id === originGroupId);
             draggedTab = groups[originGroupIndex].items.find(item => item.id === itemId);
             setGroups(prev => prev.map(group => {
                 if (group.group_id === originGroupId) {
@@ -83,32 +74,20 @@ function DragDropComponent() {
                 return group;
             }));
         }
-    //新增到新的地方
-        if (targetGroupId == 0) {
+
+//新增到新的地方
+        if (targetGroupId === 'ActiveTabs') {
+            //TODO: 以下setActive有bug!
             setActiveTabs(prev => [...prev, draggedTab]);
             openTab(draggedTab.url)
             return
-        } else if (targetGroupId > 0 && targetGroupId !== newGroupId ){
-            const targetGroupIndex = groups.findIndex(group => group.group_id=== targetGroupId);
-            setGroups(prev => prev.map((group, index) => {
-                if (index === targetGroupIndex) {
-                    return { ...group, items: [...group.items, draggedTab] };
-                }
-                return group;
-            }));
-            closeTab(draggedTab.id) 
-        } else if (targetGroupId == newGroupId){
-            setGroups(prev => prev.map((group, index) => {
-                const newGroupIndex = newGroupId - 1
-                if (index === newGroupIndex ) {
-                 return { ...group, items: [...group.items, draggedTab] };
-                }
-                return group;
-            }));
-            closeTab(draggedTab.id)
         }
-
-
+        setGroups(prev => prev.map(group => {
+            if (group.group_id === targetGroupId) {
+                return { ...group, items: [...group.items, draggedTab] };
+            }
+        return group;
+        }));
     };
     
 
@@ -118,27 +97,29 @@ function DragDropComponent() {
     };
        
 
-    const handleAddGroup = (newGroupId) =>{
+    const handleAddGroup = async (newGroupId) =>{
         const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"]
-        const emoji = emojiList[Math.floor(Math.random() * emojiList.length)]
-        setGroups(prev => [
-        ...prev,
-        { group_id: newGroupId, group_icon: emoji, group_title: "Untitled", items: [] }
-        ]);
-
-        //API
-        // postNewGroupAPI({group_icon:emoji, group_title:"Untitled"})
-        // .then(response => {
-        //     console.log('api post response',response)
-        // })
-        // .catch(error => {console.error('error adding Group',error)})
-
+        const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)]
+        
+        //post newGroup API
+        // try{
+        //     const response = await postNewGroupAPI({group_icon:tempEmoji, group_title:"Untitled"})
+        //     console.log('API post newGroup response',response.data)
+            setGroups(prev => [
+            ...prev,
+            ////TODO:最前面應該是group.group_id 不是 id -> id: response.data.group_id,
+            { group_id:newGroupId, group_icon: tempEmoji, group_title: "Untitled", items: [] }
+            ]);
+        // } catch(error) {
+        //     console.error('error in adding group',error)
+        // }
+       
     };
+
     return (
     <>
         <div className='wrapper'>
             <ActiveTabs
-                // activeTabs={groups[0].items}
                 activeTabs={activeTabs}
                 handleDrop={handleDrop}
                 handleDragStart={handleDragStart}
@@ -153,6 +134,7 @@ function DragDropComponent() {
             />
         </div>
         <button onClick={() => handleAddGroup(newGroupId)} > add group</button>
+        <button onClick={() => handleFetch()} > fetch Data</button>
     </>
     );
 }

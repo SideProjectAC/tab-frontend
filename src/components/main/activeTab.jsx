@@ -5,7 +5,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
 
   return(
     <div className='activeList'
-      onDrop={(e) => handleDrop(e, 0)} 
+      onDrop={(e) => handleDrop(e, 'ActiveTabs')} 
       onDragOver={(e) => handleDragOver(e)}
     >
       <h1 className="activeTitle">Active Tabs</h1>
@@ -13,7 +13,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
         <div className='activeTab'
           key={item.id}
           draggable
-          onDragStart={(e) => handleDragStart(e, item.id, 0)}
+          onDragStart={(e) => handleDragStart(e, item.id, 'ActiveTabs')}
         >
           <TabItem tab={item} /> 
         </div>
