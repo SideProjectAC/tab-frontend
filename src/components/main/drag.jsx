@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import { useState,useEffect} from 'react';
 import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
@@ -17,20 +17,24 @@ function openTab(url) {
 }
 
 function DragDropComponent() {
+    const [activeTabs, setActiveTabs] = useState([]);
     const {groups , setGroups} = useGroups()
     const {chromeTabs} = useChromeTabs()
-    const newGroupId = groups.length; 
+    const newGroupId = groups.length +1 ; 
 
 
+    // useEffect(() => {
+    //     setGroups(prev => prev.map((group, index) => {
+    //         if (index === 0) { 
+    //             return { ...group, items: chromeTabs };
+    //         }
+    //         return group;
+    //     }));
+    // },[setGroups,chromeTabs])
+    
     useEffect(() => {
-        setGroups(prev => prev.map((group, index) => {
-            if (index === 0) { 
-                return { ...group, items: chromeTabs };
-            }
-            return group;
-        }));
-    },[setGroups,chromeTabs])
-
+        setActiveTabs(chromeTabs)
+    },[chromeTabs])
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
@@ -47,21 +51,63 @@ function DragDropComponent() {
 
         if (originGroupId === targetGroupId) return; 
         
-        let draggedTab = groups[originGroupId].items.find(item => item.id === itemId)
-        setGroups(prev => prev.map(group => {
-            // Remove the dragged item from its origin group
-            if (group.group_id === originGroupId) {
+        // let draggedTab = groups[originGroupId].items.find(item => item.id === itemId)
+        // setGroups(prev => prev.map(group => {
+        //     // Remove the dragged item from its origin group
+        //     if (group.group_id === originGroupId) {
+        //         return { ...group, items: group.items.filter(item => item.id !== itemId) };
+        //     }
+        //     // Add the dragged item to the target group
+        //     if (group.group_id === targetGroupId) {
+        //         return { ...group, items: [...group.items, draggedTab] };
+        //     }
+        //     // Return all other groups unmodified
+        //     return group;
+        // }));
+        // if (targetGroupId === 0) openTab(draggedTab.url)
+        // if (originGroupId === 0) closeTab(draggedTab.id)
+
+        let draggedTab;
+        let originGroupIndex;
+
+         if (originGroupId === 0) {
+            draggedTab = activeTabs.find(item => item.id === itemId);
+            setActiveTabs(prev => prev.filter(item => item.id !== itemId));
+        } else {
+            originGroupIndex = groups.findIndex(group => group.group_id === originGroupId);
+            draggedTab = groups[originGroupIndex].items.find(item => item.id === itemId);
+            setGroups(prev => prev.map(group => {
+                if (group.group_id === originGroupId) {
                 return { ...group, items: group.items.filter(item => item.id !== itemId) };
-            }
-            // Add the dragged item to the target group
-            if (group.group_id === targetGroupId) {
-                return { ...group, items: [...group.items, draggedTab] };
-            }
-            // Return all other groups unmodified
-            return group;
-        }));
-        if (targetGroupId === 0) openTab(draggedTab.url)
-        if (originGroupId === 0) closeTab(draggedTab.id)
+                }
+                return group;
+            }));
+        }
+    //新增到新的地方
+        if (targetGroupId == 0) {
+            setActiveTabs(prev => [...prev, draggedTab]);
+            openTab(draggedTab.url)
+            return
+        } else if (targetGroupId > 0 && targetGroupId !== newGroupId ){
+            const targetGroupIndex = groups.findIndex(group => group.group_id=== targetGroupId);
+            setGroups(prev => prev.map((group, index) => {
+                if (index === targetGroupIndex) {
+                    return { ...group, items: [...group.items, draggedTab] };
+                }
+                return group;
+            }));
+            closeTab(draggedTab.id) 
+        } else if (targetGroupId == newGroupId){
+            setGroups(prev => prev.map((group, index) => {
+                const newGroupIndex = newGroupId - 1
+                if (index === newGroupIndex ) {
+                 return { ...group, items: [...group.items, draggedTab] };
+                }
+                return group;
+            }));
+            closeTab(draggedTab.id)
+        }
+
 
     };
     
@@ -92,7 +138,8 @@ function DragDropComponent() {
     <>
         <div className='wrapper'>
             <ActiveTabs
-                activeTabs={groups[0].items}
+                // activeTabs={groups[0].items}
+                activeTabs={activeTabs}
                 handleDrop={handleDrop}
                 handleDragStart={handleDragStart}
                 handleDragOver={handleDragOver}

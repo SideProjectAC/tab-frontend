@@ -27,13 +27,13 @@ function Groups ({
 
   const handleDeleteGroup = (groupId) => {
     setGroups(prev => prev.filter(group => group.group_id !== groupId))
-    deleteGroupAPI("8f76fd65-b6ed-41be-926d-4930a174f58c")
-     .then(() => {
-      console.log('Group API deleted successfully',groupId);
-    })
-    .catch(error => {
-      console.error('Error deleting group', error);
-    });
+    // deleteGroupAPI("8f76fd65-b6ed-41be-926d-4930a174f58c")
+    //  .then(() => {
+    //   console.log('Group API deleted successfully',groupId);
+    // })
+    // .catch(error => {
+    //   console.error('Error deleting group', error);
+    // });
   }
  
   const handleSiteCount = (groupId) => {
@@ -52,7 +52,8 @@ function Groups ({
   return (
     <>
       <div className='groups'>
-        {groups.slice(1).map(group => (
+        {/* {groups.slice(1).map(group => ( */}
+        {groups.map(group => (
           <Group
           key={group.group_id}
           group={group}
