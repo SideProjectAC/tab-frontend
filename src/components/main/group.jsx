@@ -23,21 +23,21 @@ function Group({
     setGroupTitle(e.target.value)
   }
   
-  function handleTitleUpdate(groupId) {
+  async function handleTitleUpdate(groupId) {
     setGroups(prevGroups => 
       prevGroups.map(group => 
         group.group_id === groupId ? { ...group, group_title: groupTitle } : group
       )
     );
     
-    const titleUpdate = {group_title: groupTitle}
-    updateGroupAPI(groupId, titleUpdate)
-    .then(response => {
-      console.log('Group Title updated successfully', response.data);
-    })
-    .catch(error => {
-      console.error('Error updating group Title', error);
-    });
+    // const titleUpdate = {group_title: groupTitle}
+    // try {
+    //   const response = await updateGroupAPI(groupId, titleUpdate);
+    //   console.log('Group updated successfully', response.data);
+    // } catch (error) {
+    //   console.error('Error updating group', error);
+    // }
+
   }
 
   

@@ -23,13 +23,14 @@ function DragDropComponent() {
 
 
     useEffect(() => {
-        setGroups(prev => prev.map(group => {
-            if (group.group_id === 0) {
-            return { ...group, items: chromeTabs };
+        setGroups(prev => prev.map((group, index) => {
+            if (index === 0) { 
+                return { ...group, items: chromeTabs };
             }
             return group;
         }));
     },[setGroups,chromeTabs])
+
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
@@ -59,9 +60,9 @@ function DragDropComponent() {
             // Return all other groups unmodified
             return group;
         }));
-
         if (targetGroupId === 0) openTab(draggedTab.url)
         if (originGroupId === 0) closeTab(draggedTab.id)
+
     };
     
 
@@ -80,13 +81,12 @@ function DragDropComponent() {
         ]);
 
         //API
-        postNewGroupAPI({group_icon:emoji, group_title:"Untitled"})
-        .then(response => {
-            console.log('api post response',response)
-        })
-        .catch(error => {console.error('error adding Group',error)})
+        // postNewGroupAPI({group_icon:emoji, group_title:"Untitled"})
+        // .then(response => {
+        //     console.log('api post response',response)
+        // })
+        // .catch(error => {console.error('error adding Group',error)})
 
-        console.log(groups)
     };
     return (
     <>

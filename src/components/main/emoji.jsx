@@ -6,7 +6,6 @@ function Emoji ({groupId ,setShowEmojiGroupId}) {
   const {setGroups} = useGroups()
   
   const updateEmoji = (groupId, emojiData) => {
-    console.log('groupId',groupId)
     setGroups(prevGroups => 
       prevGroups.map(group => 
         group.group_id === groupId ? { ...group, group_icon: emojiData.emoji } : group

@@ -12,11 +12,22 @@ function Groups ({
 
   const {groups, setGroups} = useGroups()
 
-  fetchGroupsAPI()
+ async function loadGroups() {
+    try {
+      const response = await fetchGroupsAPI();
+      console.log('Groups fetched: ', response.data);
+      // Process the fetched groups as needed
+    } catch (error) {
+      console.error('Error fetching groups', error);
+    }
+  }
+  // loadGroups()
+
+//"46d983fe-91f7-4566-8ee4-d8601cd3d0af"
 
   const handleDeleteGroup = (groupId) => {
     setGroups(prev => prev.filter(group => group.group_id !== groupId))
-    deleteGroupAPI(groupId)
+    deleteGroupAPI("8f76fd65-b6ed-41be-926d-4930a174f58c")
      .then(() => {
       console.log('Group API deleted successfully',groupId);
     })
