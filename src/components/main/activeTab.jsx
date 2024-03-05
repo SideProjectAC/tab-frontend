@@ -15,7 +15,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
           draggable
           onDragStart={(e) => handleDragStart(e, item.id, 'ActiveTabs')}
         >
-          <TabItem tab={item} /> 
+          <TabItem tab={item} groupId={'ActiveTabs'} /> 
         </div>
       ))}
     </div>

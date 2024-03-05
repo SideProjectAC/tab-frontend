@@ -1,25 +1,44 @@
 import { useGroups } from "./groupContext"
-import { useEffect } from 'react';
+import { useEffect,useRef } from 'react';
 import Group from "./group";
-import { deleteGroupAPI } from "../../api/groupAPI";
+import { postNewGroupAPI,deleteGroupAPI } from "../../api/groupAPI";
 
 function Groups ({
   handleDrop,
   handleDragOver,
   handleDragStart,
-  newGroupId,
-  handleAddGroup
 }) {
 
   const {groups, setGroups} = useGroups()
 
- 
+  const newGroupId = useRef(null);
+    useEffect(()=>{
+        newGroupId.current = groups.length > 0 ? groups[groups.length -1].group_id : undefined;
+    },[groups])
+
+ const handleAddGroup = async () =>{
+    const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"]
+    const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)]
+    
+    //post newGroup API
+    try{
+        const response = await postNewGroupAPI({group_icon:tempEmoji, group_title:"Untitled"})
+        console.log('API post newGroup response',response.data)
+        setGroups(prev => [
+        ...prev,
+        {  group_id: response.data.group_id, group_icon: tempEmoji, group_title: "Untitled", items: [] }
+        ]);
+    } catch(error) {
+        console.error('error in adding group',error)
+    }
+      
+  };
 
 
 
   async function handleDeleteGroup (groupId)  {
     try {
-      await deleteGroupAPI("d3ca10d3-db2f-460c-9a14-19e072491a7b");
+      await deleteGroupAPI(groupId);
       console.log('Group deleted successfully');
 
       setGroups(prev => prev.filter(group => group.group_id !== groupId))
@@ -60,8 +79,10 @@ function Groups ({
       </div>
         <div className='newGroup'
           onDrop={(e) => {
-            handleAddGroup(newGroupId)
-            handleDrop(e, newGroupId)
+            (async () => {
+              await handleAddGroup();
+              await handleDrop(e, newGroupId.current);
+            })();
           }} 
           onDragOver={handleDragOver}
         ></div>

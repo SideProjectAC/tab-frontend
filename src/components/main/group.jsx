@@ -16,6 +16,7 @@ function Group({
 
   const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
   const [groupTitle, setGroupTitle] =useState('Untitled')
+  const [oldTitle, setOldTitle]= useState(groupTitle) //只是為了阻止使用者明明沒改title卻還update title
   const { setGroups} = useGroups()
 
 
@@ -23,14 +24,24 @@ function Group({
     setGroupTitle(e.target.value)
   }
   
+  function handleKeyDown(e, groupId) {
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+      handleTitleUpdate(groupId);
+      e.target.blur();
+    }
+  }
   async function handleTitleUpdate(groupId) {
+    if (oldTitle === groupTitle) return;
+    setOldTitle(groupTitle)
+
     setGroups(prevGroups => 
       prevGroups.map(group => 
         group.group_id === groupId ? { ...group, group_title: groupTitle } : group
       )
     );
     
-    const titleUpdate = {group_title: groupTitle.toString()}
+    const titleUpdate = {group_title: groupTitle ,group_icon:'假'}
     try {
       const response = await updateGroupAPI(groupId, titleUpdate);
       console.log('Group Title updated successfully', response.data);
@@ -57,6 +68,7 @@ function Group({
           placeholder={groupTitle}
           onChange={handleTitleChange}
           onBlur={() => handleTitleUpdate(group.group_id)}
+          onKeyDown={(e) => handleKeyDown(e, group.group_id)}
         />
         <button onClick={() => handleSiteCount(group.group_id)}>
           {group.items.length} Sites ➡️
@@ -77,7 +89,7 @@ function Group({
             draggable 
             onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
           >
-            <TabItem tab={item} /> 
+            <TabItem tab={item} groupId={group.group_id} /> 
           </div>
         ))}
       </div>
