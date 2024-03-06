@@ -12,27 +12,36 @@ function Groups ({
   const {groups, setGroups} = useGroups()
 
   const newGroupId = useRef(null);
-    useEffect(()=>{
-        newGroupId.current = groups.length > 0 ? groups[groups.length -1].group_id : undefined;
-    },[groups])
 
- const handleAddGroup = async () =>{
-    const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"]
-    const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)]
-    
-    //post newGroup API
-    try{
-        const response = await postNewGroupAPI({group_icon:tempEmoji, group_title:"Untitled"})
-        console.log('API post newGroup response',response.data)
-        setGroups(prev => [
-        ...prev,
-        {  group_id: response.data.group_id, group_icon: tempEmoji, group_title: "Untitled", items: [] }
-        ]);
-    } catch(error) {
-        console.error('error in adding group',error)
-    }
+
+  const handleAddGroup = async () => {
+    const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"];
+    const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
+
+    try {
+      const response = await postNewGroupAPI({group_icon: tempEmoji, group_title: "Untitled"});
+      console.log('API post newGroup response', response.data);
+
+       const newGroup = {
+        group_id: response.data.group_id, 
+        group_icon: tempEmoji, 
+        group_title: "Untitled", 
+        items: []
+      };
       
+       setGroups(prevGroups => {
+        const updatedGroups = [...prevGroups, newGroup];
+        return updatedGroups;
+      });
+
+      newGroupId.current = response.data.group_id;
+      return { newGroupId: response.data.group_id, newGroups: [...groups, newGroup] };
+    } catch (error) {
+      console.error('error in adding group', error);
+      return { newGroupId: undefined, newGroups: groups };
+    }
   };
+
 
 
 
@@ -78,15 +87,15 @@ function Groups ({
         ))}
       </div>
         <div className='newGroup'
-          onDrop={(e) => {
-            (async () => {
-              await handleAddGroup();
-              await handleDrop(e, newGroupId.current);
-            })();
+          onDrop={async (e) => {
+            const { newGroupId, newGroups } = await handleAddGroup();
+            console.log("log e:", e.dataTransfer.getData("originGroupId"))
+            handleDrop(e, newGroupId, newGroups);
           }} 
           onDragOver={handleDragOver}
+          // onDragStart={(e) => handleDragStart(e, item.id, "ActiveTabs")}
         ></div>
-
+      <button onClick={handleAddGroup}>addGroup</button>
     </>
   )
 }

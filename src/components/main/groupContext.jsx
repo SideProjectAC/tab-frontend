@@ -5,7 +5,7 @@ const GroupsContext = createContext();
 
 export const GroupsProvider = ({ children }) => {
 
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState([]); 
 
      async function loadGroups() {
         try {

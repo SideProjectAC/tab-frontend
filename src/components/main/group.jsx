@@ -100,7 +100,7 @@ function Group({
       <div>
         {group.items.map(item => (
           <div 
-            key={item.id} 
+            key={item.id}   
             draggable 
             onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
           >
@@ -108,7 +108,9 @@ function Group({
           </div>
         ))}
       </div>
+
       <Note/>
+
     </div>
   );
 }

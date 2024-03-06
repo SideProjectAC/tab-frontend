@@ -39,20 +39,31 @@ function DragDropComponent() {
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
-        e.dataTransfer.setData("itemId", itemId);
-        e.dataTransfer.setData("originGroupId",originGroupId);
+        console.log("set group:", originGroupId)
+        e.dataTransfer.setData("itemId", itemId.toString());
+        e.dataTransfer.setData("originGroupId", originGroupId);
+        console.log("get group:", e.dataTransfer.getData("originGroupId"))
         e.dataTransfer.effectAllowed = 'move';
     };
-
-
-    const handleDrop = (e, targetGroupId) => {
+    
+    
+    const handleDrop = (e, targetGroupId, newGroups) => {
         e.preventDefault();
         const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId = e.dataTransfer.getData("originGroupId")
-        const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId);
+        console.log("get group:", e.dataTransfer.getData("originGroupId"))
+
+        let originGroupIndex
+        // if (newGroups !== undefined) {
+        //     originGroupIndex = newGroups.findIndex(group => group.group_id === originGroupId);
+        // }
+        originGroupIndex = groups.findIndex(group => {
+            console.log(group.group_id, originGroupId)
+            return group.group_id === originGroupId
+        });
         if (originGroupId === targetGroupId) return; 
-        console.log('origin group id',originGroupId,typeof(originGroupId),'index:',originGroupIndex)
-        console.log('target group id',targetGroupId)
+        console.log('originGroupId',originGroupId)
+        console.log('target group id: ',targetGroupId)
 
         let draggedTab;
 //先刪除原本在的地方
@@ -69,7 +80,7 @@ function DragDropComponent() {
                 return group;
             }));
 
-            //API
+            //delete API
             (async () => {
                 try {
                     const item_id = draggedTab.item_id
@@ -89,12 +100,6 @@ function DragDropComponent() {
             openTab(draggedTab.url)
             return
         } else {
-            // setGroups(prev => prev.map(group => {
-            //     if (group.group_id === targetGroupId) {
-            //         return { ...group, items: [...group.items, draggedTab] };
-            //     }
-            // return group;
-            // }));
 
             //API
             (async () => {
@@ -141,9 +146,9 @@ function DragDropComponent() {
                 handleDragOver={handleDragOver}
             />
             <Groups
+                handleDragStart={handleDragStart}
                 handleDrop={handleDrop}
                 handleDragOver={handleDragOver}
-                handleDragStart={handleDragStart}
             />
         </div>
         <button onClick={() => handleFetch()} > fetch Data</button>
