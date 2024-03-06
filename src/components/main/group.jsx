@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState,useRef} from "react";
 import { useGroups } from "./groupContext"
 import TabItem from "./tabItem"
 import Emoji from "./emoji";
@@ -14,34 +14,42 @@ function Group({
   handleDragOver,
 }) {
 
+  const {setGroups} = useGroups()
   const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
-  const [groupTitle, setGroupTitle] =useState('Untitled')
-  const [oldTitle, setOldTitle]= useState(groupTitle) //只是為了阻止使用者明明沒改title卻還update title
-  const { setGroups} = useGroups()
-
+  const [title, setTitle] = useState({ current: group.group_title, old: group.group_title });
+  const ignoreBlurRef = useRef(false);
+  const inputRef = useRef(null)
 
   function handleTitleChange (e) {
-    setGroupTitle(e.target.value)
+    setTitle(prev => ({ ...prev, current: e.target.value }));
   }
   
+  const handleBlur = (groupId) => {
+    if (!ignoreBlurRef.current) {
+      handleTitleUpdate(groupId);
+    }
+  };
+
   function handleKeyDown(e, groupId) {
     if (e.key === "Enter") {
       e.preventDefault(); 
       handleTitleUpdate(groupId);
+      ignoreBlurRef.current = true;
       e.target.blur();
+      setTimeout(() => ignoreBlurRef.current = false, 0);  // Re-enable onBlur after a short delay
     }
   }
   async function handleTitleUpdate(groupId) {
-    if (oldTitle === groupTitle) return;
-    setOldTitle(groupTitle)
-
+    if (title.old === title.current) return; 
+    setTitle(prev => ({ ...prev, old: prev.current })); // Update old title to match current
+    
     setGroups(prevGroups => 
       prevGroups.map(group => 
-        group.group_id === groupId ? { ...group, group_title: groupTitle } : group
+        group.group_id === groupId ? { ...group, group_title: title.current } : group
       )
     );
     
-    const titleUpdate = {group_title: groupTitle ,group_icon:'假'}
+    const titleUpdate = {group_title: title.current ,group_icon:'假'}
     try {
       const response = await updateGroupAPI(groupId, titleUpdate);
       console.log('Group Title updated successfully', response.data);
@@ -59,22 +67,29 @@ function Group({
       onDrop={(e) => handleDrop(e, group.group_id)}
       onDragOver={handleDragOver}
     >
+
       <div className="groupInfo">
         <div className="groupIcon" onClick={() => setShowEmojiGroupId(group.group_id)}>  
           {group.group_icon}
         </div> 
+
         <input className="groupTitle" 
           type="text"
-          placeholder={groupTitle}
+          defaultValue={group.group_title}
+          ref={inputRef}
           onChange={handleTitleChange}
-          onBlur={() => handleTitleUpdate(group.group_id)}
+          onBlur={() => handleBlur(group.group_id)}
           onKeyDown={(e) => handleKeyDown(e, group.group_id)}
         />
+
         <button onClick={() => handleSiteCount(group.group_id)}>
           {group.items.length} Sites ➡️
         </button>
+
         <button className="deleteButton"
-          onClick={() => handleDeleteGroup(group.group_id)}>x</button>
+          onClick={() => handleDeleteGroup(group.group_id)}>x
+        </button>
+
       </div>
       
       {showEmojiGroupId && 
