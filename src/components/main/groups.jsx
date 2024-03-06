@@ -89,7 +89,7 @@ function Groups ({
         <div className='newGroup'
           onDrop={async (e) => {
             const { newGroupId, newGroups } = await handleAddGroup();
-            console.log("log e:", e.dataTransfer.getData("originGroupId"))
+            console.log("log ee:", e.dataTransfer.getData("originGroupId"))
             handleDrop(e, newGroupId, newGroups);
           }} 
           onDragOver={handleDragOver}
