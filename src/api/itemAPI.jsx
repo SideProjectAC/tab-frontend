@@ -12,7 +12,7 @@ const api = axios.create({
 export async function PostTabAPI(groupId, tabData) {
   try {
     const response = await api.post(`/groups/${groupId}/tabs`, tabData);
-    console.log('New tab added to Group successfully:', response.data);
+    // console.log('New tab added to Group successfully:', response.data);
     return response.data; 
   } catch (error) {
     console.error('Error posting new tab to group:', error);
@@ -23,7 +23,7 @@ export async function PostTabAPI(groupId, tabData) {
 export async function DeleteItemFromGroupAPI(groupId, itemId) {
   try {
     const response = await api.delete(`/groups/${groupId}/items/${itemId}`);
-    console.log('Item deleted successfully:', response.data);
+    // console.log('Item deleted successfully:', response.data);
     return response.data; 
   } catch (error) {
     console.error('Error deleting item from group:', error);

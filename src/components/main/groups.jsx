@@ -12,7 +12,7 @@ function Groups ({
   const {groups, setGroups} = useGroups()
 
   const newGroupId = useRef(null);
-
+  
 
   const handleAddGroup = async () => {
     const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"];
@@ -21,6 +21,8 @@ function Groups ({
     try {
       const response = await postNewGroupAPI({group_icon: tempEmoji, group_title: "Untitled"});
       console.log('API post newGroup response', response.data);
+      
+      if(!response.data.group_id) return console.error('error in adding group')
 
        const newGroup = {
         group_id: response.data.group_id, 
@@ -29,7 +31,8 @@ function Groups ({
         items: []
       };
       
-       setGroups(prevGroups => {
+      
+      setGroups(prevGroups => {
         const updatedGroups = [...prevGroups, newGroup];
         return updatedGroups;
       });
@@ -40,6 +43,7 @@ function Groups ({
       console.error('error in adding group', error);
       return { newGroupId: undefined, newGroups: groups };
     }
+    
   };
 
 
@@ -87,13 +91,12 @@ function Groups ({
         ))}
       </div>
         <div className='newGroup'
-          onDrop={async (e) => {
-            const { newGroupId, newGroups } = await handleAddGroup();
-            console.log("log ee:", e.dataTransfer.getData("originGroupId"))
-            handleDrop(e, newGroupId, newGroups);
-          }} 
           onDragOver={handleDragOver}
-          // onDragStart={(e) => handleDragStart(e, item.id, "ActiveTabs")}
+          onDrop={async (e) => {
+            e.preventDefault();
+            const {newGroupId} = await handleAddGroup();
+            handleDrop(e, newGroupId);
+          }} 
         ></div>
       <button onClick={handleAddGroup}>addGroup</button>
     </>

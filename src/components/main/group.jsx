@@ -100,9 +100,9 @@ function Group({
       <div>
         {group.items.map(item => (
           <div 
-            key={item.id}   
+            key={item.item_id}   
             draggable 
-            onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
+            onDragStart={(e) => handleDragStart(e, item.item_id, group.group_id)}
           >
             <TabItem tab={item} groupId={group.group_id} /> 
           </div>

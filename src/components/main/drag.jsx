@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
 import {fetchGroupsAPI} from '../../api/groupAPI';
-import { PostTabAPI,DeleteItemFromGroupAPI } from '../../api/itemAPI';
+import { PostTabAPI,DeleteItemFromGroupAPI} from '../../api/itemAPI';
 
 
 function closeTab(tabId) {
@@ -20,6 +20,8 @@ function DragDropComponent() {
     const [activeTabs, setActiveTabs] = useState([]);
     const {groups , setGroups} = useGroups()
     const {chromeTabs} = useChromeTabs()
+    const originGroupIdRef = useRef();
+    const itemIdRef = useRef();
     
     
     
@@ -39,54 +41,47 @@ function DragDropComponent() {
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
-        console.log("set group:", originGroupId)
-        e.dataTransfer.setData("itemId", itemId.toString());
+        e.dataTransfer.setData("itemId", itemId);
         e.dataTransfer.setData("originGroupId", originGroupId);
-        console.log("get group:", e.dataTransfer.getData("originGroupId"))
+        originGroupIdRef.current = originGroupId;
+        itemIdRef.current = itemId;
         e.dataTransfer.effectAllowed = 'move';
+        console.log('startCalled',itemId,originGroupId)
     };
     
     
-    const handleDrop = (e, targetGroupId, newGroups) => {
+    const handleDrop = async (e, targetGroupId) => {
         e.preventDefault();
-        const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
-        const originGroupId = e.dataTransfer.getData("originGroupId")
-        console.log("get group:", e.dataTransfer.getData("originGroupId"))
+        // const originGroupId = e.dataTransfer.getData("originGroupId")
+        // const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
+        const originGroupId = originGroupIdRef.current;
+        const itemId = itemIdRef.current;
+        const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
 
-        let originGroupIndex
-        // if (newGroups !== undefined) {
-        //     originGroupIndex = newGroups.findIndex(group => group.group_id === originGroupId);
-        // }
-        originGroupIndex = groups.findIndex(group => {
-            console.log(group.group_id, originGroupId)
-            return group.group_id === originGroupId
-        });
+        
         if (originGroupId === targetGroupId) return; 
-        console.log('originGroupId',originGroupId)
-        console.log('target group id: ',targetGroupId)
 
         let draggedTab;
 //先刪除原本在的地方
          if (originGroupId === 'ActiveTabs') {
-            draggedTab = activeTabs.find(item => item.id === itemId);
-            setActiveTabs(prev => prev.filter(item => item.id !== itemId));
+            draggedTab = activeTabs.find(item => item.item_id === itemId);
+            setActiveTabs(prev => prev.filter(item => item.item_id !== itemId));
             closeTab(draggedTab.id)
         } else {
-            draggedTab = groups[originGroupIndex].items.find(item => item.id === itemId);
-            setGroups(prev => prev.map(group => {
-                if (group.group_id === originGroupId) {
-                return { ...group, items: group.items.filter(item => item.id !== itemId) };
-                }
-                return group;
-            }));
-
+            draggedTab = groups[originGroupIndex].items.find(item => item.item_id === itemId);
+            
             //delete API
             (async () => {
                 try {
                     const item_id = draggedTab.item_id
-                    console.log('item_id',item_id)
                     const data = await DeleteItemFromGroupAPI(originGroupId, item_id);
-                    console.log('Deletion confirmation API:',data);
+                    // console.log('Deletion confirmation API:',data);
+                    setGroups(prev => prev.map(group => {
+                        if (group.group_id === originGroupId) {
+                        return { ...group, items: group.items.filter(item => item.item_id !== itemId) };
+                        }
+                        return group;
+                    }));
                 } catch (error) {
                     console.error(error);
                 }
@@ -110,8 +105,27 @@ function DragDropComponent() {
                     targetItem_position: 0
                 };
                 try {
+                    console.log(`${itemId} from ${originGroupId} to ${targetGroupId}`)
+                    
+                    const targetGroup = groups.find(group => group.group_id === targetGroupId)
+
+                    //setTimeout for adding to new group
+                    if (targetGroup == undefined) {
+                        setTimeout(async () => {
+                           const data = await PostTabAPI(targetGroupId, newTabData);
+                            const newDraggedTab = { ...draggedTab, item_id: data.item_id };
+                            setGroups(prev => prev.map(group => {
+                                if (group.group_id === targetGroupId) {
+                                    return { ...group, items: [...group.items, newDraggedTab] };
+                                }
+                            return group;
+                            }));
+                        }, 800); 
+                        return
+                    }
+
+                    //no setTimeout for adding to existing group
                     const data = await PostTabAPI(targetGroupId, newTabData);
-                    console.log('newTab data API:', data);
                     const newDraggedTab = { ...draggedTab, item_id: data.item_id };
                     setGroups(prev => prev.map(group => {
                         if (group.group_id === targetGroupId) {

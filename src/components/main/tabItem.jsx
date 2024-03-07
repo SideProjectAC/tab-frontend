@@ -30,7 +30,7 @@ const TabItem = ({tab, groupId}) => {
     }
    setGroups(prev => prev.map(group => {
         if (group.group_id === groupId) {
-        return { ...group, items: group.items.filter(item => item.id !== tab.id) };
+        return { ...group, items: group.items.filter(item => item.item_id !== tab.id) };
         }
         return group;
     }));
@@ -40,7 +40,7 @@ const TabItem = ({tab, groupId}) => {
           const item_id = tab.item_id
           console.log('item_id',item_id)
           const data = await DeleteItemFromGroupAPI(groupId, item_id);
-          console.log('tab Deletion confirmation API:',data);
+          // console.log('tab Deletion confirmation API:',data);
         } catch (error) {
           console.error(error);
         }
@@ -49,7 +49,7 @@ const TabItem = ({tab, groupId}) => {
   }
 
   return (
-    <a onClick={activateTab}>
+    <a href={tab.url} target="_blank" rel="noopener noreferrer">
       <li className="tabItem">
         <img src={favIconUrl} alt="Favicon" className="tabIcon"/>
         <div>
