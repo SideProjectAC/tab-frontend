@@ -17,7 +17,7 @@
 6. Load Your Unpacked Extension:
 
    Click on the “**Load unpacked**” button, which appears in the top-left area after enabling Developer mode.
-   Navigate to the directory where your extension is located, and select **dist** folder.
+   Navigate to the directory where your extension is located, and select **dist** folder. 
 
 7. Open a New Tab:
 
