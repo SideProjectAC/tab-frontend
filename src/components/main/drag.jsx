@@ -55,17 +55,18 @@ function DragDropComponent() {
         // const originGroupId = e.dataTransfer.getData("originGroupId")
         // const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId = originGroupIdRef.current;
-        const itemId = itemIdRef.current;
+        const tabId = itemIdRef.current;
         const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
-
+        const itemId = groups[originGroupIndex].items.find(item => item.item_id === tabId).item_id;
+        console.log('tabId',tabId,'itemId',itemId)
         
         if (originGroupId === targetGroupId) return; 
 
         let draggedTab;
 //先刪除原本在的地方
          if (originGroupId === 'ActiveTabs') {
-            draggedTab = activeTabs.find(item => item.item_id === itemId);
-            setActiveTabs(prev => prev.filter(item => item.item_id !== itemId));
+            draggedTab = activeTabs.find(item => item.id === tabId);
+            setActiveTabs(prev => prev.filter(item => item.id !== tabId));
             closeTab(draggedTab.id)
         } else {
             draggedTab = groups[originGroupIndex].items.find(item => item.item_id === itemId);
