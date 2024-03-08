@@ -32,6 +32,7 @@ function DragDropComponent() {
         }
         fetchData()
         console.log('frontEnd groups',groups)
+        console.log('activeTabs',activeTabs)
      
     }
 
@@ -46,39 +47,33 @@ function DragDropComponent() {
         originGroupIdRef.current = originGroupId;
         itemIdRef.current = itemId;
         e.dataTransfer.effectAllowed = 'move';
-        console.log('startCalled',itemId,originGroupId)
     };
     
     
     const handleDrop = async (e, targetGroupId) => {
         e.preventDefault();
-        // const originGroupId = e.dataTransfer.getData("originGroupId")
-        // const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId = originGroupIdRef.current;
         const itemId = itemIdRef.current;
         const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
-
         
         if (originGroupId === targetGroupId) return; 
 
-        let draggedTab;
+        let draggedItem;
 //先刪除原本在的地方
          if (originGroupId === 'ActiveTabs') {
-            draggedTab = activeTabs.find(item => item.item_id === itemId);
-            setActiveTabs(prev => prev.filter(item => item.item_id !== itemId));
-            closeTab(draggedTab.id)
+            draggedItem = activeTabs.find(tab => tab.browserTab_id === itemId);
+            setActiveTabs(prev => prev.filter(tab => tab.browserTab_id !== itemId));
+            closeTab(draggedItem.browserTab_id)
         } else {
-            draggedTab = groups[originGroupIndex].items.find(item => item.item_id === itemId);
-            
+            draggedItem = groups[originGroupIndex].items.find(item => item.item_id === itemId);
             //delete API
             (async () => {
                 try {
-                    const item_id = draggedTab.item_id
-                    const data = await DeleteItemFromGroupAPI(originGroupId, item_id);
-                    // console.log('Deletion confirmation API:',data);
+                    const data = await DeleteItemFromGroupAPI(originGroupId, draggedItem.item_id);
+                    console.log('API tab deleted.',data)
                     setGroups(prev => prev.map(group => {
                         if (group.group_id === originGroupId) {
-                        return { ...group, items: group.items.filter(item => item.item_id !== itemId) };
+                        return { ...group, items: group.items.filter(item => item.item_id !== draggedItem.item_id) };
                         }
                         return group;
                     }));
@@ -91,42 +86,53 @@ function DragDropComponent() {
 
 //新增到新的地方
         if (targetGroupId === 'ActiveTabs') {
-            setActiveTabs(prev => [...prev, draggedTab]);
-            openTab(draggedTab.url)
+            setActiveTabs(prev => [...prev, draggedItem]);
+            openTab(draggedItem.browserTab_url)
             return
         } else {
 
             //API
             (async () => {
+                console.log('hihi')
                 const newTabData = {
-                    browserTab_favIconURL: draggedTab.favIconUrl,
-                    browserTab_title: draggedTab.title,
-                    browserTab_url: draggedTab.url,
+                    browserTab_favIconURL: draggedItem.browserTab_favIconURL,
+                    browserTab_title: draggedItem.browserTab_title,
+                    browserTab_url: draggedItem.browserTab_url,
+                    browserTab_id: draggedItem.browserTab_id,
+                    browserTab_index: draggedItem.browserTab_index,
+                    browserTab_active: draggedItem.browserTab_active,
+                    browserTab_status: draggedItem.browserTab_status,
+                    windowId: draggedItem.windowId,
                     targetItem_position: 0
                 };
+                console.log('newTabData',newTabData)
                 try {
                     console.log(`${itemId} from ${originGroupId} to ${targetGroupId}`)
                     
                     const targetGroup = groups.find(group => group.group_id === targetGroupId)
 
+                    console.log('targetGroup',targetGroup)
+
                     //setTimeout for adding to new group
+                    //從group拉tab到newGroup bug: 要改api ，同時加group &id
+
                     if (targetGroup == undefined) {
                         setTimeout(async () => {
                            const data = await PostTabAPI(targetGroupId, newTabData);
-                            const newDraggedTab = { ...draggedTab, item_id: data.item_id };
+                            const newDraggedTab = { ...draggedItem, item_id: data.item_id }; 
                             setGroups(prev => prev.map(group => {
                                 if (group.group_id === targetGroupId) {
                                     return { ...group, items: [...group.items, newDraggedTab] };
                                 }
                             return group;
                             }));
-                        }, 800); 
+                        }, 1000); 
                         return
                     }
 
                     //no setTimeout for adding to existing group
                     const data = await PostTabAPI(targetGroupId, newTabData);
-                    const newDraggedTab = { ...draggedTab, item_id: data.item_id };
+                    const newDraggedTab = { ...draggedItem, item_id: data.item_id };
                     setGroups(prev => prev.map(group => {
                         if (group.group_id === targetGroupId) {
                             return { ...group, items: [...group.items, newDraggedTab] };
@@ -146,6 +152,7 @@ function DragDropComponent() {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     };
+
        
 
     

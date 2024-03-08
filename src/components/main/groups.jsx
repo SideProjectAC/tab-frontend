@@ -33,7 +33,7 @@ function Groups ({
       
       
       setGroups(prevGroups => {
-        const updatedGroups = [...prevGroups, newGroup];
+        const updatedGroups = [...prevGroups, newGroup];  
         return updatedGroups;
       });
 
