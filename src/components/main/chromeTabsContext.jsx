@@ -9,29 +9,54 @@ export const ChromeTabsProvider = ({ children }) => {
 //首次先一次抓
     if (chromeTabs.length === 0 ) {
       chrome.tabs.query({ currentWindow: true }, (fetchedTabs) => {
-        const filteredTabs = fetchedTabs.filter(tab => tab.url !== 'chrome-extension://gfledkccocicmdgnjeafbnffcimdfonb/index.html');
-        setChromeTabs(filteredTabs);
+
+        //一般來說chrome tab會給一堆tab info，但我們只存需要的資料
+        const updatedFetchedTabs = fetchedTabs.map((tab) => {
+          const {active, favIconUrl, id, title, url, windowId , index , status} = tab;
+          const updatedTab = {}
+          updatedTab.browserTab_active = active;
+          updatedTab.browserTab_favIconURL = favIconUrl;
+          updatedTab.browserTab_id = id;
+          updatedTab.browserTab_title = title;
+          updatedTab.browserTab_url = url;
+          updatedTab.windowId = windowId;
+          updatedTab.browserTab_index = index;
+          updatedTab.browserTab_status = status;
+          return updatedTab;
+        });
+
+        setChromeTabs(updatedFetchedTabs);
       });
     }
 
     const port = chrome.runtime.connect({ name: "tabsUpdate" });
-//message的資料貼夠：{action:"",tab:{一堆tab info}} (因background.js)
     port.onMessage.addListener((message) => {
-//新增＋更新
+//新增＋更新tab
       if ( message.action === "tabUpdated" ) {
+
+        const updatedTab = {
+          browserTab_active: message.tab.active,
+          browserTab_favIconURL: message.tab.favIconUrl,
+          browserTab_id: message.tab.id,
+          browserTab_title: message.tab.title,
+          browserTab_url: message.tab.url,
+          browserTab_index: message.tab.index,
+          windowId: message.tab.windowId,
+          browserTab_status: message.tab.status
+        }
         setChromeTabs((prevTabs) => {
-          const filteredTabs = prevTabs.filter(t => t.id !== message.tab.id);
-          return [...filteredTabs, message.tab];
+          const filteredTabs = prevTabs.filter(tab => tab.browserTab_id !== message.tab.id);
+          return [...filteredTabs, updatedTab];
         });
 
-//刪除
+//刪除tab
       } else if (message.action === "tabRemoved") {
-        setChromeTabs((currentTabs) => currentTabs.filter(tab => tab.id !== message.tabId));
+        setChromeTabs((currentTabs) => currentTabs.filter(tab => tab.browserTab_id !== message.tabId));
       } else if (message.action === "tabMoved") {
-//移動位置
+//移動位置tab
         setChromeTabs((prevTabs) => {
-          const movedTab = prevTabs.find((tab) => tab.id === message.tabId)
-          const filteredTabs = prevTabs.filter(tab => tab.id !== message.tabId);
+          const movedTab = prevTabs.find((tab) => tab.browserTab_id === message.tabId)
+          const filteredTabs = prevTabs.filter(tab => tab.browserTab_id !== message.tabId);
           return [
             ...filteredTabs.slice(0, message.newIndex),
             movedTab,

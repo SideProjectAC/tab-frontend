@@ -96,7 +96,7 @@ function Group({
         <Emoji 
           groupId={group.group_id}
           setShowEmojiGroupId={setShowEmojiGroupId}/>}
-
+ 
       <div>
         {group.items.map(item => (
           <div 

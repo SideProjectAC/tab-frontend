@@ -11,9 +11,9 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
       <h1 className="activeTitle">Active Tabs</h1>
       {activeTabs.map((item) => (
         <div className='activeTab'
-          key={item.id}
+          key={item.browserTab_id}
           draggable
-          onDragStart={(e) => handleDragStart(e, item.id, 'ActiveTabs')}
+          onDragStart={(e) => handleDragStart(e, item.browserTab_id, 'ActiveTabs')}
         >
           <TabItem tab={item} groupId={'ActiveTabs'} /> 
         </div>
