@@ -6,20 +6,40 @@ import { postNewGroupAPI,deleteGroupAPI } from "../../api/groupAPI";
 function Groups ({
   handleDrop,
   handleDragOver,
-  handleDragStart,
-}) {
+  handleDragStart}) {
 
   const {groups, setGroups} = useGroups()
 
   const newGroupId = useRef(null);
-  
 
-  const handleAddGroup = async () => {
+  const getDraggedItem = (e) => {
+    const itemId = e.dataTransfer.getData("itemId");
+    const originGroupId = e.dataTransfer.getData("originGroupId");
+    const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
+    let draggedTab;
+    if (originGroupId === 'ActiveTabs') {
+      draggedTab = activeTabs.find(item => item.item_id === itemId);
+    } else {
+      draggedTab = groups[originGroupIndex].items.find(item => item.item_id === itemId);
+      console.log('draggedTab from getDraggedItem',draggedTab)
+     return draggedTab 
+    }
+
+  const handleAddGroup = async (tab) => {
     const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"];
     const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
 
     try {
-      const response = await postNewGroupAPI({group_icon: tempEmoji, group_title: "Untitled"});
+
+      const tabData = {
+        "browserTab_favIconURL": tab.favIconUrl,
+        "browserTab_title": tab.title,
+        "browserTab_url": tab.url,
+        "group_icon": tempEmoji,
+        "group_title": "Untitled"
+      }
+
+      const response = await postNewGroupAPI(tabData);
       console.log('API post newGroup response', response.data);
       
       if(!response.data.group_id) return console.error('error in adding group')
@@ -28,7 +48,12 @@ function Groups ({
         group_id: response.data.group_id, 
         group_icon: tempEmoji, 
         group_title: "Untitled", 
-        items: []
+        items: [{
+          item_id: response.data.item_id, 
+          browserTab_favIconURL: tab.favIconUrl, 
+          browserTab_title: tab.title, 
+          browserTab_url: tab.url,
+          targetItem_position: 0}]
       };
       
       
@@ -94,13 +119,15 @@ function Groups ({
           onDragOver={handleDragOver}
           onDrop={async (e) => {
             e.preventDefault();
-            const {newGroupId} = await handleAddGroup();
+            const tab = getDraggedItem(e);
+            const {newGroupId} = await handleAddGroup(tab);
             handleDrop(e, newGroupId);
           }} 
         ></div>
-      <button onClick={handleAddGroup}>addGroup</button>
-    </>
+      {/* <button onClick={handleAddGroup}>addGroup</button> */}
+``    </>
   )
+}
 }
 
 export default Groups

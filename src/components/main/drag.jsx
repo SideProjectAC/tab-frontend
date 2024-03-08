@@ -44,7 +44,7 @@ function DragDropComponent() {
         e.dataTransfer.setData("itemId", itemId);
         e.dataTransfer.setData("originGroupId", originGroupId);
         originGroupIdRef.current = originGroupId;
-        itemIdRef.current = itemId;
+        // itemIdRef.current = itemId;
         e.dataTransfer.effectAllowed = 'move';
         console.log('startCalled',itemId,originGroupId)
     };
@@ -52,12 +52,10 @@ function DragDropComponent() {
     
     const handleDrop = async (e, targetGroupId) => {
         e.preventDefault();
-        // const originGroupId = e.dataTransfer.getData("originGroupId")
-        // const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
+        const tabId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId = originGroupIdRef.current;
-        const itemId = itemIdRef.current;
         const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
-
+        const itemId = groups[originGroupIndex].items.find(item => item.item_id === tabId);
         
         if (originGroupId === targetGroupId) return; 
 

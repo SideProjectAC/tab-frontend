@@ -102,7 +102,7 @@ function Group({
           <div 
             key={item.item_id}   
             draggable 
-            onDragStart={(e) => handleDragStart(e, item.item_id, group.group_id)}
+            onDragStart={(e) => handleDragStart(e, item.id, group.group_id)}
           >
             <TabItem tab={item} groupId={group.group_id} /> 
           </div>
