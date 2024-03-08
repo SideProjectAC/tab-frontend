@@ -52,21 +52,23 @@ function DragDropComponent() {
     
     const handleDrop = async (e, targetGroupId) => {
         e.preventDefault();
-        // const originGroupId = e.dataTransfer.getData("originGroupId")
-        // const itemId = parseInt(e.dataTransfer.getData("itemId"), 10);
         const originGroupId = originGroupIdRef.current;
         const tabId = itemIdRef.current;
         const originGroupIndex = groups.findIndex(group => group.group_id === originGroupId );
-        const itemId = groups[originGroupIndex].items.find(item => item.item_id === tabId).item_id;
-        console.log('tabId',tabId,'itemId',itemId)
+
+        
+        const itemId = itemIdRef.current;  //暫時的！應該要先後端能存chrome給的id，之後再用這個id去做事情，如下行程式碼：
+        //  const itemId = groups[originGroupIndex].items.find(item => item.id === tabId).item_id;
+        
+       
         
         if (originGroupId === targetGroupId) return; 
 
         let draggedTab;
 //先刪除原本在的地方
          if (originGroupId === 'ActiveTabs') {
-            draggedTab = activeTabs.find(item => item.id === tabId);
-            setActiveTabs(prev => prev.filter(item => item.id !== tabId));
+            draggedTab = activeTabs.find(tab => tab.id === tabId);
+            setActiveTabs(prev => prev.filter(tab => tab.id !== tabId));
             closeTab(draggedTab.id)
         } else {
             draggedTab = groups[originGroupIndex].items.find(item => item.item_id === itemId);
@@ -74,12 +76,11 @@ function DragDropComponent() {
             //delete API
             (async () => {
                 try {
-                    const item_id = draggedTab.item_id
-                    const data = await DeleteItemFromGroupAPI(originGroupId, item_id);
-                    // console.log('Deletion confirmation API:',data);
+                    const data = await DeleteItemFromGroupAPI(originGroupId, draggedTab.item_id);
+                    console.log('API tab deleted.',data)
                     setGroups(prev => prev.map(group => {
                         if (group.group_id === originGroupId) {
-                        return { ...group, items: group.items.filter(item => item.item_id !== itemId) };
+                        return { ...group, items: group.items.filter(item => item.item_id !== draggedTab.item_id) };
                         }
                         return group;
                     }));
@@ -106,7 +107,7 @@ function DragDropComponent() {
                     targetItem_position: 0
                 };
                 try {
-                    console.log(`${itemId} from ${originGroupId} to ${targetGroupId}`)
+                    console.log(`${tabId} from ${originGroupId} to ${targetGroupId}`)
                     
                     const targetGroup = groups.find(group => group.group_id === targetGroupId)
 
