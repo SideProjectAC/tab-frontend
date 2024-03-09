@@ -4,7 +4,7 @@ import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
-import {fetchGroupsAPI} from '../../api/groupAPI';
+import {fetchGroupsAPI,postNewGroupAPI} from '../../api/groupAPI';
 import { PostTabAPI,DeleteItemFromGroupAPI} from '../../api/itemAPI';
 
 
@@ -24,11 +24,11 @@ function DragDropComponent() {
     const itemIdRef = useRef();
     
     
-    
+    //這只是debug用
     function handleFetch() {
         const fetchData = async () => {
             const response = await fetchGroupsAPI();
-            console.log('Groups fetched: ', response.data);
+            console.log('Groups fetched from Backend: ', response.data);
         }
         fetchData()
         console.log('frontEnd groups',groups)
@@ -69,8 +69,8 @@ function DragDropComponent() {
             //delete API
             (async () => {
                 try {
-                    const data = await DeleteItemFromGroupAPI(originGroupId, draggedItem.item_id);
-                    console.log('API tab deleted.',data)
+                    const response = await DeleteItemFromGroupAPI(originGroupId, draggedItem.item_id);
+                    console.log('API tab deleted.',response.data)
                     setGroups(prev => prev.map(group => {
                         if (group.group_id === originGroupId) {
                         return { ...group, items: group.items.filter(item => item.item_id !== draggedItem.item_id) };
@@ -91,10 +91,9 @@ function DragDropComponent() {
             return
         } else {
 
-            //API
+            //這邊API跟程式碼都比較重複，待優化！
             (async () => {
-                console.log('hihi')
-                const newTabData = {
+                const newGroupTabData = {
                     browserTab_favIconURL: draggedItem.browserTab_favIconURL,
                     browserTab_title: draggedItem.browserTab_title,
                     browserTab_url: draggedItem.browserTab_url,
@@ -103,34 +102,41 @@ function DragDropComponent() {
                     browserTab_active: draggedItem.browserTab_active,
                     browserTab_status: draggedItem.browserTab_status,
                     windowId: draggedItem.windowId,
-                    targetItem_position: 0
+                    // targetItem_position: 0 //後端ＡＰＩ少了這項 但暫時不會用到
+                    group_icon:"⚠️",
+                    group_title:"Untitled",
                 };
-                console.log('newTabData',newTabData)
                 try {
                     console.log(`${itemId} from ${originGroupId} to ${targetGroupId}`)
-                    
                     const targetGroup = groups.find(group => group.group_id === targetGroupId)
 
-                    console.log('targetGroup',targetGroup)
-
-                    //setTimeout for adding to new group
-                    //從group拉tab到newGroup bug: 要改api ，同時加group &id
-
+                    //拉到newGroup區域，直接新增group並將draggedItem加入該group
                     if (targetGroup == undefined) {
-                        setTimeout(async () => {
-                           const data = await PostTabAPI(targetGroupId, newTabData);
-                            const newDraggedTab = { ...draggedItem, item_id: data.item_id }; 
-                            setGroups(prev => prev.map(group => {
-                                if (group.group_id === targetGroupId) {
-                                    return { ...group, items: [...group.items, newDraggedTab] };
-                                }
-                            return group;
-                            }));
-                        }, 1000); 
-                        return
+                        const response = await postNewGroupAPI(newGroupTabData);
+                        console.log('API newGroup response', response.data);
+                        const newGroup = {
+                            group_id: response.data.group_id,   
+                            items: [{...newGroupTabData, item_id: response.data.item_id}]
+                        };
+                        setGroups(prevGroups => {
+                            const updatedGroups = [...prevGroups, newGroup];  
+                            return updatedGroups;
+                        });
+                    return
                     }
+                    //拉到已存在的group
+                    const newTabData = {
+                        browserTab_favIconURL: draggedItem.browserTab_favIconURL,
+                        browserTab_title: draggedItem.browserTab_title,
+                        browserTab_url: draggedItem.browserTab_url,
+                        browserTab_id: draggedItem.browserTab_id,
+                        browserTab_index: draggedItem.browserTab_index,
+                        browserTab_active: draggedItem.browserTab_active,
+                        browserTab_status: draggedItem.browserTab_status,
+                        windowId: draggedItem.windowId,
+                        targetItem_position: 0 
+                    };
 
-                    //no setTimeout for adding to existing group
                     const data = await PostTabAPI(targetGroupId, newTabData);
                     const newDraggedTab = { ...draggedItem, item_id: data.item_id };
                     setGroups(prev => prev.map(group => {

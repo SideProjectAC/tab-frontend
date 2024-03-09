@@ -14,7 +14,7 @@ function Emoji ({groupId ,setShowEmojiGroupId}) {
     );
 
     try {
-      const response = await updateGroupAPI(groupId, {group_title:'假的' ,group_icon: emojiData.emoji});
+      const response = await updateGroupAPI(groupId, {group_icon: emojiData.emoji});
       console.log('Group emoji updated successfully', response.data);
     } catch (error) {
       console.error('Error updating groupEmoji', error);

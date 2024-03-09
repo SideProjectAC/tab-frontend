@@ -49,9 +49,8 @@ function Group({
       )
     );
     
-    const titleUpdate = {group_title: title.current ,group_icon:'假'}
     try {
-      const response = await updateGroupAPI(groupId, titleUpdate);
+      const response = await updateGroupAPI(groupId, {group_title: title.current});
       console.log('Group Title updated successfully', response.data);
     } catch (error) {
       console.error('Error updating groupTitle', error);

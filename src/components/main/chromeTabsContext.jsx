@@ -9,9 +9,10 @@ export const ChromeTabsProvider = ({ children }) => {
 //首次先一次抓
     if (chromeTabs.length === 0 ) {
       chrome.tabs.query({ currentWindow: true }, (fetchedTabs) => {
-
+        //先過濾掉專案的這個tab
+        const filteredTabs = fetchedTabs.filter(tab => tab.url !== "chrome://newtab/"); 
         //一般來說chrome tab會給一堆tab info，但我們只存需要的資料
-        const updatedFetchedTabs = fetchedTabs.map((tab) => {
+        const updatedFetchedTabs = filteredTabs.map((tab) => {
           const {active, favIconUrl, id, title, url, windowId , index , status} = tab;
           const updatedTab = {}
           updatedTab.browserTab_active = active;
