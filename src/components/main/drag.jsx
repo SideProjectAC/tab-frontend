@@ -115,6 +115,8 @@ function DragDropComponent() {
                         const response = await postNewGroupAPI(newGroupTabData);
                         console.log('API newGroup response', response.data);
                         const newGroup = {
+                            group_icon:"⚠️",
+                            group_title:"Untitled",
                             group_id: response.data.group_id,   
                             items: [{...newGroupTabData, item_id: response.data.item_id}]
                         };
