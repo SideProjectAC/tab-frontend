@@ -65,7 +65,7 @@ function Groups ({
     const group = groups.find(g => g.group_id === groupId);
     if (group) {
       group.items.forEach(item => {
-        chrome.tabs.create({ url: item.url, active: false });
+        chrome.tabs.create({ url: item.browserTab_url, active: false });
       });
     } else {
       console.error('Group not found:', groupId);
@@ -92,9 +92,8 @@ function Groups ({
       </div>
         <div className='newGroup'
           onDragOver={handleDragOver}
-          onDrop={async (e) => {
+          onDrop={(e) => {
             e.preventDefault();
-            // const {newGroupId} = await handleAddGroup();
             handleDrop(e, newGroupId);
           }} 
         ></div>
