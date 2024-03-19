@@ -5,7 +5,7 @@ import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../styles/main/drag.css'
 import {fetchGroupsAPI,postNewGroupAPI} from '../../api/groupAPI';
-import { PostTabAPI,DeleteItemFromGroupAPI} from '../../api/itemAPI';
+import {DeleteItemFromGroupAPI,PatchItemToExistingGroupsAPI, PostTabAPI} from '../../api/itemAPI';
 
 
 function closeTab(tabId) {
@@ -66,26 +66,19 @@ function DragDropComponent() {
             closeTab(draggedItem.browserTab_id)
         } else {
             draggedItem = groups[originGroupIndex].items.find(item => item.item_id === itemId);
-            //delete API
-            (async () => {
-                try {
-                    const response = await DeleteItemFromGroupAPI(originGroupId, draggedItem.item_id);
-                    console.log('API tab deleted.',response.data)
-                    setGroups(prev => prev.map(group => {
-                        if (group.group_id === originGroupId) {
-                        return { ...group, items: group.items.filter(item => item.item_id !== draggedItem.item_id) };
-                        }
-                        return group;
-                    }));
-                } catch (error) {
-                    console.error(error);
+            //只有前端要刪除，後端用patch API 不用另外delete
+            setGroups(prev => prev.map(group => {
+                if (group.group_id === originGroupId) {
+                return { ...group, items: group.items.filter(item => item.item_id !== draggedItem.item_id) };
                 }
-            })();
-
+                return group;
+            }));       
         }
 
 //新增到新的地方
         if (targetGroupId === 'ActiveTabs') {
+            const response = await DeleteItemFromGroupAPI(originGroupId, itemId);
+            console.log('Item deleted successfully:', response.data);
             setActiveTabs(prev => [...prev, draggedItem]);
             openTab(draggedItem.browserTab_url)
             return
@@ -102,18 +95,17 @@ function DragDropComponent() {
                     browserTab_active: draggedItem.browserTab_active,
                     browserTab_status: draggedItem.browserTab_status,
                     windowId: draggedItem.windowId,
-                    // targetItem_position: 0 //後端ＡＰＩ少了這項 但暫時不會用到
+                    // targetItem_position: 0 //後端ＡＰＩ少了這項 但暫時不會用到？
                     group_icon:"⚠️",
-                    group_title:"Untitled",
+                    group_title:"",
                 };
                 try {
-                    console.log(`${itemId} from ${originGroupId} to ${targetGroupId}`)
+                    console.log(`item ID: ${itemId} from ${originGroupId} to ${targetGroupId}`)
                     const targetGroup = groups.find(group => group.group_id === targetGroupId)
 
-                    //拉到newGroup區域，直接新增group並將draggedItem加入該group
-                    if (targetGroup == undefined) {
+                    //從ActiveTabs拉到newGroup區域，後端會給新itemID
+                    if (targetGroup == undefined && originGroupId === 'ActiveTabs') {
                         const response = await postNewGroupAPI(newGroupTabData);
-                        console.log('API newGroup response', response.data);
                         const newGroup = {
                             group_icon:"⚠️",
                             group_title:"Untitled",
@@ -126,28 +118,67 @@ function DragDropComponent() {
                         });
                     return
                     }
-                    //拉到已存在的group
-                    const newTabData = {
-                        browserTab_favIconURL: draggedItem.browserTab_favIconURL,
-                        browserTab_title: draggedItem.browserTab_title,
-                        browserTab_url: draggedItem.browserTab_url,
-                        browserTab_id: draggedItem.browserTab_id,
-                        browserTab_index: draggedItem.browserTab_index,
-                        browserTab_active: draggedItem.browserTab_active,
-                        browserTab_status: draggedItem.browserTab_status,
-                        windowId: draggedItem.windowId,
-                        targetItem_position: 0 
-                    };
 
-                    const data = await PostTabAPI(targetGroupId, newTabData);
-                    const newDraggedTab = { ...draggedItem, item_id: data.item_id };
-                    setGroups(prev => prev.map(group => {
-                        if (group.group_id === targetGroupId) {
-                            return { ...group, items: [...group.items, newDraggedTab] };
+                    //從已從在的group拉到newGroup區域，沿用原itemID
+                    if(targetGroup == undefined && originGroupId !== 'ActiveTabs') {
+                        const tabData = {
+                            sourceGroup_id: originGroupId,
+                            item_id: itemId,
+                            group_icon:"⚠️"
                         }
-                    return group;
-                    }));
-
+                        const response = await postNewGroupAPI(tabData);
+                        const newGroup = {
+                            group_icon:"⚠️",
+                            group_title:"Untitled",
+                            group_id: response.data.group_id,   
+                            items: [{...newGroupTabData, item_id: itemId}]
+                        };
+                        setGroups(prevGroups => {
+                            const updatedGroups = [...prevGroups, newGroup];  
+                            return updatedGroups;
+                        });
+                    return
+                    }
+                    // 從ActiveTabs拉到已存在的group,使用post新增該item
+                    if (targetGroupId !== undefined && originGroupId === 'ActiveTabs') {
+                        const tabData = {
+                            browserTab_favIconURL: draggedItem.browserTab_favIconURL,
+                            browserTab_title: draggedItem.browserTab_title,
+                            browserTab_url: draggedItem.browserTab_url,
+                            browserTab_id: draggedItem.browserTab_id,
+                            browserTab_index: draggedItem.browserTab_index,
+                            browserTab_active: draggedItem.browserTab_active,
+                            browserTab_status: draggedItem.browserTab_status,
+                            windowId: draggedItem.windowId,
+                            targetItem_position: targetGroup.items.length,
+                        }
+                        const response = await PostTabAPI(targetGroupId, tabData);
+                        console.log('New tab added to existing Group :', response);
+                         const newDraggedTab = { ...draggedItem, item_id: response.item_id };
+                        //前端也新增
+                        setGroups(prev => prev.map(group => {
+                            if (group.group_id === targetGroupId) {
+                                return { ...group, items: [...group.items, newDraggedTab] };
+                            }
+                        return group;
+                        }));
+                    }
+                    //拉到已存在的group,使用patch移動該item
+                    if (targetGroupId !== undefined && originGroupId !== 'ActiveTabs') {
+                        const targetPosition = { 
+                            targetItem_position: targetGroup.items.length,
+                            targetGroup_id: targetGroupId
+                        };
+                        const data = await PatchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
+                        const newDraggedTab = { ...draggedItem, item_id: data.item_id };
+                        //前端也新增
+                        setGroups(prev => prev.map(group => {
+                            if (group.group_id === targetGroupId) {
+                                return { ...group, items: [...group.items, newDraggedTab] };
+                            }
+                        return group;
+                        }));
+                    }
                 } catch (error) {
                     console.error(error);
                 }

@@ -10,7 +10,6 @@ const api = axios.create({
 
 
 export async function PostTabAPI(groupId, tabData) {
-  console.log("new group: ", groupId, tabData)
   try {
     const response = await api.post(`/groups/${groupId}/tabs`, tabData);
     // console.log('New tab added to Group successfully:', response.data);
@@ -29,6 +28,17 @@ export async function DeleteItemFromGroupAPI(groupId, itemId) {
     return response.data; 
   } catch (error) {
     console.error('Error deleting item from group:', error);
+    throw error; 
+  }
+}
+
+export async function PatchItemToExistingGroupsAPI(groupId, itemId, targetPosition) {
+  try {
+    const response = await api.patch(`/groups/${groupId}/items/${itemId}`, targetPosition);
+    console.log('Item moved successfully:', response.data);
+    return response.data; 
+  } catch (error) {
+    console.error('Error moved item:', error);
     throw error; 
   }
 }
