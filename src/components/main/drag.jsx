@@ -66,12 +66,7 @@ function DragDropComponent() {
             closeTab(draggedItem.browserTab_id)
         } else {
             draggedItem = groups[originGroupIndex].items.find(item => item.item_id === itemId);
-            // setGroups(prev => prev.map(group => {
-            //     if (group.group_id === originGroupId) {
-            //     return { ...group, items: group.items.filter(item => item.item_id !== draggedItem.item_id) };
-            //     }
-            //     return group;
-            // }));
+            console.log('originGroupId:',originGroupId)
             updateGroupItems(originGroupId, items => items.filter(item => item.item_id !== itemId));
         }
 
@@ -82,130 +77,43 @@ function DragDropComponent() {
             openTab(draggedItem.browserTab_url)
             return
         } else {
-            await handleGroupTransfer(draggedItem, originGroupId, targetGroupId, itemId);
-            //這邊API跟程式碼都比較重複，待優化！
-            // (async () => {
-            //     const newGroupTabData = {
-            //         browserTab_favIconURL: draggedItem.browserTab_favIconURL,
-            //         browserTab_title: draggedItem.browserTab_title,
-            //         browserTab_url: draggedItem.browserTab_url,
-            //         browserTab_id: draggedItem.browserTab_id,
-            //         browserTab_index: draggedItem.browserTab_index,
-            //         browserTab_active: draggedItem.browserTab_active,
-            //         browserTab_status: draggedItem.browserTab_status,
-            //         windowId: draggedItem.windowId,
-            //         // targetItem_position: 0 //後端ＡＰＩ少了這項 但暫時不會用到？
-            //         group_icon:"⚠️",
-            //         group_title:"",
-            //     };
-            //     try {
-            //         console.log(`item ID: ${itemId} from ${originGroupId} to ${targetGroupId}`)
-            //         const targetGroup = groups.find(group => group.group_id === targetGroupId)
-
-            //         //從ActiveTabs拉到newGroup區域，後端會給新itemID
-            //         if (targetGroup == undefined && originGroupId === 'ActiveTabs') {
-            //             const response = await postNewGroupAPI(newGroupTabData);
-            //             const newGroup = {
-            //                 group_icon:"⚠️",
-            //                 group_title:"Untitled",
-            //                 group_id: response.data.group_id,   
-            //                 items: [{...newGroupTabData, item_id: response.data.item_id}]
-            //             };
-            //             setGroups(prevGroups => {
-            //                 const updatedGroups = [...prevGroups, newGroup];  
-            //                 return updatedGroups;
-            //             });
-            //         return
-            //         }
-
-            //         //從已從在的group拉到newGroup區域，沿用原itemID
-            //         if(targetGroup == undefined && originGroupId !== 'ActiveTabs') {
-            //             const tabData = {
-            //                 sourceGroup_id: originGroupId,
-            //                 item_id: itemId,
-            //                 group_icon:"⚠️"
-            //             }
-            //             const response = await postNewGroupAPI(tabData);
-            //             const newGroup = {
-            //                 group_icon:"⚠️",
-            //                 group_title:"Untitled",
-            //                 group_id: response.data.group_id,   
-            //                 items: [{...newGroupTabData, item_id: itemId}]
-            //             };
-            //             setGroups(prevGroups => {
-            //                 const updatedGroups = [...prevGroups, newGroup];  
-            //                 return updatedGroups;
-            //             });
-            //         return
-            //         }
-            //         // 從ActiveTabs拉到已存在的group,使用post新增該item
-            //         if (targetGroupId !== undefined && originGroupId === 'ActiveTabs') {
-            //             const tabData = {
-            //                 browserTab_favIconURL: draggedItem.browserTab_favIconURL,
-            //                 browserTab_title: draggedItem.browserTab_title,
-            //                 browserTab_url: draggedItem.browserTab_url,
-            //                 browserTab_id: draggedItem.browserTab_id,
-            //                 browserTab_index: draggedItem.browserTab_index,
-            //                 browserTab_active: draggedItem.browserTab_active,
-            //                 browserTab_status: draggedItem.browserTab_status,
-            //                 windowId: draggedItem.windowId,
-            //                 targetItem_position: targetGroup.items.length,
-            //             }
-            //             const response = await PostTabAPI(targetGroupId, tabData);
-            //             console.log('New tab added to existing Group :', response);
-            //              const newDraggedTab = { ...draggedItem, item_id: response.item_id };
-            //             //前端也新增
-            //             setGroups(prev => prev.map(group => {
-            //                 if (group.group_id === targetGroupId) {
-            //                     return { ...group, items: [...group.items, newDraggedTab] };
-            //                 }
-            //             return group;
-            //             }));
-            //         }
-            //         //拉到已存在的group,使用patch移動該item
-            //         if (targetGroupId !== undefined && originGroupId !== 'ActiveTabs') {
-            //             const targetPosition = { 
-            //                 targetItem_position: targetGroup.items.length,
-            //                 targetGroup_id: targetGroupId
-            //             };
-            //             const data = await PatchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
-            //             const newDraggedTab = { ...draggedItem, item_id: itemId };
-            //             //前端也新增
-            //             setGroups(prev => prev.map(group => {
-            //                 if (group.group_id === targetGroupId) {
-            //                     return { ...group, items: [...group.items, newDraggedTab] };
-            //                 }
-            //             return group;
-            //             }));
-            //         }
-            //     } catch (error) {
-            //         console.error(error);
-            //     }
-            // })();
+            const targetGroup = groups.find(group => group.group_id === targetGroupId)
+            await handleGroupTransfer(draggedItem, originGroupId, targetGroupId, targetGroup, itemId);
         }
     };
 
+    //更新前端Groups（當有newGroup被新增時）
+    const updateGroups = (newGroup) => {
+        console.log('當有newGroup被新增時newGroup:',newGroup)
+        setGroups(prevGroups => {
+            const updatedGroups = [...prevGroups, newGroup];  
+            return updatedGroups;
+        });
+    }
+
+    //更新前端Group裡的items  
     const updateGroupItems = (groupId, updateFunction) => {
-    setGroups(prev => prev.map(group => 
-        group.group_id === groupId ? { ...group, items: updateFunction(group.items) } : group));
-};
-    
-    const handleGroupTransfer = async (draggedItem, originGroupId, targetGroupId, itemId) => {
+        console.log('更新前端Group裡的items:',groupId,updateFunction)
+        setGroups(prev => prev.map(group => 
+            group.group_id === groupId ? { ...group, items: updateFunction(group.items) } : group));
+    };
+
+    const handleGroupTransfer = async (draggedItem, originGroupId, targetGroupId, targetGroup, itemId) => {
         try {
-            //從ActiveTabs拉到newGroup區域
-            const newGroupTabData = {
-                browserTab_favIconURL: draggedItem.browserTab_favIconURL,
-                browserTab_title: draggedItem.browserTab_title,
-                browserTab_url: draggedItem.browserTab_url,
-                browserTab_id: draggedItem.browserTab_id,
-                browserTab_index: draggedItem.browserTab_index,
-                browserTab_active: draggedItem.browserTab_active,
-                browserTab_status: draggedItem.browserTab_status,
-                windowId: draggedItem.windowId,
-                group_icon: randomEmoji(),
-                group_title:"Untitled",
-            };
-            if (targetGroupId === undefined && originGroupId === 'ActiveTabs') {
+            //從ActiveTabs拉到newGroup區域: 後端給新GroupID 和 ItemID
+            if (targetGroupId.current === null && originGroupId === 'ActiveTabs') {
+                const newGroupTabData = {
+                    browserTab_favIconURL: draggedItem.browserTab_favIconURL,
+                    browserTab_title: draggedItem.browserTab_title,
+                    browserTab_url: draggedItem.browserTab_url,
+                    browserTab_id: draggedItem.browserTab_id,
+                    browserTab_index: draggedItem.browserTab_index,
+                    browserTab_active: draggedItem.browserTab_active,
+                    browserTab_status: draggedItem.browserTab_status,
+                    windowId: draggedItem.windowId,
+                    group_icon: randomEmoji(),
+                    group_title:"Untitled",
+                };
                 const response = await postNewGroupAPI(newGroupTabData);
                 const newGroup = {
                     group_icon: newGroupTabData.group_icon,
@@ -213,16 +121,64 @@ function DragDropComponent() {
                     group_id: response.data.group_id,   
                     items: [{...newGroupTabData, item_id: response.data.item_id}]
                 };
-                setGroups(prevGroups => {
-                    const updatedGroups = [...prevGroups, newGroup];  
-                    return updatedGroups;
-                });
+                updateGroups(newGroup);
+                return
+            }
+            //從已從在的group拉到newGroup區域: 後端給新GroupID 但沿用原ItemID
+            if(targetGroupId.current === null && originGroupId !== 'ActiveTabs') {
+                const tabData = {
+                    sourceGroup_id: originGroupId,
+                    item_id: itemId,
+                    group_icon: randomEmoji()
+                }
+                const response = await postNewGroupAPI(tabData);
+                const newGroup = {
+                    group_icon: tabData.group_icon,
+                    group_title:"Untitled",
+                    group_id: response.group_id,   
+                    items: [{...draggedItem}]
+                };
+                updateGroups(newGroup);
+                return
+            }
+            // 從ActiveTabs拉到已存在的group,使用post新增該item
+            if(targetGroupId !== undefined && originGroupId === 'ActiveTabs') {
+                const tabData = {
+                    browserTab_favIconURL: draggedItem.browserTab_favIconURL,
+                    browserTab_title: draggedItem.browserTab_title,
+                    browserTab_url: draggedItem.browserTab_url,
+                    browserTab_id: draggedItem.browserTab_id,
+                    browserTab_index: draggedItem.browserTab_index,
+                    browserTab_active: draggedItem.browserTab_active,
+                    browserTab_status: draggedItem.browserTab_status,
+                    windowId: draggedItem.windowId,
+                    targetItem_position: targetGroup.items.length,
+                }
+                const response = await PostTabAPI(targetGroupId, tabData);
+                const newDraggedTab = { ...draggedItem, item_id: response.item_id };
+                updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
+                return
+            }
+            //拉到已存在的group,使用patch移動該item
+            if(targetGroupId !== undefined && originGroupId !== 'ActiveTabs') {
+                console.log('組內互拉目標組：',targetGroupId)
+                const targetPosition = { 
+                    targetItem_position: targetGroup.items.length,
+                    targetGroup_id: targetGroupId
+                };
+                console.log('targetPosition:',targetPosition)
+                await PatchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
+                const newDraggedTab = { ...draggedItem, item_id: itemId };
+                console.log('newDraggedTab:',newDraggedTab)
+                updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
                 return
             }
         } catch (error) {
             console.error(error);
         }
     };
+
+    
     const handleDragOver = (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
