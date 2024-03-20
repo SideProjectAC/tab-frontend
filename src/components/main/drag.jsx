@@ -3,7 +3,7 @@ import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
-import '../../styles/main/drag.css'
+import '../../scss/main/drag.scss'
 import {fetchGroupsAPI,postNewGroupAPI} from '../../api/groupAPI';
 import {DeleteItemFromGroupAPI,PatchItemToExistingGroupsAPI, PostTabAPI} from '../../api/itemAPI';
 
@@ -59,7 +59,7 @@ function DragDropComponent() {
         if (originGroupId === targetGroupId) return; 
 
         let draggedItem;
-//前端先刪除原本在的地方
+        //前端先刪除原本在的地方
          if (originGroupId === 'ActiveTabs') {
             draggedItem = activeTabs.find(tab => tab.browserTab_id === itemId);
             setActiveTabs(prev => prev.filter(tab => tab.browserTab_id !== itemId));
@@ -70,7 +70,7 @@ function DragDropComponent() {
             updateGroupItems(originGroupId, items => items.filter(item => item.item_id !== itemId));
         }
 
-//新增到新的地方
+        //新增到新的地方
         if (targetGroupId === 'ActiveTabs') {
             await DeleteItemFromGroupAPI(originGroupId, itemId);
             setActiveTabs(prev => [...prev, draggedItem]);
@@ -129,12 +129,13 @@ function DragDropComponent() {
                 const tabData = {
                     sourceGroup_id: originGroupId,
                     item_id: itemId,
+                    group_title:"Untitled",
                     group_icon: randomEmoji()
                 }
                 const response = await postNewGroupAPI(tabData);
                 const newGroup = {
                     group_icon: tabData.group_icon,
-                    group_title:"Untitled",
+                    group_title:tabData.group_title,
                     group_id: response.group_id,   
                     items: [{...draggedItem}]
                 };
@@ -190,6 +191,18 @@ function DragDropComponent() {
     return emojiList[Math.floor(Math.random() * emojiList.length)];
     }
 
+    //debug用:單純新增一個group
+    const handleAddGroup = async () => {
+        const newGroupData = {group_icon: randomEmoji(), group_title: "Untitled"}
+        const response = await postNewGroupAPI(newGroupData);
+        const newGroup = {
+            group_id: response.data.group_id, 
+            group_icon: newGroupData.group_icon, 
+            group_title: newGroupData.group_title, 
+            items: []
+        };
+        updateGroups(newGroup);
+    }
     
 
     return (
@@ -201,13 +214,17 @@ function DragDropComponent() {
                 handleDragStart={handleDragStart}
                 handleDragOver={handleDragOver}
             />
-            <Groups
-                handleDragStart={handleDragStart}
-                handleDrop={handleDrop}
-                handleDragOver={handleDragOver}
-            />
+            <div className='mainRight'>
+                <div className='header'>search bar</div>
+                <Groups
+                    handleDragStart={handleDragStart}
+                    handleDrop={handleDrop}
+                    handleDragOver={handleDragOver}
+                />
+            </div>
         </div>
         <button onClick={() => handleFetch()} > fetch Data</button>
+        <button onClick={handleAddGroup}>addGroup</button>
     </>
     );
 }

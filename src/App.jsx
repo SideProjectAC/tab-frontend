@@ -1,4 +1,3 @@
-import './styles/main/App.css'
 import DragDropComponent from './components/main/drag'
 import { ChromeTabsProvider } from './components/main/chromeTabsContext';
 import { GroupsProvider } from './components/main/groupContext';
