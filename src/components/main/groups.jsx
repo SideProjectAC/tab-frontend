@@ -12,42 +12,6 @@ function Groups ({
   const {groups, setGroups} = useGroups()
 
   const newGroupId = useRef(null);
-  
-
-  const handleAddGroup = async () => {
-    const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"];
-    const tempEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
-
-    try {
-      const response = await postNewGroupAPI({group_icon: tempEmoji, group_title: "Untitled"});
-      console.log('API post newGroup response', response.data);
-      
-      if(!response.data.group_id) return console.error('error in adding group')
-
-       const newGroup = {
-        group_id: response.data.group_id, 
-        group_icon: tempEmoji, 
-        group_title: "Untitled", 
-        items: []
-      };
-      
-      
-      setGroups(prevGroups => {
-        const updatedGroups = [...prevGroups, newGroup];  
-        return updatedGroups;
-      });
-
-      newGroupId.current = response.data.group_id;
-      return { newGroupId: response.data.group_id, newGroups: [...groups, newGroup] };
-    } catch (error) {
-      console.error('error in adding group', error);
-      return { newGroupId: undefined, newGroups: groups };
-    }
-    
-  };
-
-
-
 
   async function handleDeleteGroup (groupId)  {
     try {
@@ -76,7 +40,8 @@ function Groups ({
 
   return (
     <>
-      <div className='groups'>
+    <div className="groups">
+      <div className='groupList'>
         {groups.map(group => (
           <Group
           key={group.group_id}
@@ -97,7 +62,8 @@ function Groups ({
             handleDrop(e, newGroupId);
           }} 
         ></div>
-      <button onClick={handleAddGroup}>addGroup</button>
+    </div>
+      
     </>
   )
 }

@@ -25,7 +25,7 @@ function Emoji ({groupId ,setShowEmojiGroupId}) {
 
 
   return (
-    <EmojiPicker style={{ position: 'absolute'}}
+    <EmojiPicker style={{ position: 'absolute', zIndex:'100'}}
       onEmojiClick={(emojiData) => {
         updateEmoji(groupId, emojiData);
         setShowEmojiGroupId(null);

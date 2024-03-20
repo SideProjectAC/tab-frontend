@@ -81,7 +81,7 @@ function Group({
           onKeyDown={(e) => handleKeyDown(e, group.group_id)}
         />
 
-        <button onClick={() => handleSiteCount(group.group_id)}>
+        <button className="openAllButton" onClick={() => handleSiteCount(group.group_id)}>
           {group.items.length} Sites ➡️
         </button>
 
