@@ -96,19 +96,19 @@ function DragDropComponent() {
                     browserTab_status: draggedItem.browserTab_status,
                     windowId: draggedItem.windowId,
                     // targetItem_position: 0 //後端ＡＰＩ少了這項 但暫時不會用到？
-                    group_icon:"⚠️",
-                    group_title:"",
+                    group_icon:randomEmoji(),
+                    group_title:"Untitled",
                 };
                 try {
                     console.log(`item ID: ${itemId} from ${originGroupId} to ${targetGroupId}`)
                     const targetGroup = groups.find(group => group.group_id === targetGroupId)
 
                     //從ActiveTabs拉到newGroup區域，後端會給新itemID
-                    if (targetGroup == undefined && originGroupId === 'ActiveTabs') {
+                    if (targetGroup === undefined && originGroupId === 'ActiveTabs') {
                         const response = await postNewGroupAPI(newGroupTabData);
                         const newGroup = {
-                            group_icon:"⚠️",
-                            group_title:"Untitled",
+                            group_icon:newGroupTabData.group_icon,
+                            group_title:newGroupTabData.group_title,
                             group_id: response.data.group_id,   
                             items: [{...newGroupTabData, item_id: response.data.item_id}]
                         };
@@ -124,13 +124,13 @@ function DragDropComponent() {
                         const tabData = {
                             sourceGroup_id: originGroupId,
                             item_id: itemId,
-                            group_icon:"⚠️"
+                            group_icon:randomEmoji(),
                         }
                         const response = await postNewGroupAPI(tabData);
                         const newGroup = {
-                            group_icon:"⚠️",
+                            group_icon:tabData.group_icon,
                             group_title:"Untitled",
-                            group_id: response.data.group_id,   
+                            group_id: response.data.group_id,   //新的group所以拿後端給的ID
                             items: [{...newGroupTabData, item_id: itemId}]
                         };
                         setGroups(prevGroups => {
@@ -193,7 +193,10 @@ function DragDropComponent() {
     };
 
        
-
+    const randomEmoji = () => {
+        const emojiList = ["🎀","⚽","🎾","🏁","😡","💎","🚀","🌙","🎁","⛄","🌊","⛵","🏀","🐷","🐍","🐫","🔫","🍉","💛"];
+        return emojiList[Math.floor(Math.random() * emojiList.length)];
+    }
     
 
     return (
