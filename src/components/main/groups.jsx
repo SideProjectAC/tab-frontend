@@ -92,9 +92,8 @@ function Groups ({
       </div>
         <div className='newGroup'
           onDragOver={handleDragOver}
-          onDrop={async (e) => {
+          onDrop={(e) => {
             e.preventDefault();
-            // const {newGroupId} = await handleAddGroup();
             handleDrop(e, newGroupId);
           }} 
         ></div>
