@@ -19,10 +19,10 @@ function ActiveTabItem(item) {
   }; 
 
   return (
-    <a onClick={activateTab}> 
+    <a> 
       <li className="activeItem">
-        <img src={getFaviconURL(item.browserTab_url)} alt="Favicon" className="activeIcon"/>
-        <h6 className="activeTabTitle">{item.browserTab_title}</h6>
+        <img src={getFaviconURL(item.browserTab_url)} alt="Favicon" className="activeIcon" onClick={activateTab}/>
+        <h6 className="acTitle" onClick={activateTab}>{item.browserTab_title}</h6>
         <button className="deleteButton"
           onClick={() => handleDeleteTab(item.browserTab_id)}>x
         </button>
