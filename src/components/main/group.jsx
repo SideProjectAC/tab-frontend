@@ -20,6 +20,12 @@ function Group({
   const ignoreBlurRef = useRef(false);
   const inputRef = useRef(null)
 
+  
+  function handleFocus(e) {
+    if (e.target.value === 'Untitled') {
+      e.target.select();
+    }
+  }
   function handleTitleChange (e) {
     setTitle(prev => ({ ...prev, current: e.target.value }));
   }
@@ -58,6 +64,7 @@ function Group({
 
   }
 
+   const titleClass = `groupTitle ${title.current !== 'Untitled' ? 'changedTitle' : ''}`;
   
   return (
     <div
@@ -72,13 +79,14 @@ function Group({
           {group.group_icon}
         </div> 
 
-        <input className="groupTitle" 
+        <input className={titleClass} 
           type="text"
           defaultValue={group.group_title}
           ref={inputRef}
           onChange={handleTitleChange}
           onBlur={() => handleBlur(group.group_id)}
           onKeyDown={(e) => handleKeyDown(e, group.group_id)}
+          onFocus={handleFocus}
         />
 
         <button className="openAllButton" onClick={() => handleSiteCount(group.group_id)}>

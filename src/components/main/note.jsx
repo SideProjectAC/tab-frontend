@@ -1,19 +1,26 @@
 import { useState } from 'react';
-// import { useGroups } from "./groupContext"
+
 
 function Note() {
+  // State to keep track of the note's content
+  const [noteContent, setNoteContent] = useState('');
 
-  const [showNote, setShowNote] = useState(false);
-  // const {groups, setGroups} = useGroups()
+  // Handler for changes in the textarea
+  const handleNoteChange = (event) => {
+    setNoteContent(event.target.value);
+  };
 
-  function handleAddNote() {
-    setShowNote(prevShowNote => !prevShowNote);
-  }
+  // Determine the class for the textarea based on its content
+  const noteClass = noteContent ? "note hasContent" : "note";
 
   return (
     <>
-      <button onClick={handleAddNote}>show Note</button>
-      {showNote && <textarea placeholder='New note'></textarea>}
+      <textarea
+        placeholder="New note"
+        className={noteClass}
+        value={noteContent}
+        onChange={handleNoteChange}
+      ></textarea>
     </>
   );
 }
