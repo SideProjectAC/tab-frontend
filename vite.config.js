@@ -14,6 +14,8 @@ export default defineConfig({
       input: {
         main: 'index.html',
         popup: 'popup.html',
+        login: 'login.html',
+        register:'register.html',
       },
     },
   },

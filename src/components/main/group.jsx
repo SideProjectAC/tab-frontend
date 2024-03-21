@@ -116,7 +116,7 @@ function Group({
         ))}
       </div>
 
-      <Note/>
+      {/* <Note/> */}
 
     </div>
   );

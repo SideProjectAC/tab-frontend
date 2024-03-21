@@ -45,6 +45,7 @@ function DragDropComponent() {
         e.dataTransfer.setData("itemId", itemId);
         e.dataTransfer.setData("originGroupId", originGroupId);
         originGroupIdRef.current = originGroupId;
+        console.log('HandleDragStart originGroupId:',originGroupId)
         itemIdRef.current = itemId;
         e.dataTransfer.effectAllowed = 'move';
     };
@@ -67,6 +68,7 @@ function DragDropComponent() {
         } else {
             draggedItem = groups[originGroupIndex].items.find(item => item.item_id === itemId);
             console.log('originGroupId:',originGroupId)
+            console.log(originGroupIdRef.current)
             updateGroupItems(originGroupId, items => items.filter(item => item.item_id !== itemId));
         }
 
@@ -84,7 +86,6 @@ function DragDropComponent() {
 
     //更新前端Groups（當有newGroup被新增時）
     const updateGroups = (newGroup) => {
-        console.log('當有newGroup被新增時newGroup:',newGroup)
         setGroups(prevGroups => {
             const updatedGroups = [...prevGroups, newGroup];  
             return updatedGroups;
@@ -93,12 +94,12 @@ function DragDropComponent() {
 
     //更新前端Group裡的items  
     const updateGroupItems = (groupId, updateFunction) => {
-        console.log('更新前端Group裡的items:',groupId,updateFunction)
         setGroups(prev => prev.map(group => 
             group.group_id === groupId ? { ...group, items: updateFunction(group.items) } : group));
     };
 
     const handleGroupTransfer = async (draggedItem, originGroupId, targetGroupId, targetGroup, itemId) => {
+       
         try {
             //從ActiveTabs拉到newGroup區域: 後端給新GroupID 和 ItemID
             if (targetGroupId.current === null && originGroupId === 'ActiveTabs') {
@@ -162,6 +163,7 @@ function DragDropComponent() {
             }
             //拉到已存在的group,使用patch移動該item
             if(targetGroupId !== undefined && originGroupId !== 'ActiveTabs') {
+                console.log('組內互拉originGroupId:',originGroupId)
                 console.log('組內互拉目標組：',targetGroupId)
                 const targetPosition = { 
                     targetItem_position: targetGroup.items.length,

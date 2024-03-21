@@ -115,6 +115,11 @@ body {
   display: block;
 }
 
+//滑過去就出現所有activeTabs
+// .activeTitleWrapperUnpinned:hover + .activeList > .activeTab {
+//   display: block;
+// }
+
 .activeItem {
   height: 50px;
   list-style-type: none;
@@ -136,6 +141,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 0.9rem;
     // line-height: 1.2;
   }
   .activeIcon {
@@ -273,6 +279,9 @@ body {
   .tabText {
     margin: 5px;
     width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     h3 {
       text-decoration: none;
       overflow: hidden;
