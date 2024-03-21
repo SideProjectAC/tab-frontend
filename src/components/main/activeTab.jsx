@@ -1,10 +1,11 @@
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapPin } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
 function ActiveTabItem(item) {
 
   function handleDeleteTab(tabId) {
     chrome.tabs.remove(tabId);
-    
   }
 
   function getFaviconURL(u) {
@@ -18,11 +19,12 @@ function ActiveTabItem(item) {
     await chrome.tabs.update(item.browserTab_id, { active: true });
   }; 
 
+  
   return (
     <a> 
       <li className="activeItem">
         <img src={getFaviconURL(item.browserTab_url)} alt="Favicon" className="activeIcon" onClick={activateTab}/>
-        <h6 className="acTitle" onClick={activateTab}>{item.browserTab_title}</h6>
+        <h6 className="activeTabTitle" onClick={activateTab}>{item.browserTab_title}</h6>
         <button className="deleteButton"
           onClick={() => handleDeleteTab(item.browserTab_id)}>x
         </button>
@@ -34,12 +36,22 @@ function ActiveTabItem(item) {
 
 function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver }) {
 
-    return(
-    <div className='activeList'
-      onDrop={(e) => handleDrop(e, 'ActiveTabs')} 
-      onDragOver={(e) => handleDragOver(e)}
-    >
-      <h1 className="activeTitle">Active Tabs</h1>
+  const [isPinned, setIsPinned] = useState(true);
+
+   const handlePin = () => {
+    setIsPinned(!isPinned);
+  };
+
+  return(
+    <div className='activeWrapper'>
+      <div className={` ${isPinned ? 'activeTitleWrapper' : 'activeTitleWrapperUnpinned'}`} onClick={handlePin}>
+        <FontAwesomeIcon icon={faMapPin}  className={` ${isPinned ? 'pinActive' : 'pinActiveUnpinned'}`}/>
+        <h1 className={` ${isPinned ? 'activeTitle' : 'activeTitleUnpinned'}`}>Active Tabs </h1>
+      </div>
+      <div className={`activeList ${isPinned ? 'pinned' : ''}`}
+        onDrop={(e) => handleDrop(e, 'ActiveTabs')} 
+        onDragOver={(e) => handleDragOver(e)}
+      >
       {activeTabs.map((item) => (
         <div className='activeTab'
           key={item.browserTab_id}
@@ -49,6 +61,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
           <ActiveTabItem {...item} />
         </div>
       ))}
+    </div>
     </div>
   )
 }
