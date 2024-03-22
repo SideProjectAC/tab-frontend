@@ -45,7 +45,6 @@ function DragDropComponent() {
         e.dataTransfer.setData("itemId", itemId);
         e.dataTransfer.setData("originGroupId", originGroupId);
         originGroupIdRef.current = originGroupId;
-        console.log('HandleDragStart originGroupId:',originGroupId)
         itemIdRef.current = itemId;
         e.dataTransfer.effectAllowed = 'move';
     };
@@ -67,8 +66,6 @@ function DragDropComponent() {
             closeTab(draggedItem.browserTab_id)
         } else {
             draggedItem = groups[originGroupIndex].items.find(item => item.item_id === itemId);
-            console.log('originGroupId:',originGroupId)
-            console.log(originGroupIdRef.current)
             updateGroupItems(originGroupId, items => items.filter(item => item.item_id !== itemId));
         }
 
@@ -137,7 +134,7 @@ function DragDropComponent() {
                 const newGroup = {
                     group_icon: tabData.group_icon,
                     group_title:tabData.group_title,
-                    group_id: response.group_id,   
+                    group_id: response.data.group_id,   
                     items: [{...draggedItem}]
                 };
                 updateGroups(newGroup);
@@ -163,16 +160,12 @@ function DragDropComponent() {
             }
             //拉到已存在的group,使用patch移動該item
             if(targetGroupId !== undefined && originGroupId !== 'ActiveTabs') {
-                console.log('組內互拉originGroupId:',originGroupId)
-                console.log('組內互拉目標組：',targetGroupId)
                 const targetPosition = { 
                     targetItem_position: targetGroup.items.length,
                     targetGroup_id: targetGroupId
                 };
-                console.log('targetPosition:',targetPosition)
                 await PatchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
                 const newDraggedTab = { ...draggedItem, item_id: itemId };
-                console.log('newDraggedTab:',newDraggedTab)
                 updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
                 return
             }

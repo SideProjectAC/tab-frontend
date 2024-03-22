@@ -29,8 +29,7 @@ const TabItem = ({tab, groupId}) => {
     }));
 
     try {
-      const data = await DeleteItemFromGroupAPI(groupId, tab.item_id);
-      console.log('tab Deletion confirmation API:', data);
+      await DeleteItemFromGroupAPI(groupId, tab.item_id);
     } catch (error) {
       console.error(error);
     }
