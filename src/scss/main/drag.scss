@@ -151,10 +151,12 @@ body {
     height: 2rem;
   }
   .activeGroupIcon {
-    margin: 5px;
-    font-size: 1rem;
+    margin: 15px;
+    font-size: 0.9rem;
     position: absolute;
     right: 1px;
+    background-color: var(--background-color);
+    border-radius: 50%;
   }
 }
 

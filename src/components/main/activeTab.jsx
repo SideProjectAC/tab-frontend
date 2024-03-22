@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapPin } from '@fortawesome/free-solid-svg-icons';
-import { useState , useEffect } from 'react';
+import { useState , useEffect, useCallback } from 'react';
 import { activeTabsPropTypes } from './propTypes';
-import { fetchGroupsAPI } from '../../api/groupAPI';
+import { useGroups } from './groupContext';
 
 ActiveTabs.propTypes = activeTabsPropTypes;
 
@@ -23,24 +23,28 @@ function ActiveTabItem(item) {
     await chrome.tabs.update(item.browserTab_id, { active: true });
   }; 
 
+  //get group icon for ActiveTab
   const [groupIcon, setGroupIcon] = useState(null);
-
-  const getGroupIcon =  async (tabUrl) =>{
-    const {data} = await fetchGroupsAPI();
-    for (let group of data) {
+  const groups = useGroups();
+  const getGroupIcon = useCallback((tabUrl) => {
+    for (let group of groups.groups) {
       for (let item of group.items) {
         if (item.browserTab_url === tabUrl) {
-          console.log(group.group_icon)
+          console.log(group.group_icon);
           return group.group_icon;
         }
       }
     }
     return null; 
-  }
-  
+  }, [groups]);
+
+  //如果groupsIcon被 user 更新，將重新render ActiveTabItem的groupIcon
   useEffect(() => {
-    getGroupIcon(item.browserTab_url).then(icon => setGroupIcon(icon));
-  }, [item.browserTab_url]);
+    const icon = getGroupIcon(item.browserTab_url);
+    if (icon) {
+      setGroupIcon(icon);
+    }
+  }, [item.browserTab_url, getGroupIcon]);
 
   return (
     <a> 
