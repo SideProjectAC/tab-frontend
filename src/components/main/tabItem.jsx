@@ -1,5 +1,8 @@
 import { DeleteItemFromGroupAPI } from "../../api/itemAPI";
 import { useGroups } from "./groupContext"
+import { tabItemPropTypes } from './propTypes';
+
+
 
 const TabItem = ({tab, groupId}) => {
 
@@ -49,5 +52,5 @@ const TabItem = ({tab, groupId}) => {
     </a>
   );
 }
-
+TabItem.propTypes = tabItemPropTypes;
 export default TabItem

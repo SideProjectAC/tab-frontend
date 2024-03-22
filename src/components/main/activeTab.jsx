@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapPin } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { activeTabsPropTypes } from './propTypes';
+ActiveTabs.propTypes = activeTabsPropTypes;
 
 function ActiveTabItem(item) {
 

@@ -72,7 +72,7 @@ export const ChromeTabsProvider = ({ children }) => {
     });
     
     return () => port.disconnect();
-  },[]);
+  },[chromeTabs.length]);
 
   return (
     <ChromeTabsContext.Provider value={{ chromeTabs, setChromeTabs }}>

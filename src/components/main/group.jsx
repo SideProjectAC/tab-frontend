@@ -4,6 +4,9 @@ import TabItem from "./tabItem"
 import Emoji from "./emoji";
 import Note from "./note";
 import { updateGroupAPI } from "../../api/groupAPI";
+import { groupPropTypes } from "./propTypes";
+
+Group.propTypes = groupPropTypes;
 
 function Group({ 
   group,

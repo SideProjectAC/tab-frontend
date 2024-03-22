@@ -1,7 +1,10 @@
 import { useGroups } from "./groupContext"
-import { useEffect,useRef } from 'react';
+import {useRef } from 'react';
 import Group from "./group";
-import { postNewGroupAPI,deleteGroupAPI } from "../../api/groupAPI";
+import { deleteGroupAPI } from "../../api/groupAPI";
+import { groupsPropTypes } from "./propTypes";
+
+Groups.propTypes = groupsPropTypes;
 
 function Groups ({
   handleDrop,

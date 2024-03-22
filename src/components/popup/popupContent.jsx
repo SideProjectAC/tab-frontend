@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleHalfStroke, faList, faPalette, faMapPin, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { popupContentPropTypes} from '../main/propTypes';
+Tab.propTypes = popupContentPropTypes;
 
 function Tab({ currentTab }) {
   function getFaviconURL(u) {
@@ -34,7 +36,7 @@ function PopupContent() {
       setCurrentTab(activeTab);
       console.log('currentTab popup', currentTab);
     });
-  }, []); 
+  }, [currentTab]); 
 
   return (
     <>
