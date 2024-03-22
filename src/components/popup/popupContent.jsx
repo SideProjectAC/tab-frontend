@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleHalfStroke, faList, faPalette, faMapPin, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleHalfStroke, faList, faPalette, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { popupContentPropTypes} from '../main/propTypes';
 Tab.propTypes = popupContentPropTypes;
 
@@ -54,7 +54,6 @@ function PopupContent() {
         <FontAwesomeIcon icon={faCircleHalfStroke} className='button' />
         <FontAwesomeIcon icon={faList} className='button' />
         <FontAwesomeIcon icon={faPalette} className='button' />
-        <FontAwesomeIcon icon={faMapPin} className='button' />
         <button className='button'>Save</button>
       </div>
     </>

@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleHalfStroke} from '@fortawesome/free-solid-svg-icons';
+import { ThemeContext } from './themeContext';
 import ActiveTabs from './activeTab';
 import Groups from './groups';
 import '../../scss/main/drag.scss'
@@ -22,8 +25,13 @@ function DragDropComponent() {
     const {chromeTabs} = useChromeTabs()
     const originGroupIdRef = useRef();
     const itemIdRef = useRef();
+    const {theme, setTheme} = useContext(ThemeContext);
     
     
+    const toggleTheme = () => {
+        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'))   
+    }
+
     //這只是debug用
     function handleFetch() {
         const fetchData = async () => {
@@ -37,8 +45,9 @@ function DragDropComponent() {
     }
 
     useEffect(() => {
-        setActiveTabs(chromeTabs)
-    },[chromeTabs])
+        setActiveTabs(chromeTabs);
+         document.documentElement.setAttribute('data-theme', theme);
+    },[chromeTabs,theme])
 
 
     const handleDragStart = (e, itemId, originGroupId) => {
@@ -210,7 +219,12 @@ function DragDropComponent() {
                 handleDragOver={handleDragOver}
             />
             <div className='mainRight'>
-                <div className='header'>search bar</div>
+                <div className='header'>
+                    search bar
+                    <FontAwesomeIcon className='themeIcon'
+                        icon={faCircleHalfStroke} 
+                        onClick={toggleTheme} />
+                </div>
                 <Groups
                     handleDragStart={handleDragStart}
                     handleDrop={handleDrop}

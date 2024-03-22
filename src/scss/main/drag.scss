@@ -1,15 +1,15 @@
-// @import "../variables.scss";
+@import "../abstracts/colors";
 
 body {
   margin: 0;
   padding: 0;
-  background-color: rgba(244, 245, 247, 255);
+  background-color: var(--background-color);
 }
 
 .wrapper {
   display: flex;
   width: 100%;
-  height: 97vh;
+  height: 100vh;
 }
 
 .activeWrapper {
@@ -67,28 +67,28 @@ body {
     font-size: 1rem;
     margin-top: 10px;
     margin-left: 10px;
-    color: gray;
+    color: var(--group-title-color);
     &:hover {
-      color: black;
+      color: var(--text-color);
     }
   }
 
   .activeTitleUnpinned {
-    color: gray;
+    color: var(--group-title-color);
     transform: rotate(90deg);
     transform-origin: center;
     white-space: nowrap;
     margin-top: 70px;
     margin-left: 10px;
     &:hover {
-      color: black;
+      color: var(--text-color);
     }
   }
 }
 
 .pinActive {
   font-size: 1rem;
-  color: black;
+  color: var(--text-color);
 
   &::after {
     content: "Pin Active Tabs";
@@ -103,7 +103,7 @@ body {
 }
 
 .activeTitle {
-  color: black;
+  color: var(--text-color);
   width: 150px;
 }
 
@@ -130,7 +130,7 @@ body {
   margin: 0px 10px;
 
   &:hover {
-    background-color: white;
+    background-color: var(--secondary-background-color);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
     .deleteButton {
       opacity: 1;
@@ -138,6 +138,7 @@ body {
   }
   .activeTabTitle {
     display: block;
+    color: var(--text-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -154,7 +155,7 @@ body {
 .mainRight {
   display: flex;
   flex-direction: column;
-  min-width: 85%;
+  min-width: 100%;
   height: 100%;
   box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.4);
   // overflow: scroll;
@@ -164,8 +165,14 @@ body {
     width: 100%;
     height: 50px;
     margin-bottom: 10px;
-    background-color: rgba(230, 233, 238, 255);
+    border: 2px solid var(--secondary-text-color);
     padding: 10px 0px;
+    color: var(--text-color);
+    .themeIcon {
+      margin: 0px 10px;
+      color: var(--text-color);
+      font-size: 1rem;
+    }
   }
 
   .groups {
@@ -180,7 +187,7 @@ body {
       display: flex;
     }
     .newGroup {
-      background-color: rgba(244, 245, 247, 255);
+      // background-color: rgba(244, 245, 247, 255);
       width: 100%;
       height: 100%;
     }
@@ -192,7 +199,7 @@ body {
   padding: 10px;
   width: 300px;
   position: relative;
-  background-color: white;
+  background-color: var(--secondary-background-color);
   border-radius: 10px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
   display: flex;
@@ -207,31 +214,38 @@ body {
 
     .groupIcon {
       font-size: 2.5rem;
-      margin-right: 10px;
+      margin-right: 8px;
     }
 
     .groupTitle {
       border: none;
+      border-radius: 4px;
+      margin-left: 2px;
       font-size: 1.5rem;
       font-weight: bold;
-      color: lightgray;
+      color: var(--secondary-text-color);
+      background-color: var(--secondary-background-color);
       width: 35%;
       margin-left: 10px;
+      &:hover {
+        background-color: var(--background-color);
+      }
     }
     .changedTitle {
-      color: gray;
+      color: var(--group-title-color);
     }
 
     .openAllButton {
       border: none;
       border-radius: 10px;
-      color: gray;
-      background-color: rgba(244, 245, 247, 255);
+      color: var(--group-title-color);
+      background-color: var(--background-color);
       padding: 5px 10px;
       position: absolute;
       right: 15%;
       &:hover {
-        background-color: rgb(200, 200, 200);
+        background-color: var(--selected);
+        color: var(--text-color);
       }
       &:hover::after {
         content: "Open All";
@@ -266,11 +280,11 @@ body {
   display: flex;
   align-items: center;
   border-radius: 10px;
-  color: black;
+  color: var(--text-color);
   position: relative;
 
   &:hover {
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 5px 0px rgba(46, 46, 46, 0.4);
     .deleteButton {
       opacity: 1;
     }
@@ -282,6 +296,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text-color);
     h3 {
       text-decoration: none;
       overflow: hidden;
@@ -305,9 +320,10 @@ body {
   border-radius: 50%;
   position: absolute;
   right: 10px;
-  background-color: rgba(244, 245, 247, 255);
+  color: var(--text-color);
+  background-color: var(--background-color);
   &:hover {
-    background-color: rgb(200, 200, 200);
+    background-color: var(--selected);
   }
 }
 .note {
@@ -319,7 +335,7 @@ body {
 
   &:hover,
   &.hasContent {
-    background-color: rgba(244, 245, 247, 1);
+    background-color: var(--background-color);
     opacity: 1;
   }
 }
