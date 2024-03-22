@@ -7,12 +7,6 @@ function Register() {
       <h1>REGISTER</h1>
     <input 
       type="text" 
-      placeholder="Username"
-      // value={username}
-      // onChange={(nameInputValue) => setUsername(nameInputValue)}
-    />  
-    <input 
-      type="text" 
       placeholder="Email" 
       /* value={password}
       onChange={(passwordInputValue) => setPassword(passwordInputValue)} */

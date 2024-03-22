@@ -8,7 +8,7 @@ function Login () {
       <h1>LOGIN</h1>
     <input 
       type="text" 
-      placeholder="Username"
+      placeholder="Email"
       // value={username}
       // onChange={(nameInputValue) => setUsername(nameInputValue)}
     />  
