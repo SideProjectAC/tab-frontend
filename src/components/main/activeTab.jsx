@@ -1,7 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapPin } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { activeTabsPropTypes } from './propTypes';
+import { fetchGroupsAPI } from '../../api/groupAPI';
+
 ActiveTabs.propTypes = activeTabsPropTypes;
 
 function ActiveTabItem(item) {
@@ -21,12 +23,31 @@ function ActiveTabItem(item) {
     await chrome.tabs.update(item.browserTab_id, { active: true });
   }; 
 
+  const [groupIcon, setGroupIcon] = useState(null);
+
+  const getGroupIcon =  async (tabUrl) =>{
+    const {data} = await fetchGroupsAPI();
+    for (let group of data) {
+      for (let item of group.items) {
+        if (item.browserTab_url === tabUrl) {
+          console.log(group.group_icon)
+          return group.group_icon;
+        }
+      }
+    }
+    return null; 
+  }
   
+  useEffect(() => {
+    getGroupIcon(item.browserTab_url).then(icon => setGroupIcon(icon));
+  }, [item.browserTab_url]);
+
   return (
     <a> 
       <li className="activeItem">
         <img src={getFaviconURL(item.browserTab_url)} alt="Favicon" className="activeIcon" onClick={activateTab}/>
         <h6 className="activeTabTitle" onClick={activateTab}>{item.browserTab_title}</h6>
+        {groupIcon && <div className='activeGroupIcon'>{groupIcon}</div>}
         <button className="deleteButton"
           onClick={() => handleDeleteTab(item.browserTab_id)}>x
         </button>
