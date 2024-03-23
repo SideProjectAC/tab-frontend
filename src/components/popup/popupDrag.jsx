@@ -1,5 +1,6 @@
 import  { useRef, useEffect, useState } from 'react';
 import PopupContent from './popupContent';
+import { ThemeProvider } from '../main/themeContext';
 
 function PopupDrag() {
   const DivRef = useRef(null); // Reference to the main div
@@ -54,15 +55,15 @@ function PopupDrag() {
   }, []);
 
   return (
-    <>
+    <ThemeProvider>
       <div
         id="myDiv"
         ref={DivRef}
-        style={{ position: 'absolute', top: `${position.top}px`, left: `${position.left}px`, cursor: 'move' }}
+        style={{ position: 'absolute', top: `${position.top}px`, left: `${position.left}px`}}
       >
       <PopupContent/>
       </div>
-    </>
+    </ThemeProvider>
   );
 }
 
