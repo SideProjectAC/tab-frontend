@@ -1,7 +1,9 @@
 import EmojiPicker from "emoji-picker-react";
+import { useContext } from "react";
 import { useGroups } from "./groupContext"
 import { updateGroupAPI } from "../../api/groupAPI";
 import {emojiPropTypes} from "./propTypes"; 
+import { ThemeContext } from './themeContext';
 
 Emoji.propTypes = emojiPropTypes;
 
@@ -26,13 +28,15 @@ function Emoji ({groupId ,setShowEmojiGroupId}) {
 
   };
 
+  const {theme} = useContext(ThemeContext);
 
   return (
-    <EmojiPicker style={{ position: 'absolute', zIndex:'100'}}
+    <EmojiPicker style={{ position: 'absolute', zIndex:'100',top:"65px"}}
       onEmojiClick={(emojiData) => {
         updateEmoji(groupId, emojiData);
         setShowEmojiGroupId(null);
       }}
+      theme={theme}
     />
   )
 }

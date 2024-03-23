@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useChromeTabs } from './chromeTabsContext'
 import { useGroups } from './groupContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -57,18 +57,17 @@ function DragDropComponent() {
             />
             <div className='mainRight'>
                 <div className='header'>
-                    <div> search bar </div>
+                    <div className='searchBar'> search bar </div>
                     <div className='headerButtons'>
-                        <FontAwesomeIcon className='themeIcon'
-                            icon={faCircleHalfStroke} 
-                            onClick={toggleTheme} 
-                        />
-                        <FontAwesomeIcon className='logoutIcon'
-                            icon={faArrowRightFromBracket} 
-                        />
-                        <FontAwesomeIcon className='userIcon'
-                            icon={faUser} 
-                        />
+                        <div className='iconWrapper themeIcon' onClick={toggleTheme}>
+                            <FontAwesomeIcon icon={faCircleHalfStroke} />
+                        </div>
+                        <div className='iconWrapper logoutIcon'>
+                            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                        </div>
+                        <div className='iconWrapper userIcon'>
+                            <FontAwesomeIcon icon={faUser} />
+                        </div>
                     </div>
                 </div>
                 <Groups

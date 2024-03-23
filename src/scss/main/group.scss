@@ -1,0 +1,82 @@
+@import "../abstracts/colors";
+
+.group {
+  margin: 0px 10px;
+  padding: 10px;
+  width: 300px;
+  position: relative;
+  background-color: var(--secondary-background-color);
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  .groupInfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+
+    .groupIcon {
+      font-size: 2.5rem;
+      margin-right: 4px;
+      padding: 2px;
+      border-radius: 4px;
+      &:hover {
+        background-color: var(--background-color);
+        cursor: pointer;
+      }
+    }
+
+    .groupTitle {
+      border: none;
+      border-radius: 4px;
+      margin-left: 2px;
+      padding-left: 2px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--secondary-text-color);
+      background-color: var(--secondary-background-color);
+      width: 35%;
+      margin-left: 10px;
+      &:hover {
+        background-color: var(--background-color);
+      }
+    }
+    .changedTitle {
+      color: var(--group-title-color);
+    }
+
+    .openAllButton {
+      border: none;
+      border-radius: 10px;
+      color: var(--group-title-color);
+      background-color: var(--background-color);
+      padding: 5px 10px;
+      position: absolute;
+      right: 15%;
+      &:hover {
+        cursor: pointer;
+        background-color: var(--selected);
+        color: var(--text-color);
+      }
+      &:hover::after {
+        content: "Open All";
+        position: absolute;
+        top: 35px;
+        right: 15px;
+        color: white;
+        background-color: gray;
+        padding: 5px;
+        font-size: smaller;
+      }
+    }
+
+    &:hover {
+      .deleteButton {
+        opacity: 1;
+      }
+    }
+  }
+}

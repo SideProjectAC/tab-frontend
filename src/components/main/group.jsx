@@ -5,6 +5,7 @@ import Emoji from "./emoji";
 import Note from "./note";
 import { updateGroupAPI } from "../../api/groupAPI";
 import { groupPropTypes } from "./propTypes";
+import '../../scss/main/group.scss';
 
 Group.propTypes = groupPropTypes;
 

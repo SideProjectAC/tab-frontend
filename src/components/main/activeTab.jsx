@@ -3,6 +3,7 @@ import { faMapPin } from '@fortawesome/free-solid-svg-icons';
 import { useState , useEffect, useCallback } from 'react';
 import { activeTabsPropTypes } from './propTypes';
 import { useGroups } from './groupContext';
+import '../../scss/main/activeTab.scss';
 
 ActiveTabs.propTypes = activeTabsPropTypes;
 

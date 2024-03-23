@@ -1,0 +1,49 @@
+@import "../abstracts/colors";
+
+.tabLink {
+  text-decoration: none;
+}
+.tabItem {
+  list-style-type: none;
+  text-decoration: none;
+  width: 95%;
+  height: 50px;
+  margin: 5px auto;
+  padding: 5px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  color: var(--text-color);
+  position: relative;
+
+  &:hover {
+    box-shadow: 2px 3px 10px 5px rgba(83, 83, 83, 0.4);
+    .deleteButton {
+      opacity: 1;
+    }
+  }
+
+  .tabText {
+    margin: 5px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-color);
+    h3 {
+      text-decoration: none;
+      overflow: hidden;
+      margin: 0px;
+    }
+    p {
+      margin: 0px;
+    }
+  }
+
+  .tabIcon {
+    margin: 5px;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
