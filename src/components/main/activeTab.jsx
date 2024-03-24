@@ -73,7 +73,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
   return(
     <div className='activeWrapper' draggable>
       <div className={` ${isPinned ? 'activeTitleWrapper' : 'activeTitleWrapperUnpinned'}`} onClick={handlePin}>
-        <FontAwesomeIcon icon={faMapPin}  className={` ${isPinned ? 'pinActive' : 'pinActiveUnpinned'}`}/>
+        <FontAwesomeIcon icon={faMapPin}  className={` ${isPinned ? 'pin' : 'pinUnpinned'}`}/>
         <h1 className={` ${isPinned ? 'activeTitle' : 'activeTitleUnpinned'}`}>Active Tabs </h1>
       </div>
       <div className={`activeList ${isPinned ? 'pinned' : ''}`}

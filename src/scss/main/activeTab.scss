@@ -52,7 +52,7 @@
     z-index: 3;
   }
 
-  .pinActiveUnpinned {
+  .pinUnpinned {
     font-size: 1rem;
     margin-top: 10px;
     margin-left: 10px;
@@ -75,7 +75,7 @@
   }
 }
 
-.pinActive {
+.pin {
   font-size: 1rem;
   color: var(--text-color);
 

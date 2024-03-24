@@ -20,9 +20,15 @@ function DragDropComponent() {
     //有關dragDrop的function拉到 useDragDrop.jsx 裡面
     const {handleDragStart, handleDragOver, handleDrop, handleAddGroup} = useDragDrop(activeTabs, groups, setGroups, setActiveTabs);
 
+    
+
     //切換theme
     const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'))   
+        setTheme(prevTheme => {
+        const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        return newTheme;
+    });
     }
 
     useEffect(() => {
