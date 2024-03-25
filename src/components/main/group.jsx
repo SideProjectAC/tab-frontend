@@ -6,7 +6,6 @@ import Note from './note'
 import { updateGroupAPI } from '../../api/groupAPI'
 import { groupPropTypes } from './propTypes'
 import '../../scss/main/group.scss'
-//TODO import { SearchBar } from './searchBar'
 
 Group.propTypes = groupPropTypes
 

@@ -1,33 +1,66 @@
 import { useState } from 'react'
-import { Group } from './group'
+import { getItemsByKeywordAPI } from '../../api/searchAPI'
+
+const dummyData = [
+  {
+    id: 1,
+    title: 'title1',
+    text: 'test',
+  },
+  {
+    id: 2,
+    title: 'title2',
+    text: 'test2',
+  },
+]
 
 function SearchBar() {
   const [query, setQuery] = useState('')
-  const [filteredItem, setFilteredItem] = useState({})
+  const [filteredItem, setFilteredItem] = useState([])
 
   function handleChange(e) {
-    const queryInput = e.target.value.toLowerCase().trim()
-    setQuery(queryInput)
-    setFilteredItem(group.items.filter((item) => item.includes(e.target.value)))
+    setQuery(e.target.value.toLowerCase().trim())
+  }
+
+  // function handleSearch() {
+  //   setFilteredItem(
+  //     dummyData.filter(
+  //       ({ title, text }) =>
+  //         title.toLowerCase().includes(query) ||
+  //         text.toLowerCase().includes(query)
+  //     )
+  //   )
+  // }
+
+  async function handleSearch() {
+    try {
+      const item = await getItemsByKeywordAPI({ query })
+      console.log(item.match)
+      console.log(item.match[1])
+
+      // setFilteredItem(
+      //   item.matchfilter
+      // )
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
     <div>
-      <input value={query} onChange={handleChange} placeholder='search for tabs name' />
-      <button>icon望遠鏡</button>
+      <input
+        value={query}
+        onChange={handleChange}
+        placeholder='search for tabs name'
+      />
+      <button onClick={handleSearch}>icon望遠鏡</button>
       <div>
-        <Group key={group.group_id} group={group} />
+        {filteredItem.map((fi) => (
+          <li key={fi.id}>{fi.id}</li>
+        ))}
       </div>
     </div>
   )
 }
 
 export default SearchBar
-
-    {
-      group.items.map((item) => (
-        <div key={item.item_id} draggable onDragStart={(e) => handleDragStart(e, item.item_id, group.group_id)}>
-          <TabItem tab={item} groupId={group.group_id} />
-        </div>
-      ))
-    }

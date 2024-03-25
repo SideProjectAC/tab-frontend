@@ -9,6 +9,7 @@ import Groups from './groups';
 import '../../scss/main/drag.scss'
 import {fetchGroupsAPI} from '../../api/groupAPI';
 import { useDragDrop } from './handleDragDrop';
+import SearchBar from './SearchBar.jsx'
 
 
 function DragDropComponent() {
@@ -53,40 +54,42 @@ function DragDropComponent() {
 
 
     return (
-    <>
+      <>
         <div className='wrapper'>
-            <ActiveTabs
-                activeTabs={activeTabs}
-                handleDrop={handleDrop}
-                handleDragStart={handleDragStart}
-                handleDragOver={handleDragOver}
-            />
-            <div className='mainRight'>
-                <div className='header'>
-                    <div className='searchBar'> search bar </div>
-                    <div className='headerButtons'>
-                        <div className='iconWrapper themeIcon' onClick={toggleTheme}>
-                            <FontAwesomeIcon icon={faCircleHalfStroke} />
-                        </div>
-                        <div className='iconWrapper logoutIcon'>
-                            <FontAwesomeIcon icon={faArrowRightFromBracket} />
-                        </div>
-                        <div className='iconWrapper userIcon'>
-                            <FontAwesomeIcon icon={faUser} />
-                        </div>
-                    </div>
+          <ActiveTabs
+            activeTabs={activeTabs}
+            handleDrop={handleDrop}
+            handleDragStart={handleDragStart}
+            handleDragOver={handleDragOver}
+          />
+          <div className='mainRight'>
+            <div className='header'>
+              <div className='searchBar'> search bar
+                {/* <SearchBar /> */}
+              </div>
+              <div className='headerButtons'>
+                <div className='iconWrapper themeIcon' onClick={toggleTheme}>
+                  <FontAwesomeIcon icon={faCircleHalfStroke} />
                 </div>
-                <Groups
-                    handleDragStart={handleDragStart}
-                    handleDrop={handleDrop}
-                    handleDragOver={handleDragOver}
-                />
+                <div className='iconWrapper logoutIcon'>
+                  <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                </div>
+                <div className='iconWrapper userIcon'>
+                  <FontAwesomeIcon icon={faUser} />
+                </div>
+              </div>
             </div>
+            <Groups
+              handleDragStart={handleDragStart}
+              handleDrop={handleDrop}
+              handleDragOver={handleDragOver}
+            />
+          </div>
         </div>
-        <button onClick={() => handleFetch()} > fetch Data</button>
+        <button onClick={() => handleFetch()}> fetch Data</button>
         <button onClick={handleAddGroup}>addGroup</button>
-    </>
-    );
+      </>
+    )
 }
 
 export default DragDropComponent;
