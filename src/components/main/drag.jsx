@@ -9,6 +9,7 @@ import Groups from './groups';
 import '../../scss/main/drag.scss'
 import {fetchGroupsAPI} from '../../api/groupAPI';
 import { useDragDrop } from './handleDragDrop';
+import SearchBar from './searchBar'
 
 
 function DragDropComponent() {
@@ -63,7 +64,7 @@ function DragDropComponent() {
             />
             <div className='mainRight'>
                 <div className='header'>
-                    <div className='searchBar'> search bar </div>
+                    <div className='searchBar'> <SearchBar /> </div>
                     <div className='headerButtons'>
                         <div className='iconWrapper themeIcon' onClick={toggleTheme}>
                             <FontAwesomeIcon icon={faCircleHalfStroke} />
