@@ -1,15 +1,16 @@
-import {  useState,useRef} from "react";
-import { useGroups } from "./groupContext"
-import TabItem from "./tabItem"
-import Emoji from "./emoji";
-import Note from "./note";
-import { updateGroupAPI } from "../../api/groupAPI";
-import { groupPropTypes } from "./propTypes";
-import '../../scss/main/group.scss';
+import { useState, useRef } from 'react'
+import { useGroups } from './groupContext'
+import TabItem from './tabItem'
+import Emoji from './emoji'
+import Note from './note'
+import { updateGroupAPI } from '../../api/groupAPI'
+import { groupPropTypes } from './propTypes'
+import '../../scss/main/group.scss'
+//TODO import { SearchBar } from './searchBar'
 
-Group.propTypes = groupPropTypes;
+Group.propTypes = groupPropTypes
 
-function Group({ 
+function Group({
   group,
   handleDrop,
   handleDragStart,
@@ -17,74 +18,81 @@ function Group({
   handleDeleteGroup,
   handleDragOver,
 }) {
-
-  const {setGroups} = useGroups()
+  const { setGroups } = useGroups()
   const [showEmojiGroupId, setShowEmojiGroupId] = useState(null)
-  const [title, setTitle] = useState({ current: group.group_title, old: group.group_title });
-  const ignoreBlurRef = useRef(false);
+  const [title, setTitle] = useState({
+    current: group.group_title,
+    old: group.group_title,
+  })
+  const ignoreBlurRef = useRef(false)
   const inputRef = useRef(null)
 
-  
   function handleFocus(e) {
     if (e.target.value === 'Untitled') {
-      e.target.select();
+      e.target.select()
     }
   }
-  function handleTitleChange (e) {
-    setTitle(prev => ({ ...prev, current: e.target.value }));
+  function handleTitleChange(e) {
+    setTitle((prev) => ({ ...prev, current: e.target.value }))
   }
-  
+
   const handleBlur = (groupId) => {
     if (!ignoreBlurRef.current) {
-      handleTitleUpdate(groupId);
+      handleTitleUpdate(groupId)
     }
-  };
+  }
 
   function handleKeyDown(e, groupId) {
-    if (e.key === "Enter") {
-      e.preventDefault(); 
-      handleTitleUpdate(groupId);
-      ignoreBlurRef.current = true;
-      e.target.blur();
-      setTimeout(() => ignoreBlurRef.current = false, 0);  // Re-enable onBlur after a short delay
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleTitleUpdate(groupId)
+      ignoreBlurRef.current = true
+      e.target.blur()
+      setTimeout(() => (ignoreBlurRef.current = false), 0) // Re-enable onBlur after a short delay
     }
   }
   async function handleTitleUpdate(groupId) {
-    if (title.old === title.current) return; 
-    setTitle(prev => ({ ...prev, old: prev.current })); // Update old title to match current
-    
-    setGroups(prevGroups => 
-      prevGroups.map(group => 
-        group.group_id === groupId ? { ...group, group_title: title.current } : group
-      )
-    );
-    
-    try {
-      const response = await updateGroupAPI(groupId, {group_title: title.current});
-      console.log('Group Title updated successfully', response.data);
-    } catch (error) {
-      console.error('Error updating groupTitle', error);
-    }
+    if (title.old === title.current) return
+    setTitle((prev) => ({ ...prev, old: prev.current })) // Update old title to match current
 
+    setGroups((prevGroups) =>
+      prevGroups.map((group) =>
+        group.group_id === groupId
+          ? { ...group, group_title: title.current }
+          : group
+      )
+    )
+
+    try {
+      const response = await updateGroupAPI(groupId, {
+        group_title: title.current,
+      })
+      console.log('Group Title updated successfully', response.data)
+    } catch (error) {
+      console.error('Error updating groupTitle', error)
+    }
   }
 
-   const titleClass = `groupTitle ${title.current !== 'Untitled' ? 'changedTitle' : ''}`;
-  
+  const titleClass = `groupTitle ${
+    title.current !== 'Untitled' ? 'changedTitle' : ''
+  }`
+
   return (
     <div
       className='group'
       key={group.group_id}
       onDrop={(e) => handleDrop(e, group.group_id)}
-      onDragOver={handleDragOver}
-    >
-
-      <div className="groupInfo">
-        <div className="groupIcon" onClick={() => setShowEmojiGroupId(group.group_id)}>  
+      onDragOver={handleDragOver}>
+      <div className='groupInfo'>
+        <div
+          className='groupIcon'
+          onClick={() => setShowEmojiGroupId(group.group_id)}>
           {group.group_icon}
-        </div> 
+        </div>
 
-        <input className={titleClass} 
-          type="text"
+        <input
+          className={titleClass}
+          type='text'
           defaultValue={group.group_title}
           ref={inputRef}
           onChange={handleTitleChange}
@@ -93,38 +101,41 @@ function Group({
           onFocus={handleFocus}
         />
 
-        <button className="openAllButton" onClick={() => handleSiteCount(group.group_id)}>
+        <button
+          className='openAllButton'
+          onClick={() => handleSiteCount(group.group_id)}>
           {group.items.length} Sites ➡️
         </button>
 
-        <button className="deleteButton"
-          onClick={() => handleDeleteGroup(group.group_id)}>x
+        <button
+          className='deleteButton'
+          onClick={() => handleDeleteGroup(group.group_id)}>
+          x
         </button>
-
       </div>
-      
-      {showEmojiGroupId && 
-        <Emoji 
+
+      {showEmojiGroupId && (
+        <Emoji
           groupId={group.group_id}
-          setShowEmojiGroupId={setShowEmojiGroupId}/>}
- 
+          setShowEmojiGroupId={setShowEmojiGroupId}
+        />
+      )}
       <div>
-        {group.items.map(item => (
-          <div 
-            key={item.item_id}   
-            draggable 
-            onDragStart={(e) => handleDragStart(e, item.item_id, group.group_id)}
-          >
-            <TabItem tab={item} groupId={group.group_id} /> 
+        {group.items.map((item) => (
+          <div
+            key={item.item_id}
+            draggable
+            onDragStart={(e) =>
+              handleDragStart(e, item.item_id, group.group_id)
+            }>
+            <TabItem tab={item} groupId={group.group_id} />
           </div>
         ))}
       </div>
 
-      <Note/>
-
+      <Note />
     </div>
-  );
+  )
 }
-
 
 export default Group
