@@ -1,4 +1,5 @@
 import  { createContext, useState, useEffect, useContext } from 'react';
+import { ChromeTabsProviderPropTypes } from './propTypes.jsx'
 
 const ChromeTabsContext = createContext();
 
@@ -80,5 +81,8 @@ export const ChromeTabsProvider = ({ children }) => {
     </ChromeTabsContext.Provider>
   );
 }
- 
+
+//Review this and corresponding new import
+ChromeTabsProvider.propTypes = ChromeTabsProviderPropTypes
+
 export const useChromeTabs = () => useContext(ChromeTabsContext);

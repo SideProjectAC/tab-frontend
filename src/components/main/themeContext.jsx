@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { ThemeProviderPropTypes } from './propTypes.jsx'
 
 const ThemeContext = createContext({theme:'light', undefined});
 
@@ -11,5 +12,8 @@ const ThemeProvider = ({children}) => {
       </ThemeContext.Provider>
     )
 }
+
+//Review this and corresponding new import
+ThemeProvider.propTypes = ThemeProviderPropTypes
 
 export { ThemeContext, ThemeProvider }
