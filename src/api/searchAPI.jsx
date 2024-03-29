@@ -9,7 +9,7 @@ const api = axios.create({
   },
 })
 
-export async function getItemsByKeywordAPI({ query }) {
+export async function getItemsByKeywordAPI(query) {
   try {
     const response = await api.get(
       `/groups/items/search?keyword=${query}&itemTypes=0`
