@@ -63,10 +63,7 @@ function DragDropComponent() {
         />
         <div className='mainRight'>
           <div className='header'>
-            <div className='searchBar'>
-              {' '}
-              <SearchBar />{' '}
-            </div>
+              <SearchBar />
             <div className='headerButtons'>
               <div className='iconWrapper themeIcon' onClick={toggleTheme}>
                 <FontAwesomeIcon icon={faCircleHalfStroke} />

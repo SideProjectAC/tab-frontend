@@ -5,8 +5,6 @@ import { activeTabsPropTypes } from './propTypes';
 import { useGroups } from './groupContext';
 import '../../scss/main/activeTab.scss';
 
-ActiveTabs.propTypes = activeTabsPropTypes;
-
 function ActiveTabItem(item) {
 
   function handleDeleteTab(tabId) {
@@ -93,5 +91,7 @@ function ActiveTabs({activeTabs , handleDrop, handleDragStart, handleDragOver })
     </div>
   )
 }
+
+ActiveTabs.propTypes = activeTabsPropTypes
 
 export default ActiveTabs

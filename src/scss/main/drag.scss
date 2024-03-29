@@ -1,4 +1,4 @@
-@import "../abstracts/colors";
+@import '../abstracts/colors';
 
 body {
   margin: 0;
@@ -40,6 +40,17 @@ body {
       height: 15px;
       width: 400px;
       background-color: var(--secondary-background-color);
+      z-index: 100;
+
+      input {
+        color: var(--text-color);
+        background-color: var(--secondary-background-color);
+        border: unset;
+      }
+
+      .matchedItemsContainer {
+        background-color: var(--secondary-background-color);
+      }
     }
 
     .headerButtons {
@@ -59,7 +70,7 @@ body {
       margin: 15px;
 
       &:hover::after {
-        content: " ";
+        content: ' ';
         z-index: 10;
         position: absolute;
         top: 20px;
@@ -72,15 +83,15 @@ body {
     }
 
     .themeIcon:hover::after {
-      content: "Change Theme";
+      content: 'Change Theme';
     }
 
     .logoutIcon:hover::after {
-      content: "Log Out";
+      content: 'Log Out';
     }
 
     .userIcon:hover::after {
-      content: "Show User Email";
+      content: 'Show User Email';
     }
   }
 
