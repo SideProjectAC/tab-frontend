@@ -34,10 +34,8 @@ function SearchBar() {
         placeholder='search for tabs name'
       />
       <div className='matchedItemsContainer'>
-        {titleMatchedItems.map((mi) => (
-          <li key={mi.browserTab_id} className='tabItem'>
-            <TabItem tab={mi} groupId={mi.group_id} />
-          </li>
+        {titleMatchedItems.map((tmi) => (
+            <TabItem key={tmi.item_id} tab={tmi} groupId={tmi.group_id} />
         ))}
       </div>
     </div>
