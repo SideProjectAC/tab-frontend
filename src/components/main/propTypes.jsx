@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types'
 
 //shared propTypes
-const itemPropTypes = {
+export const itemPropTypes = {
   browserTab_url: PropTypes.string,
   windowId: PropTypes.number,
   item_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   browserTab_title: PropTypes.string,
 }
 
-const dragDropPropTypes = {
+export const dragDropPropTypes = {
   handleDrop: PropTypes.func,
   handleDragStart: PropTypes.func,
   handleDragOver: PropTypes.func,
@@ -29,12 +29,10 @@ export const groupPropTypes = {
   }),
 }
 
-//Review add spread operator
 export const groupsPropTypes = {
   ...dragDropPropTypes,
 }
 
-//Review add spread operator
 export const activeTabsPropTypes = {
   activeTabs: PropTypes.arrayOf(PropTypes.shape(itemPropTypes)),
   ...dragDropPropTypes,

@@ -1,6 +1,36 @@
 import { useState } from 'react'
 import { getItemsByKeywordAPI } from '../../api/searchAPI'
-import TabItem from './tabItem'
+
+import { itemPropTypes } from './propTypes'
+import '../../scss/main/tabItem.scss'
+
+function PartialTabItem({ browserTab_url, browserTab_title, windowId, key }) {
+  const activateTab = async () => {
+    await chrome.tabs.create({ url: browserTab_url, active: false })
+    await chrome.windows.update(windowId, { focused: true })
+  }
+
+  function getFaviconURL(u) {
+    const url = new URL(chrome.runtime.getURL('/_favicon/'))
+    url.searchParams.set('pageUrl', u)
+    url.searchParams.set('size', '32')
+    return url.toString()
+  }
+  const favIconUrl = getFaviconURL(browserTab_url)
+
+  return (
+    <>
+      <li key={key} className='tabItem' onClick={activateTab}>
+        <img src={favIconUrl} alt='Favicon' className='tabIcon' />
+        <div className='tabText'>
+          <h3>{browserTab_title}</h3>
+          <p>{browserTab_url}</p>
+        </div>
+      </li>
+    </>
+  )
+}
+PartialTabItem.propTypes = itemPropTypes
 
 function SearchBar() {
   const [query, setQuery] = useState('')
@@ -34,10 +64,14 @@ function SearchBar() {
         placeholder='search for tabs name'
       />
       <div className='matchedItemsContainer'>
-        {titleMatchedItems.map((mi) => (
-          <li key={mi.browserTab_id} className='tabItem'>
-            <TabItem tab={mi} groupId={mi.group_id} />
-          </li>
+        {titleMatchedItems.map((tmi) => (
+            <PartialTabItem
+              key={tmi.browserTab_id}
+              browserTab_url={tmi.browserTab_url}
+              browserTab_title={tmi.browserTab_title}
+              browserTab_id={tmi.browserTab_id}
+              windowId={tmi.windowId}
+            />
         ))}
       </div>
     </div>
