@@ -65,13 +65,7 @@ function SearchBar() {
       />
       <div className='matchedItemsContainer'>
         {titleMatchedItems.map((tmi) => (
-            <PartialTabItem
-              key={tmi.browserTab_id}
-              browserTab_url={tmi.browserTab_url}
-              browserTab_title={tmi.browserTab_title}
-              browserTab_id={tmi.browserTab_id}
-              windowId={tmi.windowId}
-            />
+            <TabItem key={tmi.item_id} tab={tmi} groupId={tmi.group_id} />
         ))}
       </div>
     </div>
