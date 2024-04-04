@@ -1,4 +1,4 @@
-import { useGroups } from './groupContext'
+import { useGroups } from '../useContext/groupContext'
 import { useRef } from 'react'
 import Group from './group'
 import { deleteGroupAPI } from '../../api/groupAPI'

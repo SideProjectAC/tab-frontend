@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { useGroups } from './groupContext'
+import { useGroups } from '../useContext/groupContext'
 import TabItem from './tabItem'
 import Emoji from './emoji'
 import Note from './note'

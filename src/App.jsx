@@ -1,7 +1,7 @@
 import DragDropComponent from './components/main/drag'
-import { ChromeTabsProvider } from './components/main/chromeTabsContext';
-import { GroupsProvider } from './components/main/groupContext';
-import { ThemeProvider } from './components/main/themeContext';
+import { ChromeTabsProvider } from './components/useContext/chromeTabsContext';
+import { GroupsProvider } from './components/useContext/groupContext';
+import { ThemeProvider } from './components/useContext/themeContext';
 
 const App = () => {
  

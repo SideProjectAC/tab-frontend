@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
-import { useChromeTabs } from './chromeTabsContext'
-import { useGroups } from './groupContext'
+import { useChromeTabs } from '../useContext/chromeTabsContext'
+import { useGroups } from '../useContext/groupContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleHalfStroke,
   faArrowRightFromBracket,
   faUser,
 } from '@fortawesome/free-solid-svg-icons'
-import { ThemeContext } from './themeContext'
+import { ThemeContext } from '../useContext/themeContext'
 import ActiveTabs from './activeTab'
 import Groups from './groups'
 import '../../scss/main/drag.scss'

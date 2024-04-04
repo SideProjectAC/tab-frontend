@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import { fetchGroupsAPI } from '../../api/groupAPI'
-import { GroupsProviderPropTypes } from './propTypes'
+import { GroupsProviderPropTypes } from '../main/propTypes'
 
 const GroupsContext = createContext()
 

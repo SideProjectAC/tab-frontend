@@ -1,9 +1,9 @@
 import EmojiPicker from "emoji-picker-react";
 import { useContext } from "react";
-import { useGroups } from "./groupContext"
+import { useGroups } from "../useContext/groupContext"
 import { updateGroupAPI } from "../../api/groupAPI";
 import {emojiPropTypes} from "./propTypes"; 
-import { ThemeContext } from './themeContext';
+import { ThemeContext } from '../useContext/themeContext';
 
 Emoji.propTypes = emojiPropTypes;
 

@@ -1,5 +1,5 @@
 import { DeleteItemFromGroupAPI } from '../../api/itemAPI'
-import { useGroups } from './groupContext'
+import { useGroups } from '../useContext/groupContext'
 import { tabItemPropTypes } from './propTypes'
 import '../../scss/main/tabItem.scss'
 

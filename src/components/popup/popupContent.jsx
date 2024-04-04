@@ -6,7 +6,7 @@ import {
   faPalette,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
-import { ThemeContext } from '../main/themeContext'
+import { ThemeContext } from '../useContext/themeContext'
 import { popupContentPropTypes } from '../main/propTypes'
 Tab.propTypes = popupContentPropTypes
 

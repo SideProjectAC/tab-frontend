@@ -1,6 +1,6 @@
 import  { useRef, useEffect, useState } from 'react';
 import PopupContent from './popupContent';
-import { ThemeProvider } from '../main/themeContext';
+import { ThemeProvider } from '../useContext/themeContext';
 
 function PopupDrag() {
   const DivRef = useRef(null); // Reference to the main div

@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { ThemeProviderPropTypes } from './propTypes.jsx'
+import { ThemeProviderPropTypes } from '../main/propTypes.jsx'
 
 const ThemeContext = createContext({theme:'light', undefined});
 
