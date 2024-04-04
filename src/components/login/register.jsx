@@ -2,14 +2,14 @@
 import '../../scss/login/register.scss'
 import { useState } from 'react'
 import { registerAPI } from '../../api/authAPI';
-// import { Link, useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 
 function Register() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function handleValueChange(e,setValue) {
     setValue(e.target.value);
@@ -38,7 +38,7 @@ function Register() {
       // console.log('Login successful:', response.data);
       const token = response.data.token
       localStorage.setItem('authToken', token) 
-      // navigate('/main')
+      navigate('/main')
 
 
 
@@ -54,16 +54,18 @@ function Register() {
     }
   } 
   return (
-    <div className="wrapper">
-      <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/tab_pane.png" alt="logo" className='logo' />
+    <div className="register-wrapper">
+      <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/tab_pane.png" alt="logo" className='register-logo' />
       <h1>REGISTER</h1>
     <input 
+      className='register-input '
       type="text" 
       placeholder="Email"
       value={email}
       onChange={(e) => handleValueChange(e, setEmail)}
     />  
     <input 
+      className='register-input '
       type="password" 
       placeholder="Password" 
       value={password}
@@ -71,9 +73,10 @@ function Register() {
       onKeyDown={(e) => handleKeyDown(e)}
     />  
     {loginError && <p className='loginError'>{loginError}</p>}
-    <button  className='submitButton'
+    <button  className='register-button'
       onClick={handleSubmit}
     > register </button>
+    <Link to="/login">Login</Link>
   </div>
   )
 }

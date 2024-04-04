@@ -1,14 +1,21 @@
 import '../../scss/login/login.scss'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { loginAPI } from '../../api/authAPI';
-// import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login () {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+  if (localStorage.getItem('authToken')) {
+    navigate('/main');
+  }
+}, [navigate]);
 
   function handleValueChange(e,setValue) {
     setValue(e.target.value);
@@ -37,7 +44,7 @@ function Login () {
       // console.log('Login successful:', response.data);
       const token = response.data.token
       localStorage.setItem('authToken', token) 
-      // navigate('/main')
+      navigate('/main')
 
 
     } catch (error) {
@@ -55,28 +62,30 @@ function Login () {
 
 
   return (
-  <div className="wrapper">
-      <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/tab_pane.png" alt="logo" className='logo' />
+  <div className="login-wrapper">
+      <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/tab_pane.png" alt="logo" className='login-logo' />
       <h1>LOGIN</h1>
     <input 
+      className='login-input'
       type="text" 
       placeholder="Email"
       value={email}
       onChange={(e) => handleValueChange(e, setEmail)}
     />  
     <input 
+      className='login-input'  
       type="password" 
       placeholder="Password" 
       value={password}
       onChange={(e) => handleValueChange(e, setPassword)} 
       onKeyDown={(e) => handleKeyDown(e)}
     />  
-    {loginError && <p className='loginError'>{loginError}</p>}
+    {loginError && <p className='login-error'>{loginError}</p>}
 
-    <button  className='submitButton'
+    <button  className='login-button'
       onClick={handleSubmit}
     > login </button>
-    {/* <Link to="/register">Register</Link> */}
+    <Link to="/register">Register</Link>
   </div>
   )
 
