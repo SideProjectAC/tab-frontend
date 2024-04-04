@@ -14,6 +14,7 @@ export const GroupsProvider = ({ children }) => {
       setGroups(response.data)
     } catch (error) {
       console.error('Error fetching groups', error)
+      alert('please LOGIN ')
     }
   }
 

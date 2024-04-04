@@ -34,6 +34,16 @@ function DragDropComponent() {
     })
   }
 
+  const logout = () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return
+    localStorage.removeItem("authToken");
+    alert('Logout successfully')
+    //暫時？
+    location.reload();
+
+  }
+
   useEffect(() => {
     //setActiveTabs從chromeTabs取得目前正打開的ActiveTabs
     setActiveTabs(chromeTabs)
@@ -68,7 +78,7 @@ function DragDropComponent() {
               <div className='iconWrapper themeIcon' onClick={toggleTheme}>
                 <FontAwesomeIcon icon={faCircleHalfStroke} />
               </div>
-              <div className='iconWrapper logoutIcon'>
+              <div className='iconWrapper logoutIcon' onClick={logout}>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </div>
               <div className='iconWrapper userIcon'>
