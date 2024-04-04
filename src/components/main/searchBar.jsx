@@ -30,16 +30,18 @@ function SearchBar() {
 
   return (
     <div className='searchBar'>
-      <FontAwesomeIcon icon={faMagnifyingGlass} className='searchIcon' />
-      <input
-        type='search'
-        value={query}
-        onChange={handleChange}
-        placeholder='Search for tabs title'
-      />
-      <div className='matchedItemsContainer'>
+      <div className='searchInputContainer'>
+        <FontAwesomeIcon icon={faMagnifyingGlass} className='searchIcon' />
+        <input
+          type='search'
+          value={query}
+          onChange={handleChange}
+          placeholder='Search for tabs title'
+        />
+      </div>
+      <div className='searchResultsContainer'>
         {titleMatchedItems.map((tmi) => (
-          <TabItem key={tmi.item_id} tab={tmi} groupId={tmi.group_id} />
+          <TabItem className='searchResultsStyle' key={tmi.item_id} tab={tmi} groupId={tmi.group_id} />
         ))}
       </div>
     </div>

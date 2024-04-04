@@ -1,9 +1,6 @@
-@import "../abstracts/colors";
+@import '../abstracts/colors';
 
-// .tabLink {
-//   text-decoration: none;
-// }
-.tabItem {
+@mixin tabItemStyles {
   list-style-type: none;
   text-decoration: none;
   width: 95%;
@@ -46,4 +43,8 @@
     width: 1.5rem;
     height: 1.5rem;
   }
+}
+
+.tabItem {
+  @include tabItemStyles;
 }

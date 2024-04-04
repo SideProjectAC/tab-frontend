@@ -3,7 +3,7 @@ import { useGroups } from './groupContext'
 import { tabItemPropTypes } from './propTypes'
 import '../../scss/main/tabItem.scss'
 
-const TabItem = ({ tab, groupId }) => {
+const TabItem = ({ tab, groupId, className }) => {
   const { setGroups } = useGroups()
 
   const activateTab = async () => {
@@ -41,7 +41,7 @@ const TabItem = ({ tab, groupId }) => {
 
   return (
     <a onClick={activateTab}>
-      <li className='tabItem'>
+      <li className={className ? `tabItem ${className}` : 'tabItem'}>
         <img src={favIconUrl} alt='Favicon' className='tabIcon' />
         <div className='tabText'>
           <h3>{tab.browserTab_title}</h3>
