@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { getItemsByKeywordAPI } from '../../api/searchAPI'
 import TabItem from './tabItem'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 function SearchBar() {
   const [query, setQuery] = useState('')
@@ -28,10 +30,12 @@ function SearchBar() {
 
   return (
     <div className='searchBar'>
+      <FontAwesomeIcon icon={faMagnifyingGlass} className='searchIcon' />
       <input
+        type='search'
         value={query}
         onChange={handleChange}
-        placeholder='search for tabs name'
+        placeholder='Search for tabs title'
       />
       <div className='matchedItemsContainer'>
         {titleMatchedItems.map((tmi) => (
