@@ -25,7 +25,6 @@ function Login () {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleSubmit()
-
     }
   }
 
@@ -41,10 +40,10 @@ function Login () {
 
     try {
       const response = await loginAPI(userInfo);
-      // console.log('Login successful:', response.data);
       const token = response.data.token
       localStorage.setItem('authToken', token) 
       navigate('/main')
+      location.reload()
 
 
     } catch (error) {

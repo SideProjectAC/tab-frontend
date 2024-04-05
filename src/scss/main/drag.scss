@@ -1,5 +1,5 @@
-@import '../abstracts/colors';
-@import 'tabItem.scss';
+@import "../abstracts/colors";
+@import "tabItem.scss";
 
 body {
   margin: 0;
@@ -104,7 +104,7 @@ body {
         margin: 15px;
 
         &:hover::after {
-          content: ' ';
+          content: " ";
           z-index: 10;
           position: absolute;
           top: 20px;
@@ -117,15 +117,15 @@ body {
       }
 
       .themeIcon:hover::after {
-        content: 'Change Theme';
+        content: "Change Theme";
       }
 
       .logoutIcon:hover::after {
-        content: 'Log Out';
+        content: "Log Out";
       }
 
       .userIcon:hover::after {
-        content: 'Show User Email';
+        content: "Account management";
       }
     }
   }
@@ -144,6 +144,49 @@ body {
       width: 100%;
       height: 100%;
     }
+  }
+}
+
+// userInfo section
+
+.userInfoBackground {
+  position: absolute;
+  z-index: 150;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--transparent-background);
+}
+.userWrapper {
+  margin: 25vh auto;
+  width: 250px;
+  height: 150px;
+  z-index: 200;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 15px;
+  background-color: rgba(244, 245, 247, 255);
+  border-radius: 10px;
+}
+.userCloseButton {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  border: none;
+  border-radius: 50%;
+  &:hover {
+    background-color: rgb(170, 170, 170);
+  }
+}
+
+.userButtons {
+  display: flex;
+  padding: 15px;
+  .userButton {
+    margin: 0px 5px;
   }
 }
 

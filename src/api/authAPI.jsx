@@ -26,3 +26,7 @@ export function updateUserAPI( updateUserInfo) {
 export function deleteUserAPI() {
   return api.delete('/user');
 }
+
+export function getUserInfoAPI() {
+  return api.get('/user')
+}

@@ -14,12 +14,14 @@ import '../../scss/main/drag.scss'
 import { fetchGroupsAPI } from '../../api/groupAPI'
 import { useDragDrop } from './handleDragDrop'
 import SearchBar from './searchBar'
+import UserInfo from './userInfo'
 
 function DragDropComponent() {
   const [activeTabs, setActiveTabs] = useState([])
   const { groups, setGroups } = useGroups()
   const { chromeTabs } = useChromeTabs()
   const { theme, setTheme } = useContext(ThemeContext)
+  const [showUserInfo, setShowUserInfo] = useState()
 
   //有關dragDrop的function拉到 useDragDrop.jsx 裡面
   const { handleDragStart, handleDragOver, handleDrop, handleAddGroup } =
@@ -81,7 +83,8 @@ function DragDropComponent() {
               <div className='iconWrapper logoutIcon' onClick={logout}>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </div>
-              <div className='iconWrapper userIcon'>
+              <div className='iconWrapper userIcon'
+                onClick={ ()=> setShowUserInfo(true)}>
                 <FontAwesomeIcon icon={faUser} />
               </div>
             </div>
@@ -90,8 +93,9 @@ function DragDropComponent() {
             handleDragStart={handleDragStart}
             handleDrop={handleDrop}
             handleDragOver={handleDragOver}
-          />
+            />
         </div>
+          {showUserInfo && <UserInfo setShowUserInfo={setShowUserInfo}></UserInfo>}
       </div>
       <button onClick={() => handleFetch()}> fetch Data</button>
       <button onClick={handleAddGroup}>addGroup</button>
