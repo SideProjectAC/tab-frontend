@@ -29,7 +29,7 @@ function ActiveTabItem(item) {
     for (let group of groups.groups) {
       for (let item of group.items) {
         if (item.browserTab_url === tabUrl) {
-          console.log(group.group_icon);
+          // console.log(group.group_icon);
           return group.group_icon;
         }
       }

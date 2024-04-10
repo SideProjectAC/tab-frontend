@@ -66,6 +66,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
             group_icon: randomEmoji(),
             group_title:"Untitled",
           };
+          console.log('debug',newGroupTabData) //4/9 debug
           const response = await postNewGroupAPI(newGroupTabData);
           const newGroup = {
             group_icon: newGroupTabData.group_icon,

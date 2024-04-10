@@ -49,7 +49,11 @@ const TabItem = ({ tab, groupId, className }) => {
         </div>
         <button
           className='deleteButton'
-          onClick={() => handleDeleteTab(groupId)}>
+          onClick={(event) => {
+            event.stopPropagation();
+            handleDeleteTab(groupId);
+          }}
+        >
           x
         </button>
       </li>

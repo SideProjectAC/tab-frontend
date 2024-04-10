@@ -126,13 +126,14 @@ function Group({
             draggable
             onDragStart={(e) =>
               handleDragStart(e, item.item_id, group.group_id)
-            }>
-            <TabItem tab={item} groupId={group.group_id} />
+            }> 
+            {item.item_type === 0 && <TabItem tab={item} groupId={group.group_id} />}
+            {item.item_type === 1 && <Note item={item} groupId={group.group_id} />}
+
           </div>
         ))}
       </div>
 
-      <Note />
     </div>
   )
 }

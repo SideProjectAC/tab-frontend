@@ -21,9 +21,20 @@ export async function PostTabAPI(groupId, tabData) {
   }
 }
 
+
+export async function PostNoteAPI(groupId, tabData) {
+  try {
+    const response = await api.post(`/groups/${groupId}/notes`, tabData)
+    return response.data
+  } catch (error) {
+    console.error('Error posting new tab to group:', error)
+    throw error
+  }
+}
+
 export async function DeleteItemFromGroupAPI(groupId, itemId) {
   try {
-    console.log('in delete api: ', groupId, itemId)
+    // console.log('in delete api: ', groupId, itemId)
     const response = await api.delete(`/groups/${groupId}/items/${itemId}`)
     // console.log('Item deleted successfully:', response.data);
     return response.data

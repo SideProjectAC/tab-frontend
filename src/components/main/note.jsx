@@ -1,26 +1,35 @@
 import { useState } from 'react';
+import '../../scss/main/note.scss'
 
 
-function Note() {
-  // State to keep track of the note's content
-  const [noteContent, setNoteContent] = useState('');
+function Note({item}) {
 
-  // Handler for changes in the textarea
+  const [noteContent, setNoteContent] = useState(item.note_content);
+  const noteBgColor = item.note_bgColor
+
+  //尚未寫 更改note的patchAPI 
   const handleNoteChange = (event) => {
     setNoteContent(event.target.value);
   };
 
-  // Determine the class for the textarea based on its content
-  const noteClass = noteContent ? "note hasContent" : "note";
+
 
   return (
     <>
+    <div 
+      className='tabItem' //沿用其他tab的樣式
+      style={{backgroundColor: noteBgColor}}
+    >
+
       <textarea
         placeholder="New note"
-        className={noteClass}
+        className='note'
         value={noteContent}
         onChange={handleNoteChange}
-      ></textarea>
+        style={{backgroundColor: noteBgColor}}
+      >
+      </textarea>
+    </div>
     </>
   );
 }
