@@ -1,6 +1,6 @@
  import { useRef } from 'react';
- import {DeleteItemFromGroupAPI,PatchItemToExistingGroupsAPI, PostTabAPI} from '../../api/itemAPI';  
- import {postNewGroupAPI} from '../../api/groupAPI';
+ import {deleteItemFromGroupAPI,patchItemToExistingGroupsAPI, postTabAPI} from '../../api/itemAPI';  
+ import {postGroupAPI} from '../../api/groupAPI';
    
 export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
   const originGroupIdRef = useRef();
@@ -40,7 +40,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
 
     //新增到新的地方
     if (targetGroupId === 'ActiveTabs') {
-      await DeleteItemFromGroupAPI(originGroupId, itemId);
+      await deleteItemFromGroupAPI(originGroupId, itemId);
       setActiveTabs(prev => [...prev, draggedItem]);
       openTab(draggedItem.browserTab_url)
       return
@@ -67,7 +67,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
             group_title:"Untitled",
           };
           console.log('debug',newGroupTabData) //4/9 debug
-          const response = await postNewGroupAPI(newGroupTabData);
+          const response = await postGroupAPI(newGroupTabData);
           const newGroup = {
             group_icon: newGroupTabData.group_icon,
             group_title: newGroupTabData.group_title,
@@ -85,7 +85,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
           group_title:"Untitled",
           group_icon: randomEmoji()
         }
-        const response = await postNewGroupAPI(tabData);
+        const response = await postGroupAPI(tabData);
         const newGroup = {
           group_icon: tabData.group_icon,
           group_title:tabData.group_title,
@@ -108,7 +108,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
           windowId: draggedItem.windowId,
           targetItem_position: targetGroup.items.length,
         }
-        const response = await PostTabAPI(targetGroupId, tabData);
+        const response = await postTabAPI(targetGroupId, tabData);
         const newDraggedTab = { ...draggedItem, item_id: response.item_id };
         updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
         return
@@ -119,7 +119,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
           targetItem_position: targetGroup.items.length,
           targetGroup_id: targetGroupId
         };
-        await PatchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
+        await patchItemToExistingGroupsAPI(originGroupId, itemId, targetPosition);
         const newDraggedTab = { ...draggedItem, item_id: itemId };
         updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
         return
@@ -163,7 +163,7 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
   //debug用:單純新增一個group，之後會刪除
   const handleAddGroup = async () => {
     const newGroupData = {group_icon: randomEmoji(), group_title: "Untitled"}
-    const response = await postNewGroupAPI(newGroupData);
+    const response = await postGroupAPI(newGroupData);
     const newGroup = {
       group_id: response.data.group_id, 
       group_icon: newGroupData.group_icon, 

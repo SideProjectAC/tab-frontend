@@ -12,15 +12,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export async function fetchGroupsAPI() {
+export async function getGroupAPI() {
   return api.get('/groups'); 
 }
   
-export function postNewGroupAPI(newGroupData) { 
+export function postGroupAPI(newGroupData) { 
   return api.post('/groups',newGroupData)
 }
 
-export function updateGroupAPI(groupId, updateData) {
+export function patchGroupAPI(groupId, updateData) {
   return api.patch(`/groups/${groupId}`, updateData);
 }
 

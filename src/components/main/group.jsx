@@ -3,7 +3,7 @@ import { useGroups } from '../useContext/groupContext'
 import TabItem from './tabItem'
 import Emoji from './emoji'
 import Note from './note'
-import { updateGroupAPI } from '../../api/groupAPI'
+import { patchGroupAPI } from '../../api/groupAPI'
 import { groupPropTypes } from './propTypes'
 import '../../scss/main/group.scss'
 
@@ -63,7 +63,7 @@ function Group({
     )
 
     try {
-      const response = await updateGroupAPI(groupId, {
+      const response = await patchGroupAPI(groupId, {
         group_title: title.current,
       })
       console.log('Group Title updated successfully', response.data)

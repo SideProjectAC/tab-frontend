@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
-import { fetchGroupsAPI , postNewGroupAPI} from '../../api/groupAPI'
-import { PostNoteAPI } from '../../api/itemAPI';
+import { getGroupAPI , postGroupAPI} from '../../api/groupAPI'
+import { postNoteAPI } from '../../api/itemAPI';
 
 const PopupGroups = ({note , setShowGroups}) => {
 
@@ -8,7 +8,7 @@ const PopupGroups = ({note , setShowGroups}) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetchGroupsAPI();
+      const response = await getGroupAPI();
       setGroups(response.data);
     };
 
@@ -20,7 +20,7 @@ const PopupGroups = ({note , setShowGroups}) => {
       "note_content": note ,
       "note_bgColor":  "#c5c5c5"
     }
-    const response = await PostNoteAPI(groupId, noteData)
+    const response = await postNoteAPI(groupId, noteData)
     if (response.status === 'success') setShowGroups(false)
     const noteId = response.item_id
     console.log('noteId', noteId)
@@ -31,7 +31,7 @@ const PopupGroups = ({note , setShowGroups}) => {
   //     "group_icon": "📝",
   //     "group_title": "from popup"
   //   }
-  //   const response = await postNewGroupAPI(newGroup)
+  //   const response = await postGroupAPI(newGroup)
 
   // }
 

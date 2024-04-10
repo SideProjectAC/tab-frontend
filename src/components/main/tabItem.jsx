@@ -1,4 +1,4 @@
-import { DeleteItemFromGroupAPI } from '../../api/itemAPI'
+import { deleteItemFromGroupAPI } from '../../api/itemAPI'
 import { useGroups } from '../useContext/groupContext'
 import { tabItemPropTypes } from './propTypes'
 import '../../scss/main/tabItem.scss'
@@ -33,7 +33,7 @@ const TabItem = ({ tab, groupId, className }) => {
     )
 
     try {
-      await DeleteItemFromGroupAPI(groupId, tab.item_id)
+      await deleteItemFromGroupAPI(groupId, tab.item_id)
     } catch (error) {
       console.error(error)
     }

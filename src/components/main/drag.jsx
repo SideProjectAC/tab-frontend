@@ -11,7 +11,7 @@ import { ThemeContext } from '../useContext/themeContext'
 import ActiveTabs from './activeTab'
 import Groups from './groups'
 import '../../scss/main/drag.scss'
-import { fetchGroupsAPI } from '../../api/groupAPI'
+import { getGroupAPI } from '../../api/groupAPI'
 import { useDragDrop } from './handleDragDrop'
 import SearchBar from './searchBar'
 import UserInfo from './userInfo'
@@ -56,7 +56,7 @@ function DragDropComponent() {
   //這只是debug用，可抓取後端資料(GET api) ，同時比對前端的groups 和 activeTabs
   function handleFetch() {
     const fetchData = async () => {
-      const response = await fetchGroupsAPI()
+      const response = await getGroupAPI()
       console.log('Groups fetched from Backend: ', response.data)
     }
     fetchData()

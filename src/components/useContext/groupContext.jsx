@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { fetchGroupsAPI } from '../../api/groupAPI'
+import { getGroupAPI } from '../../api/groupAPI'
 import { GroupsProviderPropTypes } from '../main/propTypes'
 
 const GroupsContext = createContext()
@@ -9,7 +9,7 @@ export const GroupsProvider = ({ children }) => {
 
   async function loadGroups() {
     try {
-      const response = await fetchGroupsAPI()
+      const response = await getGroupAPI()
       // console.log('first Groups fetched: ', response.data);
       setGroups(response.data)
     } catch (error) {

@@ -1,7 +1,7 @@
 import EmojiPicker from "emoji-picker-react";
 import { useContext } from "react";
 import { useGroups } from "../useContext/groupContext"
-import { updateGroupAPI } from "../../api/groupAPI";
+import { patchGroupAPI } from "../../api/groupAPI";
 import {emojiPropTypes} from "./propTypes"; 
 import { ThemeContext } from '../useContext/themeContext';
 
@@ -19,7 +19,7 @@ function Emoji ({groupId ,setShowEmojiGroupId}) {
     );
 
     try {
-      const response = await updateGroupAPI(groupId, {group_icon: emojiData.emoji});
+      const response = await patchGroupAPI(groupId, {group_icon: emojiData.emoji});
       console.log('Group emoji updated successfully', response.data);
     } catch (error) {
       console.error('Error updating groupEmoji', error);
