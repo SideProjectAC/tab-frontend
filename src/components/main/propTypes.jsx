@@ -20,6 +20,10 @@ export const tabItemPropTypes = {
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
+export const noteItemPropTypes = {
+  item: PropTypes.shape(itemPropTypes),
+}
+
 export const groupPropTypes = {
   group: PropTypes.shape({
     group_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

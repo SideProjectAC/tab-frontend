@@ -1,12 +1,11 @@
 import axios from 'axios'
 
-const token = localStorage.getItem("authToken");
+const token = localStorage.getItem('authToken')
 
 const api = axios.create({
   baseURL: 'http://localhost:5050',
-
-   headers: {
-    Authorization: `Bearer ${token}`, 
+  headers: {
+    Authorization: `Bearer ${token}`,
   },
 })
 
@@ -21,13 +20,12 @@ export async function postTabAPI(groupId, tabData) {
   }
 }
 
-
-export async function postNoteAPI(groupId, tabData) {
+export async function postNoteAPI(groupId, noteData) {
   try {
-    const response = await api.post(`/groups/${groupId}/notes`, tabData)
+    const response = await api.post(`/groups/${groupId}/notes`, noteData)
     return response.data
   } catch (error) {
-    console.error('Error posting new tab to group:', error)
+    console.error('Error posting new note to group:', error)
     throw error
   }
 }

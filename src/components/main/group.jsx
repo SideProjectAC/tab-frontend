@@ -130,6 +130,15 @@ function Group({
             {item.item_type === 0 && (
               <TabItem tab={item} groupId={group.group_id} />
             )}
+          </div>
+        ))}
+        {group.items.map((item) => (
+          <div
+            key={item.item_id}
+            draggable
+            onDragStart={(e) =>
+              handleDragStart(e, item.item_id, group.group_id)
+            }>
             {item.item_type === 1 && (
               <Note item={item} groupId={group.group_id} />
             )}
