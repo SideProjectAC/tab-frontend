@@ -9,6 +9,6 @@ const api = axios.create({
   },
 })
 
-export async function PostNewNoteAPI(group_id, newNoteData) {
+export async function postNoteAPI(group_id, newNoteData) {
   return api.post(`/groups/${group_id}/notes`, newNoteData)
 }

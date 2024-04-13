@@ -25,7 +25,7 @@ const TabItem = ({ tab, groupId, className }) => {
         if (group.group_id === groupId) {
           return {
             ...group,
-            items: group.items.filter((item) => item.item_id !== tab.item_id),
+            items: group.items.filter((gitem) => gitem.item_id !== tab.item_id),
           }
         }
         return group
@@ -49,11 +49,7 @@ const TabItem = ({ tab, groupId, className }) => {
         </div>
         <button
           className='deleteButton'
-          onClick={(event) => {
-            event.stopPropagation();
-            handleDeleteTab(groupId);
-          }}
-        >
+          onClick={() => handleDeleteTab(groupId)}>
           x
         </button>
       </li>

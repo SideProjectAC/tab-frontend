@@ -71,9 +71,15 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
           const newGroup = {
             group_icon: newGroupTabData.group_icon,
             group_title: newGroupTabData.group_title,
-            group_id: response.data.group_id,   
-            items: [{...newGroupTabData, item_id: response.data.item_id}]
-          };
+            group_id: response.data.group_id,
+            items: [
+              {
+                ...newGroupTabData,
+                item_type: 0,
+                item_id: response.data.item_id,
+              },
+            ],
+          }
           updateGroups(newGroup);
           return
       }
@@ -109,7 +115,11 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
           targetItem_position: targetGroup.items.length,
         }
         const response = await postTabAPI(targetGroupId, tabData);
-        const newDraggedTab = { ...draggedItem, item_id: response.item_id };
+        const newDraggedTab = {
+          ...draggedItem,
+          item_type: 0,
+          item_id: response.item_id,
+        };
         updateGroupItems(targetGroupId, items => [...items, newDraggedTab]);
         return
       }
