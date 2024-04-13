@@ -45,6 +45,6 @@
   }
 }
 
-.tabItem {
+.tabItem, .noteItem {
   @include tabItemStyles;
 }

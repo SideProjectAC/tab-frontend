@@ -17,54 +17,55 @@ function Note({ item, groupId }) {
     }
   }
 
+
+
   const handleAddNote = async () => {
     const newNoteData = { note_content: noteContent, note_bgColor: notebgColor }
     const response = await postNoteAPI(groupId, newNoteData)
     console.log(response)
-    const newNote = {
-      group_id: response.group_id,
-      noteContent: newNoteData.note_content,
-      noteBgColor: newNoteData.note_bgColor,
-      item_type: 1,
-      item_id: response.item_id,
-    }
+    // const newNote = {
+    //   group_id: response.group_id,
+    //   noteContent: newNoteData.note_content,
+    //   noteBgColor: newNoteData.note_bgColor,
+    //   item_type: 1,
+    //   item_id: response.item_id,
+    // }
     // setNoteContent('')
   }
 
-    async function handleDeleteNote(groupId) {
-      setGroups((prev) =>
-        prev.map((group) => {
-          if (group.group_id === groupId) {
-            return {
-              ...group,
-              items: group.items.filter(
-                (gitem) => gitem.item_id !== item.item_id
-              ),
-            }
+  const handleDeleteNote = async (groupId) => {
+    setGroups((prev) =>
+      prev.map((group) => {
+        if (group.group_id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter(
+              (gitem) => gitem.item_id !== item.item_id
+            ),
           }
-          return group
-        })
-      )
+        }
+        return group
+      })
+    )
 
-      try {
-        await deleteItemFromGroupAPI(groupId, item.item_id)
-      } catch (error) {
-        console.error(error)
-      }
+    try {
+      await deleteItemFromGroupAPI(groupId, item.item_id)
+    } catch (error) {
+      console.error(error)
     }
+  }
 
   return (
     <>
       <div
-        className='tabItem' //沿用其他tab的樣式
-        style={{ backgroundColor: item.noteBgColor }}>
+        className='noteItem' //沿用其他tab的樣式
+        style={{ backgroundColor: item.note_bgColor }}>
         <textarea
-          placeholder={item.noteContent}
           className='note'
-          value={item.noteContent}
+          value={item.note_content}
           onChange={handleNoteChange}
           onKeyDown={handleNoteChange}
-          style={{ backgroundColor: item.noteBgColor }}></textarea>
+          style={{ backgroundColor: item.note_bgColor }}></textarea>
         <button
           className='deleteButton'
           onClick={() => handleDeleteNote(groupId)}>
