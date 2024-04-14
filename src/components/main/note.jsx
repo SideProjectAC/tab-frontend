@@ -6,17 +6,18 @@ import noteItemPropTypes from 'prop-types'
 
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
-  const [noteContent, setNoteContent] = useState(item?.item_noteContent)
+  const [noteContent, setNoteContent] = useState(item?.note_content || '')
   const notebgColor = '#f7f7f7'
 
   const handleNoteChange = (event) => {
     setNoteContent(event.target.value)
+    //todo patch note_content
   }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      handleAddNote()
+      item ? handleNoteChange(event) : handleAddNote()
     }
   }
 
@@ -70,12 +71,10 @@ function Note({ item, groupId }) {
 
   return (
     <>
-      <div
-        className='noteItem'
-        style={{ backgroundColor: item?.note_bgColor }}>
+      <div className='noteItem' style={{ backgroundColor: item?.note_bgColor }}>
         <textarea
           className='note'
-          value={item?.note_content}
+          value={noteContent}
           onChange={handleNoteChange}
           onKeyDown={handleKeyDown}
           style={{ backgroundColor: item?.note_bgColor }}></textarea>
