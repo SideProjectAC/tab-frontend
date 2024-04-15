@@ -1,28 +1,23 @@
 import { useState } from 'react'
 import '../../scss/main/note.scss'
-import { postNoteAPI, deleteItemFromGroupAPI } from '../../api/itemAPI'
+import {
+  postNoteAPI,
+  patchNoteAPI,
+  deleteItemFromGroupAPI,
+} from '../../api/itemAPI'
 import { useGroups } from '../useContext/groupContext'
 import noteItemPropTypes from 'prop-types'
 
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
   const [noteContent, setNoteContent] = useState(item?.note_content || '')
-  const notebgColor = '#f7f7f7'
-
-  const handleNoteChange = (event) => {
-    setNoteContent(event.target.value)
-    //todo patch note_content
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      item ? handleNoteChange(event) : handleAddNote()
-    }
-  }
+  const noteBgColor = '#f7f7f7' //暫無變換顏色功能
 
   const handleAddNote = async () => {
-    const newNoteData = { note_content: noteContent, note_bgColor: notebgColor }
+    const newNoteData = {
+      note_content: noteContent,
+      note_bgColor: noteBgColor,
+    }
     const response = await postNoteAPI(groupId, newNoteData)
     console.log(response)
 
@@ -37,7 +32,7 @@ function Note({ item, groupId }) {
                   item_id: response.item_id,
                   item_type: 1,
                   note_content: noteContent,
-                  note_bgColor: notebgColor,
+                  note_bgColor: noteBgColor,
                 },
               ],
             }
@@ -45,6 +40,20 @@ function Note({ item, groupId }) {
       )
     )
     setNoteContent('')
+  }
+  const handlePatchNote = async () => {
+    const patchNoteData = { note_content: noteContent }
+    const response = await patchNoteAPI(groupId, item?.item_id, patchNoteData)
+    console.log(response)
+  }
+
+  const handleChangeNote = (event) => {
+    event.key !== 'Enter'
+      ? setNoteContent(event.target.value)
+      : (() => {
+          event.preventDefault()
+          item ? handlePatchNote() : handleAddNote()
+        })()
   }
 
   const handleDeleteNote = async (groupId) => {
@@ -54,7 +63,7 @@ function Note({ item, groupId }) {
           return {
             ...group,
             items: group.items.filter(
-              (gitem) => gitem.item_id !== item.item_id
+              (gItem) => gItem.item_id !== item.item_id
             ),
           }
         }
@@ -75,8 +84,8 @@ function Note({ item, groupId }) {
         <textarea
           className='note'
           value={noteContent}
-          onChange={handleNoteChange}
-          onKeyDown={handleKeyDown}
+          onChange={handleChangeNote}
+          onKeyDown={handleChangeNote}
           style={{ backgroundColor: item?.note_bgColor }}></textarea>
         <button
           className='deleteButton'

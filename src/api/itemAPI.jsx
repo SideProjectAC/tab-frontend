@@ -30,6 +30,16 @@ export async function postNoteAPI(groupId, noteData) {
   }
 }
 
+export async function patchNoteAPI(groupId, itemId, noteData) {
+  try {
+    const response = await api.patch(`/groups/${groupId}/notes/${itemId}`, noteData)
+    return response.data
+  } catch (error) {
+    console.error('Error updating note:', error)
+    throw error
+  }
+}
+
 export async function deleteItemFromGroupAPI(groupId, itemId) {
   try {
     // console.log('in delete api: ', groupId, itemId)
