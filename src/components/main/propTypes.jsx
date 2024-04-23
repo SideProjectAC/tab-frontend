@@ -22,6 +22,8 @@ export const tabItemPropTypes = {
 
 export const noteItemPropTypes = {
   item: PropTypes.shape(itemPropTypes),
+  // note_bgColor: PropTypes.string,
+  // note_content: PropTypes.string,
 }
 
 export const groupPropTypes = {

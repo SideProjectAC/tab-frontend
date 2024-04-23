@@ -133,9 +133,12 @@ function Group({
             {item.item_type === 1 && (
               <Note item={item} groupId={group.group_id} />
             )}
+            {item.item_type === 2 && (
+                <Note item={item} groupId={group.group_id} />
+            )}
           </div>
         ))}
-          <Note groupId={group.group_id} />
+        <Note groupId={group.group_id} />
       </div>
     </div>
   )
