@@ -14,9 +14,10 @@ import Register from "./components/login/register";
 
 function determineContext() {
   const views = chrome.extension.getViews({ type: "popup" });
+  const token = localStorage.getItem("authToken");
   if (views.length > 0 && window === views[0]) {
     return "/popup";
-  }
+  } else if (!token) return "/login";
   return "/main";
 }
 const App = () => {
