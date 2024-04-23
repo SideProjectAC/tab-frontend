@@ -35,7 +35,20 @@ export async function patchNoteAPI(groupId, itemId, noteData) {
     const response = await api.patch(`/groups/${groupId}/notes/${itemId}`, noteData)
     return response.data
   } catch (error) {
-    console.error('Error updating note:', error)
+    console.error('Error patching note -> todo:', error)
+    throw error
+  }
+}
+
+export async function patchTodoAPI(groupId, itemId, todoData) {
+  try {
+    const response = await api.patch(
+      `/groups/${groupId}/todos/${itemId}`,
+      todoData
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error patching todo -> note:', error)
     throw error
   }
 }
