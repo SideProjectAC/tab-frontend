@@ -5,23 +5,17 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-   "action": {
-    "default_popup":"popup.html"
+  "action": {
+    "default_popup": "popup.html"
   },
-  
-  "permissions": [
-    "tabGroups",
-    "tabs",
-    "favicon",
-    "scripting",
-    "windows"
-  ],
-  "web_accessible_resources": [ 
-    { 
-        "resources": ["_favicon/*"], 
-        "matches": ["<all_urls>"], 
-        "extension_ids": ["*"] 
-    } 
+
+  "permissions": ["tabGroups", "tabs", "favicon", "scripting", "windows"],
+  "web_accessible_resources": [
+    {
+      "resources": ["_favicon/*"],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["*"]
+    }
   ],
   "background": {
     "service_worker": "background.js"
