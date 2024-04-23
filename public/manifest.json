@@ -6,7 +6,7 @@
     "newtab": "index.html"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "index.html"
   },
 
   "permissions": ["tabGroups", "tabs", "favicon", "scripting", "windows"],
