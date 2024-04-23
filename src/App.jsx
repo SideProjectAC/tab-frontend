@@ -2,12 +2,12 @@ import DragDropComponent from "./components/main/drag";
 import { ChromeTabsProvider } from "./components/useContext/chromeTabsContext";
 import { GroupsProvider } from "./components/useContext/groupContext";
 import { ThemeProvider } from "./components/useContext/themeContext";
+import PopupDrag from "./components/popup/popupDrag";
 import {
   MemoryRouter as Router,
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 import Login from "./components/login/login";
 import Register from "./components/login/register";
@@ -27,6 +27,7 @@ const App = () => {
         <GroupsProvider>
           <ChromeTabsProvider>
             <Routes>
+              <Route path="/popup" element={<PopupDrag />} />
               <Route path="/main" element={<DragDropComponent />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

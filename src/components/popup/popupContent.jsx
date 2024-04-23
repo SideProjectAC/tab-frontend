@@ -1,94 +1,87 @@
-import { useState, useEffect, useContext } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState, useEffect, useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleHalfStroke,
   faList,
   faPalette,
   faXmark,
-} from '@fortawesome/free-solid-svg-icons'
-import { ThemeContext } from '../useContext/themeContext'
+} from "@fortawesome/free-solid-svg-icons";
+import { ThemeContext } from "../useContext/themeContext";
 
-import Tab from './popupTab'
-import PopupGroups from './popupShowGroups'
-import { popupContentPropTypes } from '../main/propTypes'
-Tab.propTypes = popupContentPropTypes
-
-
+import Tab from "./popupTab";
+import PopupGroups from "./popupShowGroups";
+import { popupContentPropTypes } from "../main/propTypes";
+Tab.propTypes = popupContentPropTypes;
 
 function PopupContent() {
-  const { theme, setTheme } = useContext(ThemeContext)
+  const { theme, setTheme } = useContext(ThemeContext);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'))
-  }
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
 
-  const [currentTab, setCurrentTab] = useState(null)
-  const [showGroups,setShowGroups] = useState(false)
-  const [note, setNote] = useState(null)
-
+  const [currentTab, setCurrentTab] = useState(null);
+  const [showGroups, setShowGroups] = useState(false);
+  const [note, setNote] = useState(null);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const activeTab = tabs[0]
-      setCurrentTab(activeTab)
-    })
+      const activeTab = tabs[0];
+      setCurrentTab(activeTab);
+    });
 
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [currentTab, theme])
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [currentTab, theme]);
 
   const handleShowSave = () => {
-    if ( note.length === 0) return
-    setShowGroups(true)
-  }
-
-
-
+    if (note.length === 0) return;
+    setShowGroups(true);
+  };
 
   return (
     <>
-      <div id='header'>
+      <div id="header">
         {/* <p>Click here to move</p> */}
         <FontAwesomeIcon
           icon={faXmark}
-          className='button delete'
+          className="button delete"
           onClick={() => window.close()}
         />
       </div>
 
-      {showGroups && 
-        <PopupGroups 
-          note={note} 
+      {showGroups && (
+        <PopupGroups
+          note={note}
           // backgroundColor = {backgroundColor} //for note background color
           setShowGroups={setShowGroups}
-          currentTab = {currentTab}
-        />}
+          currentTab={currentTab}
+        />
+      )}
 
       {currentTab && <Tab currentTab={currentTab} />}
 
       <form>
-        <textarea 
-          className='popupNote'
-          onChange={(e)=> setNote(e.target.value)}
-          placeholder='New note'
-          value = {note}
-          >
-            
-          </textarea>
+        <textarea
+          className="popupNote"
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="New note"
+          value={note}
+        ></textarea>
       </form>
-      <div className='buttons'>
+      <div className="popup-buttons">
         <FontAwesomeIcon
           icon={faCircleHalfStroke}
-          className='button theme'
+          className="popup-button theme"
           onClick={toggleTheme}
         />
-        <FontAwesomeIcon icon={faList} className='button todo' />
-        <FontAwesomeIcon icon={faPalette} className='button color' />
-        <button className='button save'
-          onClick={handleShowSave}
-        >Save</button>
+        <FontAwesomeIcon icon={faList} className="popup-button todo" />
+        <FontAwesomeIcon icon={faPalette} className="popup-button color" />
+        <button className="popup-button save" onClick={handleShowSave}>
+          Save
+        </button>
       </div>
     </>
-  )
+  );
 }
 
-export default PopupContent
+export default PopupContent;

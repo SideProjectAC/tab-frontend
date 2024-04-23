@@ -1,18 +1,13 @@
-import { useState, useEffect } from "react";
-import { getGroupAPI, postGroupAPI } from "../../api/groupAPI";
 import { postNoteAPI } from "../../api/itemAPI";
+import { useGroups } from "../useContext/groupContext";
+import { useEffect } from "react";
 
 const PopupGroups = ({ note, setShowGroups }) => {
-  const [groups, setGroups] = useState([]);
+  const { groups, setGroups } = useGroups();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await getGroupAPI();
-      setGroups(response.data);
-    };
-
-    fetchData();
-  }, []);
+    console.log(groups);
+  }, [groups]);
 
   const handleSaveNote = async (groupId) => {
     const noteData = {
@@ -20,10 +15,22 @@ const PopupGroups = ({ note, setShowGroups }) => {
       note_bgColor: "#c5c5c5",
     };
     const response = await postNoteAPI(groupId, noteData);
-    if (response.status === "success") {
-      setShowGroups(false);
-      console.log("noteId", response.item_id);
-    }
+    if (response.status === "success") setShowGroups(false);
+
+    const newAddNote = {
+      item_type: 1,
+      item_id: response.item_id,
+      note_content: note,
+      note_bgColor: "#c5c5c5",
+    };
+
+    setGroups((prev) =>
+      prev.map((group) =>
+        group.group_id === groupId
+          ? { ...group, items: [...group.items, newAddNote] }
+          : group
+      )
+    );
   };
 
   // const handleSaveToNewGroup = async () => {

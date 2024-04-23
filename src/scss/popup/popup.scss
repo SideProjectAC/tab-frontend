@@ -1,6 +1,6 @@
 @import "../abstracts/colors";
 
-body {
+.popupBody {
   width: 300px;
   /* Set the width of the popup */
   height: 250px;
@@ -15,7 +15,6 @@ body {
   border: 1px solid var(--background-color);
   box-shadow: 2px 3px 10px 5px rgba(112, 112, 112, 0.4);
   text-align: center;
-  // cursor: move;
   width: 300px;
   height: auto;
   box-sizing: border-box;
@@ -25,7 +24,6 @@ body {
 }
 
 #header {
-  cursor: move;
   background-color: var(--background-color);
   color: var(--text-color);
   display: flex;
@@ -35,7 +33,7 @@ body {
   height: 30px;
 }
 
-.tabItem {
+.popup-tabItem {
   list-style-type: none;
   margin: 0px auto;
   overflow: hidden;
@@ -44,7 +42,7 @@ body {
   width: 250px;
 }
 
-.tabTitle {
+.popup-tabTitle {
   overflow: hidden;
   text-align: left;
   margin-left: 10px;
@@ -52,16 +50,16 @@ body {
   color: var(--text-color);
 }
 
-.tabIcon {
+.popup-tabIcon {
   width: 1 rem;
   height: 1 rem;
 }
-.tabUrl {
+.popup-tabUrl {
   text-align: left;
   margin-left: 10px;
   color: var(--text-color);
 }
-.buttons {
+.popup-buttons {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -69,7 +67,7 @@ body {
   position: relative;
 }
 
-.button {
+.popup-button {
   position: relative;
   &.save {
     background-color: var(--background-color);
