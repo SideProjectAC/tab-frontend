@@ -11,7 +11,7 @@ export const GroupsProvider = ({ children }) => {
     try {
       const response = await getGroupAPI();
       // console.log('first Groups fetched: ', response.data);
-      setGroups(response.data.groups);
+      setGroups(response.data);
     } catch (error) {
       console.error("Error fetching groups", error);
     }
@@ -19,10 +19,11 @@ export const GroupsProvider = ({ children }) => {
 
   useEffect(() => {
     loadGroups();
+    console;
   }, []);
 
   return (
-    <GroupsContext.Provider value={{ groups, setGroups }}>
+    <GroupsContext.Provider value={{ groups, setGroups, loadGroups }}>
       {children}
     </GroupsContext.Provider>
   );

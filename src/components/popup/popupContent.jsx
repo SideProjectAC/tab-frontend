@@ -44,7 +44,7 @@ function PopupContent() {
         {/* <p>Click here to move</p> */}
         <FontAwesomeIcon
           icon={faXmark}
-          className="button delete"
+          className="popup-button delete"
           onClick={() => window.close()}
         />
       </div>
@@ -67,19 +67,22 @@ function PopupContent() {
           placeholder="New note"
           value={note}
         ></textarea>
+        {/* <button onClick={handleShowSave} className="popup-save">
+          SAVE
+        </button> */}
       </form>
-      <div className="popup-buttons">
+      {/* <div className="popup-buttons">
         <FontAwesomeIcon
           icon={faCircleHalfStroke}
           className="popup-button theme"
           onClick={toggleTheme}
         />
         <FontAwesomeIcon icon={faList} className="popup-button todo" />
-        <FontAwesomeIcon icon={faPalette} className="popup-button color" />
-        <button className="popup-button save" onClick={handleShowSave}>
-          Save
-        </button>
-      </div>
+        <FontAwesomeIcon icon={faPalette} className="popup-button color" /> */}
+      <button className="popup-button save" onClick={handleShowSave}>
+        Save
+      </button>
+      {/* </div> */}
     </>
   );
 }

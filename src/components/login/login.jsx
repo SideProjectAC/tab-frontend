@@ -18,7 +18,7 @@ function Login() {
   }, [navigate]);
 
   const handleGoogleSubmit = async () => {
-    window.location.href = "https://tabcolab.live/api/1.0/auth/google";
+    window.location.href = "http://localhost:5050/auth/google";
     // const response = await googleOauthAPI();
     // console.log("Google Oauth response", response);
   };

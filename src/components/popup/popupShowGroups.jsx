@@ -5,14 +5,10 @@ import { useEffect } from "react";
 const PopupGroups = ({ note, setShowGroups }) => {
   const { groups, setGroups } = useGroups();
 
-  useEffect(() => {
-    console.log(groups);
-  }, [groups]);
-
   const handleSaveNote = async (groupId) => {
     const noteData = {
       note_content: note,
-      note_bgColor: "#c5c5c5",
+      note_bgColor: "#f7f7f7",
     };
     const response = await postNoteAPI(groupId, noteData);
     if (response.status === "success") setShowGroups(false);
@@ -21,7 +17,7 @@ const PopupGroups = ({ note, setShowGroups }) => {
       item_type: 1,
       item_id: response.item_id,
       note_content: note,
-      note_bgColor: "#c5c5c5",
+      note_bgColor: "#f7f7f7",
     };
 
     setGroups((prev) =>
@@ -31,16 +27,9 @@ const PopupGroups = ({ note, setShowGroups }) => {
           : group
       )
     );
+
+    window.close();
   };
-
-  // const handleSaveToNewGroup = async () => {
-  //   const newGroup = {
-  //     "group_icon": "📝",
-  //     "group_title": "from popup"
-  //   }
-  //   const response = await postGroupAPI(newGroup)
-
-  // }
 
   return (
     <>
