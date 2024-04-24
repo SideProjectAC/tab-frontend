@@ -8,7 +8,6 @@ Groups.propTypes = groupsPropTypes;
 
 function Groups({ handleDrop, handleDragOver, handleDragStart }) {
   const { groups, setGroups } = useGroups();
-  console.log("groups,", groups);
 
   const newGroupId = useRef(null);
 

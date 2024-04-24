@@ -1,5 +1,7 @@
+@import "../abstracts/colors";
 .note {
   border: none;
   border-radius: 5px;
   padding: 15px;
+  background-color: var(--secondary-background-color);
 }

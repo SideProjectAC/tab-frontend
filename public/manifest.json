@@ -9,7 +9,14 @@
     "default_popup": "index.html"
   },
 
-  "permissions": ["tabGroups", "tabs", "favicon", "scripting", "windows"],
+  "permissions": [
+    "tabGroups",
+    "tabs",
+    "favicon",
+    "scripting",
+    "windows",
+    "identity"
+  ],
   "host_permissions": ["https://tabcolab.live/api/1.0/*"],
   "web_accessible_resources": [
     {
@@ -18,6 +25,10 @@
       "extension_ids": ["*"]
     }
   ],
+  "oauth2": {
+    "client_id": "560502229224-mi0fugbocfd28g611gsrhsmrai6l5ird.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/userinfo.email"]
+  },
   "background": {
     "service_worker": "background.js"
   }
