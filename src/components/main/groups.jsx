@@ -1,42 +1,43 @@
-import { useGroups } from '../useContext/groupContext'
-import { useRef } from 'react'
-import Group from './group'
-import { deleteGroupAPI } from '../../api/groupAPI'
-import { groupsPropTypes } from './propTypes'
+import { useGroups } from "../useContext/groupContext";
+import { useRef } from "react";
+import Group from "./group";
+import { deleteGroupAPI } from "../../api/groupAPI";
+import { groupsPropTypes } from "./propTypes";
 
-Groups.propTypes = groupsPropTypes
+Groups.propTypes = groupsPropTypes;
 
 function Groups({ handleDrop, handleDragOver, handleDragStart }) {
-  const { groups, setGroups } = useGroups()
+  const { groups, setGroups } = useGroups();
+  console.log("groups,", groups);
 
-  const newGroupId = useRef(null)
+  const newGroupId = useRef(null);
 
   async function handleDeleteGroup(groupId) {
     try {
-      await deleteGroupAPI(groupId)
-      console.log('Group deleted successfully')
+      await deleteGroupAPI(groupId);
+      console.log("Group deleted successfully");
 
-      setGroups((prev) => prev.filter((group) => group.group_id !== groupId))
+      setGroups((prev) => prev.filter((group) => group.group_id !== groupId));
     } catch (error) {
-      console.error('Error deleting group', error)
+      console.error("Error deleting group", error);
     }
   }
 
   const handleSiteCount = (groupId) => {
-    const group = groups.find((g) => g.group_id === groupId)
+    const group = groups.find((g) => g.group_id === groupId);
     if (group) {
       group.items.forEach((item) => {
-        chrome.tabs.create({ url: item.browserTab_url, active: false })
-      })
+        chrome.tabs.create({ url: item.browserTab_url, active: false });
+      });
     } else {
-      console.error('Group not found:', groupId)
+      console.error("Group not found:", groupId);
     }
-  }
+  };
 
   return (
     <>
-      <div className='groups'>
-        <div className='groupList'>
+      <div className="groups">
+        <div className="groupList">
           {groups.map((group) => (
             <Group
               key={group.group_id}
@@ -50,15 +51,16 @@ function Groups({ handleDrop, handleDragOver, handleDragStart }) {
           ))}
         </div>
         <div
-          className='newGroup'
+          className="newGroup"
           onDragOver={handleDragOver}
           onDrop={(e) => {
-            e.preventDefault()
-            handleDrop(e, newGroupId)
-          }}></div>
+            e.preventDefault();
+            handleDrop(e, newGroupId);
+          }}
+        ></div>
       </div>
     </>
-  )
+  );
 }
 
-export default Groups
+export default Groups;

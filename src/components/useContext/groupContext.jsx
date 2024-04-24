@@ -1,34 +1,34 @@
-import { createContext, useState, useContext, useEffect } from 'react'
-import { getGroupAPI } from '../../api/groupAPI'
-import { GroupsProviderPropTypes } from '../main/propTypes'
+import { createContext, useState, useContext, useEffect } from "react";
+import { getGroupAPI } from "../../api/groupAPI";
+import { GroupsProviderPropTypes } from "../main/propTypes";
 
-const GroupsContext = createContext()
+const GroupsContext = createContext();
 
 export const GroupsProvider = ({ children }) => {
-  const [groups, setGroups] = useState([])
+  const [groups, setGroups] = useState([]);
 
   async function loadGroups() {
     try {
-      const response = await getGroupAPI()
+      const response = await getGroupAPI();
       // console.log('first Groups fetched: ', response.data);
-      setGroups(response.data)
+      setGroups(response.data.groups);
     } catch (error) {
-      console.error('Error fetching groups', error)
+      console.error("Error fetching groups", error);
     }
   }
 
   useEffect(() => {
-    loadGroups()
-  }, [])
+    loadGroups();
+  }, []);
 
   return (
     <GroupsContext.Provider value={{ groups, setGroups }}>
       {children}
     </GroupsContext.Provider>
-  )
-}
+  );
+};
 
 //Review this and corresponding new import
-GroupsProvider.propTypes = GroupsProviderPropTypes
+GroupsProvider.propTypes = GroupsProviderPropTypes;
 
-export const useGroups = () => useContext(GroupsContext)
+export const useGroups = () => useContext(GroupsContext);

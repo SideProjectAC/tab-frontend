@@ -10,6 +10,7 @@
   },
 
   "permissions": ["tabGroups", "tabs", "favicon", "scripting", "windows"],
+  "host_permissions": ["https://tabcolab.live/api/1.0/*"],
   "web_accessible_resources": [
     {
       "resources": ["_favicon/*"],
