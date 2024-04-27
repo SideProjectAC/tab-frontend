@@ -66,7 +66,7 @@ function Group({
       const response = await patchGroupAPI(groupId, {
         group_title: title.current,
       });
-      console.log("Group Title updated successfully", response.data);
+      // console.log("Group Title updated successfully", response.data);
     } catch (error) {
       console.error("Error updating groupTitle", error);
     }

@@ -19,13 +19,14 @@ const PopupGroups = ({ note, setShowGroups }) => {
       note_bgColor: "#f7f7f7",
     };
 
-    setGroups((prev) =>
-      prev.map((group) =>
+    setGroups((prev) => {
+      localStorage.setItem("needReload", "true");
+      return prev.map((group) =>
         group.group_id === groupId
           ? { ...group, items: [...group.items, newAddNote] }
           : group
-      )
-    );
+      );
+    });
 
     window.close();
   };

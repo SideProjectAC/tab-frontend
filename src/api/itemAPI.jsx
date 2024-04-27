@@ -78,7 +78,7 @@ export async function patchItemToExistingGroupsAPI(
       `/groups/${groupId}/items/${itemId}`,
       targetPosition
     );
-    console.log("Item moved successfully:", response.data);
+    // console.log("Item moved successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error moved item:", error);

@@ -20,8 +20,16 @@ function determineContext() {
   } else if (!token) return "/login";
   return "/main";
 }
+
 const App = () => {
   const initialPath = determineContext();
+  window.addEventListener("storage", (event) => {
+    if (event.key === "needReload" && event.newValue === "true") {
+      window.location.reload();
+      localStorage.removeItem("needReload");
+    }
+  });
+
   return (
     <Router initialEntries={[initialPath]}>
       <ThemeProvider>

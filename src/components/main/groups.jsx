@@ -14,7 +14,7 @@ function Groups({ handleDrop, handleDragOver, handleDragStart }) {
   async function handleDeleteGroup(groupId) {
     try {
       await deleteGroupAPI(groupId);
-      console.log("Group deleted successfully");
+      // console.log("Group deleted successfully");
 
       setGroups((prev) => prev.filter((group) => group.group_id !== groupId));
     } catch (error) {
