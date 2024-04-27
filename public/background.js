@@ -54,53 +54,25 @@ chrome.runtime.onConnect.addListener((port) => {
 
 //oauth
 
-function authenticate(callback) {
-  chrome.identity.getAuthToken({ interactive: true }, (token) => {
-    if (chrome.runtime.lastError) {
-      console.error("Authentication failed: ", chrome.runtime.lastError);
-      callback(null);
-    } else {
-      callback(token);
-    }
-  });
-}
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "authenticate") {
-    authenticate((token) => {
-      sendResponse({ token: token });
-    });
+    const redirectUri = chrome.identity.getRedirectURL();
+    const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=560502229224-mi0fugbocfd28g611gsrhsmrai6l5ird.apps.googleusercontent.com&response_type=code&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=profile%20email`;
+    // console.log(
+    //   "Redirect URI in OAuth request:",
+    //   decodeURIComponent(authUrl.split("redirect_uri=")[1].split("&")[0])
+    // );
+
+    chrome.identity.launchWebAuthFlow(
+      { url: authUrl, interactive: true },
+      (responseUrl) => {
+        const url = new URL(responseUrl);
+        const code = url.searchParams.get("code");
+        sendResponse({ code: code });
+      }
+    );
     return true;
-  }
-});
-
-//log out test
-// Function to remove the cached token and revoke it
-function logout(callback) {
-  chrome.identity.getAuthToken({ interactive: false }, function (token) {
-    if (chrome.runtime.lastError) {
-      console.error("Error fetching auth token:", chrome.runtime.lastError);
-    } else {
-      // Remove the token from the cache
-      chrome.identity.removeCachedAuthToken({ token: token }, () => {
-        console.log("Token removed from cache.");
-        // Optionally, revoke the token on Google's servers
-        const revokeUrl = `https://accounts.google.com/o/oauth2/revoke?token=${token}`;
-        fetch(revokeUrl).then(() => {
-          console.log("Token revoked.");
-          callback();
-        });
-      });
-    }
-  });
-}
-
-// Listen for a logout message from the popup
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action === "logout") {
-    logout(() => {
-      sendResponse({ success: true });
-    });
-    return true; // Indicates you're sending a response asynchronously
   }
 });

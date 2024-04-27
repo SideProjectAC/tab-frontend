@@ -34,7 +34,6 @@ const PopupGroups = ({ note, setShowGroups }) => {
     <>
       <div className="popupAddGroupWrapper">
         <h3 className="popupAddTitle">Add Note to which Group?</h3>
-
         <div className="popupGroupList">
           {groups.map((group) => (
             <div
@@ -48,9 +47,6 @@ const PopupGroups = ({ note, setShowGroups }) => {
           ))}
         </div>
         {groups.length === 0 && <h1> No Groups yet!</h1>}
-        {/* <button className='addToNewGroup'
-        onClick={() => handleSaveToNewGroup()}
-      >add a new Group</button> */}
       </div>
     </>
   );

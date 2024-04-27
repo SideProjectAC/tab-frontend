@@ -17,26 +17,22 @@ function Login() {
     }
   }, [navigate]);
 
-  const handleGoogleSubmit = async () => {
-    chrome.runtime.sendMessage({ action: "authenticate" }, (response) => {
-      if (response && response.token) {
+  const handleGoogleSubmit = () => {
+    chrome.runtime.sendMessage({ action: "authenticate" }, async (response) => {
+      if (response && response.code) {
         const redirectUri = chrome.identity.getRedirectURL();
-        console.log("Generated Redirect URI:", redirectUri);
-        console.log("OAuth token received:", response.token);
-        //POST API ：傳token 跟URL給後端
-      } else {
-        console.error("Failed to authenticate");
-      }
-    });
-  };
-
-  const handleLogout = () => {
-    // Send a message to the background script to log out
-    chrome.runtime.sendMessage({ action: "logout" }, (response) => {
-      if (response.success) {
-        console.log("Logged out successfully");
-      } else {
-        console.error("Failed to log out");
+        const token = {
+          authorization_code: response.code,
+          redirect_url: redirectUri,
+        };
+        try {
+          const response = await googleOauthAPI(token);
+          localStorage.setItem("authToken", response.data.token);
+          navigate("/main");
+          location.reload();
+        } catch (error) {
+          console.error("Error during Google OAuth:", error);
+        }
       }
     });
   };
@@ -114,7 +110,6 @@ function Login() {
       </button>
       <Link to="/register">Register</Link>
       <GoogleButton className="login-button" onClick={handleGoogleSubmit} />
-      <button onClick={handleLogout}>logout Google</button>
     </div>
   );
 }

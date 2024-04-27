@@ -8,6 +8,6 @@ const api = axios.create({
   },
 });
 
-export function googleOauthAPI() {
-  return api.get("/auth/google/token");
+export function googleOauthAPI(token) {
+  return api.post("/oauth/google/token", token);
 }
