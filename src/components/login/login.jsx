@@ -18,9 +18,27 @@ function Login() {
   }, [navigate]);
 
   const handleGoogleSubmit = async () => {
-    window.location.href = "https://tabcolab.live/api/1.0/auth/google";
-    // const response = await googleOauthAPI();
-    // console.log("Google Oauth response", response);
+    chrome.runtime.sendMessage({ action: "authenticate" }, (response) => {
+      if (response && response.token) {
+        const redirectUri = chrome.identity.getRedirectURL();
+        console.log("Generated Redirect URI:", redirectUri);
+        console.log("OAuth token received:", response.token);
+        //POST API ：傳token 跟URL給後端
+      } else {
+        console.error("Failed to authenticate");
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    // Send a message to the background script to log out
+    chrome.runtime.sendMessage({ action: "logout" }, (response) => {
+      if (response.success) {
+        console.log("Logged out successfully");
+      } else {
+        console.error("Failed to log out");
+      }
+    });
   };
 
   function handleValueChange(e, setValue) {
@@ -96,6 +114,7 @@ function Login() {
       </button>
       <Link to="/register">Register</Link>
       <GoogleButton className="login-button" onClick={handleGoogleSubmit} />
+      <button onClick={handleLogout}>logout Google</button>
     </div>
   );
 }
