@@ -1,6 +1,5 @@
 import { postNoteAPI } from "../../api/itemAPI";
 import { useGroups } from "../useContext/groupContext";
-import { useEffect } from "react";
 
 const PopupGroups = ({ note, setShowGroups }) => {
   const { groups, setGroups } = useGroups();

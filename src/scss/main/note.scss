@@ -1,7 +1,20 @@
 @import "../abstracts/colors";
+.new-noteItem {
+  opacity: 0;
+  background-color: var(--background-color);
+  &:hover {
+    opacity: 1;
+  }
+}
+.noteItem {
+  opacity: 1;
+  background-color: var(--background-color);
+}
 .note {
   border: none;
   border-radius: 5px;
   padding: 15px;
-  background-color: var(--secondary-background-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  resize: none;
 }
