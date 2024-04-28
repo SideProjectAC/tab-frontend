@@ -1,8 +1,8 @@
-import { useGroups } from "../useContext/groupContext";
+import { useGroups } from "../useContext/GroupContext";
 import { useRef } from "react";
-import Group from "./group";
+import Group from "./Group";
 import { deleteGroupAPI } from "../../api/groupAPI";
-import { groupsPropTypes } from "./propTypes";
+import { groupsPropTypes } from "./PropTypes";
 
 Groups.propTypes = groupsPropTypes;
 

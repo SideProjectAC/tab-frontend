@@ -6,7 +6,7 @@ import {
   deleteItemFromGroupAPI,
   patchTodoAPI,
 } from "../../api/itemAPI";
-import { useGroups } from "../useContext/groupContext";
+import { useGroups } from "../useContext/GroupContext";
 import noteItemPropTypes from "prop-types";
 
 function Note({ item, groupId }) {

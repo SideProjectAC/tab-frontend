@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import { useGroups } from "../useContext/groupContext";
-import TabItem from "./tabItem";
-import Emoji from "./emoji";
-import Note from "./note";
+import { useGroups } from "../useContext/GroupContext";
+import TabItem from "./TabItem";
+import Emoji from "./Emoji";
+import Note from "./Note";
 import { patchGroupAPI } from "../../api/groupAPI";
-import { groupPropTypes } from "./propTypes";
+import { groupPropTypes } from "./PropTypes";
 import "../../scss/main/group.scss";
 
 Group.propTypes = groupPropTypes;

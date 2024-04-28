@@ -6,11 +6,11 @@ import {
   faPalette,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { ThemeContext } from "../useContext/themeContext";
+import { ThemeContext } from "../useContext/ThemeContext";
 
-import Tab from "./popupTab";
-import PopupGroups from "./popupShowGroups";
-import { popupContentPropTypes } from "../main/propTypes";
+import Tab from "./PopupTab";
+import PopupGroups from "./PopupShowGroups";
+import { popupContentPropTypes } from "../main/PropTypes";
 Tab.propTypes = popupContentPropTypes;
 
 function PopupContent() {

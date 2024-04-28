@@ -1,19 +1,19 @@
 import { useState, useEffect, useContext } from "react";
-import { useChromeTabs } from "../useContext/chromeTabsContext";
-import { useGroups } from "../useContext/groupContext";
+import { useChromeTabs } from "../useContext/ChromeTabsContext";
+import { useGroups } from "../useContext/GroupContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleHalfStroke,
   faArrowRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { ThemeContext } from "../useContext/themeContext";
-import ActiveTabs from "./activeTab";
-import Groups from "./groups";
+import { ThemeContext } from "../useContext/ThemeContext";
+import ActiveTabs from "./ActiveTab";
+import Groups from "./Groups";
 import "../../scss/main/drag.scss";
-import { useDragDrop } from "./handleDragDrop";
-import SearchBar from "./searchBar";
-import UserInfo from "./userInfo";
+import { useDragDrop } from "./HandleDragDrop";
+import SearchBar from "./SearchBar";
+import UserInfo from "./UserInfo";
 
 function DragDropComponent() {
   const [activeTabs, setActiveTabs] = useState([]);

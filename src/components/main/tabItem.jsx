@@ -1,6 +1,6 @@
 import { deleteItemFromGroupAPI } from "../../api/itemAPI";
-import { useGroups } from "../useContext/groupContext";
-import { tabItemPropTypes } from "./propTypes";
+import { useGroups } from "../useContext/GroupContext";
+import { tabItemPropTypes } from "./PropTypes";
 import "../../scss/main/item.scss";
 
 const TabItem = ({ tab, groupId, className }) => {

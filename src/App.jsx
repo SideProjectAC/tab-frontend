@@ -1,16 +1,16 @@
-import DragDropComponent from "./components/main/drag";
-import { ChromeTabsProvider } from "./components/useContext/chromeTabsContext";
-import { GroupsProvider } from "./components/useContext/groupContext";
-import { ThemeProvider } from "./components/useContext/themeContext";
-import PopupDrag from "./components/popup/popupDrag";
+import DragDropComponent from "./components/main/Drag";
+import { ChromeTabsProvider } from "./components/useContext/ChromeTabsContext";
+import { GroupsProvider } from "./components/useContext/GroupContext";
+import { ThemeProvider } from "./components/useContext/ThemeContext";
+import PopupDrag from "./components/popup/PopupDrag";
 import {
   MemoryRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/login/login";
-import Register from "./components/login/register";
+import Login from "./components/login/Login";
+import Register from "./components/login/Register";
 
 function determineContext() {
   const views = chrome.extension.getViews({ type: "popup" });
