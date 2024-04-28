@@ -1,9 +1,8 @@
-import "../../scss/login/login.scss";
 import { useState, useEffect } from "react";
 import { loginAPI } from "../../api/loginAPI";
 import { Link, useNavigate } from "react-router-dom";
-import GoogleButton from "react-google-button";
-import { googleOauthAPI } from "../../api/oauthAPI";
+import "../../scss/login/login.scss";
+import GoogleLogin from "./GoogleLogin";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,26 +15,6 @@ function Login() {
       navigate("/main");
     }
   }, [navigate]);
-
-  const handleGoogleSubmit = () => {
-    chrome.runtime.sendMessage({ action: "authenticate" }, async (response) => {
-      if (response && response.code) {
-        const redirectUri = chrome.identity.getRedirectURL();
-        const token = {
-          authorization_code: response.code,
-          redirect_url: redirectUri,
-        };
-        try {
-          const response = await googleOauthAPI(token);
-          localStorage.setItem("authToken", response.data.token);
-          navigate("/main");
-          location.reload();
-        } catch (error) {
-          console.error("Error during Google OAuth:", error);
-        }
-      }
-    });
-  };
 
   function handleValueChange(e, setValue) {
     setValue(e.target.value);
@@ -109,7 +88,7 @@ function Login() {
         login{" "}
       </button>
       <Link to="/register">Register</Link>
-      <GoogleButton className="login-button" onClick={handleGoogleSubmit} />
+      <GoogleLogin />
     </div>
   );
 }

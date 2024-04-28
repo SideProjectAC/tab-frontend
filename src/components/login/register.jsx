@@ -1,7 +1,8 @@
-import "../../scss/login/register.scss";
 import { useState } from "react";
 import { registerAPI } from "../../api/loginAPI";
 import { Link, useNavigate } from "react-router-dom";
+import GoogleLogin from "./GoogleLogin";
+import "../../scss/login/register.scss";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -36,6 +37,7 @@ function Register() {
       const token = response.data.token;
       localStorage.setItem("authToken", token);
       navigate("/main");
+      location.reload();
     } catch (error) {
       if (error.response) {
         console.error("Login error:", error.response.data);
@@ -79,6 +81,7 @@ function Register() {
         register{" "}
       </button>
       <Link to="/login">Login</Link>
+      <GoogleLogin />
     </div>
   );
 }
