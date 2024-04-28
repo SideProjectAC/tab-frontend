@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { postNoteAPI } from "../../api/itemAPI";
+import { postNoteAPI, postTabAPI } from "../../api/itemAPI";
 import { getGroupAPI } from "../../api/groupAPI";
 
-const PopupGroups = ({ note, setShowGroups }) => {
+const PopupGroups = ({ note, setShowGroups, currentTab }) => {
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,15 +15,31 @@ const PopupGroups = ({ note, setShowGroups }) => {
     fetchData();
   }, []);
 
-  const handleSaveNote = async (groupId) => {
+  const handleSaveNote = async (groupId, itemLength) => {
+    const tabData = {
+      browserTab_favIconURL: currentTab.favIconUrl,
+      browserTab_title: currentTab.title,
+      browserTab_url: currentTab.url,
+      browserTab_id: currentTab.id,
+      browserTab_index: currentTab.index,
+      browserTab_active: currentTab.active,
+      browserTab_status: currentTab.status,
+      windowId: currentTab.windowId,
+      targetItem_position: itemLength,
+    };
     const noteData = {
       note_content: note,
       note_bgColor: "#f7f7f7",
     };
-    const response = await postNoteAPI(groupId, noteData);
-    if (response.status === "success") setShowGroups(false);
-    localStorage.setItem("needReload", "true");
-    window.close();
+    try {
+      await postTabAPI(groupId, tabData);
+      await postNoteAPI(groupId, noteData);
+      setShowGroups(false);
+      localStorage.setItem("needReload", "true");
+      window.close();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -34,7 +50,7 @@ const PopupGroups = ({ note, setShowGroups }) => {
           {groups.map((group) => (
             <div
               className="popupGroup"
-              onClick={() => handleSaveNote(group.group_id)}
+              onClick={() => handleSaveNote(group.group_id, group.items.length)}
               key={group.group_id}
             >
               <div className="popupGroupInfo">{group.group_icon}</div>
