@@ -1,8 +1,19 @@
+import { useState, useEffect } from "react";
 import { postNoteAPI } from "../../api/itemAPI";
-import { useGroups } from "../useContext/GroupContext";
+import { getGroupAPI } from "../../api/groupAPI";
 
 const PopupGroups = ({ note, setShowGroups }) => {
-  const { groups, setGroups } = useGroups();
+  const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getGroupAPI();
+      setGroups(response.data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   const handleSaveNote = async (groupId) => {
     const noteData = {
@@ -11,23 +22,7 @@ const PopupGroups = ({ note, setShowGroups }) => {
     };
     const response = await postNoteAPI(groupId, noteData);
     if (response.status === "success") setShowGroups(false);
-
-    const newAddNote = {
-      item_type: 1,
-      item_id: response.item_id,
-      note_content: note,
-      note_bgColor: "#f7f7f7",
-    };
-
-    setGroups((prev) => {
-      localStorage.setItem("needReload", "true");
-      return prev.map((group) =>
-        group.group_id === groupId
-          ? { ...group, items: [...group.items, newAddNote] }
-          : group
-      );
-    });
-
+    localStorage.setItem("needReload", "true");
     window.close();
   };
 
@@ -47,7 +42,7 @@ const PopupGroups = ({ note, setShowGroups }) => {
             </div>
           ))}
         </div>
-        {groups.length === 0 && <h1> No Groups yet!</h1>}
+        {isLoading ? "" : groups.length === 0 && <h1> No Groups yet!</h1>}
       </div>
     </>
   );

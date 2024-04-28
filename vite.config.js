@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [react()],
   base: "",
   build: {
-    chunkSizeWarningLimit: 600,
     outDir: "dist",
     emptyOutDir: true, // Clears the directory on build
     rollupOptions: {
       input: {
         main: "index.html",
+        popup: "popup.html",
       },
     },
   },

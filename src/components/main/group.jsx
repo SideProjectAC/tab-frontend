@@ -123,7 +123,7 @@ function Group({
           setShowEmojiGroupId={setShowEmojiGroupId}
         />
       )}
-      <div>
+      <div className="itemWrapper">
         {group.items.map((item) => (
           <div
             key={item.item_id}

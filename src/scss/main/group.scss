@@ -13,6 +13,10 @@
   flex-direction: column;
   justify-content: flex-start;
 
+  .itemWrapper {
+    overflow-x: auto;
+  }
+
   .groupInfo {
     display: flex;
     align-items: center;
@@ -39,8 +43,7 @@
       font-weight: bold;
       color: var(--secondary-text-color);
       background-color: var(--secondary-background-color);
-      width: 35%;
-      margin-left: 10px;
+      width: 40%;
       &:hover {
         background-color: var(--background-color);
       }
@@ -56,7 +59,7 @@
       background-color: var(--background-color);
       padding: 5px 10px;
       position: absolute;
-      right: 15%;
+      right: 13%;
       &:hover {
         cursor: pointer;
         background-color: var(--selected);

@@ -1,12 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleHalfStroke,
-  faList,
-  faPalette,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { ThemeContext } from "../useContext/ThemeContext";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import Tab from "./PopupTab";
 import PopupGroups from "./PopupShowGroups";
@@ -14,12 +8,6 @@ import { popupContentPropTypes } from "../main/PropTypes";
 Tab.propTypes = popupContentPropTypes;
 
 function PopupContent() {
-  const { theme, setTheme } = useContext(ThemeContext);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
   const [currentTab, setCurrentTab] = useState(null);
   const [showGroups, setShowGroups] = useState(false);
   const [note, setNote] = useState(null);
@@ -29,9 +17,7 @@ function PopupContent() {
       const activeTab = tabs[0];
       setCurrentTab(activeTab);
     });
-
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [currentTab, theme]);
+  }, [currentTab]);
 
   const handleShowSave = () => {
     if (note.length === 0) return;
@@ -41,14 +27,12 @@ function PopupContent() {
   return (
     <>
       <div id="header">
-        {/* <p>Click here to move</p> */}
         <FontAwesomeIcon
           icon={faXmark}
           className="popup-button delete"
           onClick={() => window.close()}
         />
       </div>
-
       {showGroups && (
         <PopupGroups
           note={note}
@@ -57,9 +41,7 @@ function PopupContent() {
           currentTab={currentTab}
         />
       )}
-
       {currentTab && <Tab currentTab={currentTab} />}
-
       <form>
         <textarea
           className="popupNote"
@@ -67,22 +49,10 @@ function PopupContent() {
           placeholder="New note"
           value={note}
         ></textarea>
-        {/* <button onClick={handleShowSave} className="popup-save">
-          SAVE
-        </button> */}
       </form>
-      {/* <div className="popup-buttons">
-        <FontAwesomeIcon
-          icon={faCircleHalfStroke}
-          className="popup-button theme"
-          onClick={toggleTheme}
-        />
-        <FontAwesomeIcon icon={faList} className="popup-button todo" />
-        <FontAwesomeIcon icon={faPalette} className="popup-button color" /> */}
       <button className="popup-button save" onClick={handleShowSave}>
         Save
       </button>
-      {/* </div> */}
     </>
   );
 }
