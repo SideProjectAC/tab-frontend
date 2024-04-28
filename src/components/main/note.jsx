@@ -15,6 +15,7 @@ function Note({ item, groupId }) {
   const [noteType, setNoteType] = useState(item?.item_type || 1); //TODO 需要預設為1就好嗎？
   const noteBgColor = "#f7f7f7"; //暫無變換顏色功能
   const noteItemClass = !noteContent ? "new-noteItem" : "noteItem";
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleAddNote = async () => {
     const newNoteData = {
@@ -131,9 +132,15 @@ function Note({ item, groupId }) {
         className={noteItemClass}
         // style={{ backgroundColor: item?.note_bgColor }}
       >
-        {noteType === 2 && <input className="CheckBox" type="checkbox"></input>}
+        {noteType === 2 && (
+          <input
+            className="CheckBox"
+            type="checkbox"
+            onChange={(e) => setIsChecked(e.target.checked)}
+          ></input>
+        )}
         <textarea
-          className="note"
+          className={isChecked ? "checked note" : "note"}
           value={noteContent}
           onChange={handleChangeNote}
           onKeyDown={handleChangeNote}
