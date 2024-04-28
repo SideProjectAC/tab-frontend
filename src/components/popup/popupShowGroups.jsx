@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { postNoteAPI, postTabAPI } from "../../api/itemAPI";
-import { getGroupAPI } from "../../api/groupAPI";
+import { getGroupAPI, postGroupAPI } from "../../api/groupAPI";
 
 const PopupGroups = ({ note, setShowGroups, currentTab }) => {
   const [groups, setGroups] = useState([]);
@@ -32,9 +32,30 @@ const PopupGroups = ({ note, setShowGroups, currentTab }) => {
       note_bgColor: "#f7f7f7",
     };
     try {
-      await postTabAPI(groupId, tabData);
+      if (!note || note.length !== 0) await postTabAPI(groupId, tabData);
       await postNoteAPI(groupId, noteData);
       setShowGroups(false);
+      localStorage.setItem("needReload", "true");
+      window.close();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleAddNewGroup = async () => {
+    const newGroupData = {
+      browserTab_favIconURL: currentTab.favIconUrl,
+      browserTab_title: currentTab.title,
+      browserTab_url: currentTab.url,
+      browserTab_id: currentTab.id,
+      browserTab_index: currentTab.index,
+      browserTab_active: currentTab.active,
+      browserTab_status: currentTab.status,
+      windowId: currentTab.windowId,
+      group_icon: "🍿",
+      group_title: "from Popup",
+    };
+    try {
+      await postGroupAPI(newGroupData);
       localStorage.setItem("needReload", "true");
       window.close();
     } catch (error) {
@@ -47,18 +68,36 @@ const PopupGroups = ({ note, setShowGroups, currentTab }) => {
       <div className="popupAddGroupWrapper">
         <h3 className="popupAddTitle">Add Note to which Group?</h3>
         <div className="popupGroupList">
-          {groups.map((group) => (
-            <div
-              className="popupGroup"
-              onClick={() => handleSaveNote(group.group_id, group.items.length)}
-              key={group.group_id}
-            >
-              <div className="popupGroupInfo">{group.group_icon}</div>
-              <div className="popupGroupInfo">{group.group_title}</div>
-            </div>
-          ))}
+          {isLoading ? (
+            ""
+          ) : groups.length === 0 ? (
+            (!note || note.length === 0) && (
+              <div className="popup-add-group" onClick={handleAddNewGroup}>
+                Add to new Group
+              </div>
+            )
+          ) : (
+            <>
+              {groups.map((group) => (
+                <div
+                  className="popupGroup"
+                  onClick={() =>
+                    handleSaveNote(group.group_id, group.items.length)
+                  }
+                  key={group.group_id}
+                >
+                  <div className="popupGroupInfo">{group.group_icon}</div>
+                  <div className="popupGroupInfo">{group.group_title}</div>
+                </div>
+              ))}
+              {(!note || note.length === 0) && (
+                <div className="popup-add-group" onClick={handleAddNewGroup}>
+                  Add to new Group
+                </div>
+              )}
+            </>
+          )}
         </div>
-        {isLoading ? "" : groups.length === 0 && <h1> No Groups yet!</h1>}
       </div>
     </>
   );

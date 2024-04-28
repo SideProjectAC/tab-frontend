@@ -20,7 +20,7 @@ function PopupContent() {
   }, [currentTab]);
 
   const handleShowSave = () => {
-    if (note.length === 0) return;
+    // if (note.length === 0) return;
     setShowGroups(true);
   };
 
