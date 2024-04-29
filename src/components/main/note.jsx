@@ -103,9 +103,9 @@ function Note({ item, groupId }) {
   //FIX 這個版本只有正確打出 API 才可以自由切換
   const handlePatchItemType = async () => {
     try {
-      await noteType === 1
-      ? handlePatchNoteContent()
-      : handlePatchTodoContent()
+      noteType === 1
+        ? await handlePatchNoteContent()
+        : await handlePatchTodoContent()
 
       const newNoteType = noteType === 1 ? 2 : 1
       const patchAPI = noteType === 1 ? patchNoteAPI : patchTodoAPI
@@ -123,12 +123,12 @@ function Note({ item, groupId }) {
       console.log('Error patching item type:', error)
     }
   }
-  const handlePatchDoneStatus = async () => {
-    const patchDoneStatus = { doneStatus: !todoDoneStatus }
+  const handlePatchDoneStatus = async (e) => {
+    const patchDoneStatus = { doneStatus: e.target.checked }
     try {
       await patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
       console.log('Patch done status request sent successfully.')
-      setTodoDoneStatus(!todoDoneStatus)
+      setTodoDoneStatus(e.target.checked)
     } catch (error) {
       console.log('Error patching done status:', error)
     }
@@ -165,7 +165,7 @@ function Note({ item, groupId }) {
           <input
             className='CheckBox'
             type='checkbox'
-            onClick={handlePatchDoneStatus}></input>
+            onClick={(e) => handlePatchDoneStatus(e)}></input>
         )}
         <textarea
           className={noteType === 1 ? 'note' : 'todo'}
