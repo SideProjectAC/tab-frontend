@@ -11,16 +11,6 @@ chrome.runtime.onConnect.addListener((port) => {
   const tabUpdatedListener = (tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete") {
       chrome.tabs.get(tabId, (tab) => {
-        // const tabInfo = {
-        //   browserTab_id : updatedTab.id,
-        //   browserTab_favIconUrl: updatedTab.favIconUrl,
-        //   browserTab_title: updatedTab.title,
-        //   browserTab_url: updatedTab.url,
-        //   browserTab_active: updatedTab.active,
-        //   browserTab_groupId: updatedTab.groupId,
-        //   browserTab_index: updatedTab.index,
-        //   browserTab_status: updatedTab.status,
-        // }
         port.postMessage({ action: "tabUpdated", tab: tab });
       });
     }
@@ -60,11 +50,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=560502229224-mi0fugbocfd28g611gsrhsmrai6l5ird.apps.googleusercontent.com&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=profile%20email`;
-    // console.log(
-    //   "Redirect URI in OAuth request:",
-    //   decodeURIComponent(authUrl.split("redirect_uri=")[1].split("&")[0])
-    // );
-
     chrome.identity.launchWebAuthFlow(
       { url: authUrl, interactive: true },
       (responseUrl) => {
@@ -74,5 +59,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     );
     return true;
+  }
+});
+
+//pin project
+chrome.tabs.onCreated.addListener((tab) => {
+  if (!tab.url) {
+    chrome.tabs.update(tab.id, { pinned: true });
   }
 });
