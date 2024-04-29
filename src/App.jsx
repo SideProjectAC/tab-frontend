@@ -13,6 +13,7 @@ import Register from "./components/login/Register";
 
 const App = () => {
   window.addEventListener("storage", (event) => {
+    localStorage.removeItem("needReload");
     if (event.key === "needReload" && event.newValue === "true") {
       window.location.reload();
       localStorage.removeItem("needReload");
