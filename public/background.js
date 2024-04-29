@@ -63,8 +63,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 //pin project
+let isFirstTabPinned = false;
 chrome.tabs.onCreated.addListener((tab) => {
-  if (!tab.url) {
-    chrome.tabs.update(tab.id, { pinned: true });
+  if (!isFirstTabPinned && !tab.url) {
+    chrome.tabs.update(tab.id, { pinned: true }, () => {
+      isFirstTabPinned = true;
+    });
   }
 });
