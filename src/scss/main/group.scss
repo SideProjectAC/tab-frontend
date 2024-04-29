@@ -13,14 +13,17 @@
   flex-direction: column;
   justify-content: flex-start;
 
+  .itemWrapper {
+    overflow-x: auto;
+  }
+
   .groupInfo {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
     position: relative;
 
     .groupIcon {
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin-right: 4px;
       padding: 2px;
       border-radius: 4px;
@@ -35,12 +38,11 @@
       border-radius: 4px;
       margin-left: 2px;
       padding-left: 2px;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: var(--secondary-text-color);
       background-color: var(--secondary-background-color);
-      width: 35%;
-      margin-left: 10px;
+      width: 43%;
       &:hover {
         background-color: var(--background-color);
       }
@@ -56,7 +58,7 @@
       background-color: var(--background-color);
       padding: 5px 10px;
       position: absolute;
-      right: 15%;
+      right: 13%;
       &:hover {
         cursor: pointer;
         background-color: var(--selected);

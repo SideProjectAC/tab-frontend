@@ -1,57 +1,56 @@
-import { postNoteAPI } from "../../api/itemAPI";
-import { useGroups } from "../useContext/groupContext";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { postNoteAPI, postTabAPI } from "../../api/itemAPI";
+import { getGroupAPI } from "../../api/groupAPI";
 
-const PopupGroups = ({ note, setShowGroups }) => {
-  const { groups, setGroups } = useGroups();
+const PopupGroups = ({ note, setShowGroups, currentTab }) => {
+  const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log(groups);
-  }, [groups]);
+    const fetchData = async () => {
+      const response = await getGroupAPI();
+      setGroups(response.data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
-  const handleSaveNote = async (groupId) => {
+  const handleSaveNote = async (groupId, itemLength) => {
+    const tabData = {
+      browserTab_favIconURL: currentTab.favIconUrl,
+      browserTab_title: currentTab.title,
+      browserTab_url: currentTab.url,
+      browserTab_id: currentTab.id,
+      browserTab_index: currentTab.index,
+      browserTab_active: currentTab.active,
+      browserTab_status: currentTab.status,
+      windowId: currentTab.windowId,
+      targetItem_position: itemLength,
+    };
     const noteData = {
       note_content: note,
-      note_bgColor: "#c5c5c5",
+      note_bgColor: "#f7f7f7",
     };
-    const response = await postNoteAPI(groupId, noteData);
-    if (response.status === "success") setShowGroups(false);
-
-    const newAddNote = {
-      item_type: 1,
-      item_id: response.item_id,
-      note_content: note,
-      note_bgColor: "#c5c5c5",
-    };
-
-    setGroups((prev) =>
-      prev.map((group) =>
-        group.group_id === groupId
-          ? { ...group, items: [...group.items, newAddNote] }
-          : group
-      )
-    );
+    try {
+      await postTabAPI(groupId, tabData);
+      await postNoteAPI(groupId, noteData);
+      setShowGroups(false);
+      localStorage.setItem("needReload", "true");
+      window.close();
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  // const handleSaveToNewGroup = async () => {
-  //   const newGroup = {
-  //     "group_icon": "📝",
-  //     "group_title": "from popup"
-  //   }
-  //   const response = await postGroupAPI(newGroup)
-
-  // }
 
   return (
     <>
       <div className="popupAddGroupWrapper">
         <h3 className="popupAddTitle">Add Note to which Group?</h3>
-
         <div className="popupGroupList">
           {groups.map((group) => (
             <div
               className="popupGroup"
-              onClick={() => handleSaveNote(group.group_id)}
+              onClick={() => handleSaveNote(group.group_id, group.items.length)}
               key={group.group_id}
             >
               <div className="popupGroupInfo">{group.group_icon}</div>
@@ -59,10 +58,7 @@ const PopupGroups = ({ note, setShowGroups }) => {
             </div>
           ))}
         </div>
-        {groups.length === 0 && <h1> No Groups yet!</h1>}
-        {/* <button className='addToNewGroup'
-        onClick={() => handleSaveToNewGroup()}
-      >add a new Group</button> */}
+        {isLoading ? "" : groups.length === 0 && <h1> No Groups yet!</h1>}
       </div>
     </>
   );

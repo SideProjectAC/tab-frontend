@@ -1,28 +1,29 @@
-import { useState } from 'react'
-import '../../scss/main/note.scss'
+import { useState } from "react";
+import "../../scss/main/note.scss";
 import {
   postNoteAPI,
   patchNoteAPI,
   deleteItemFromGroupAPI,
   patchTodoAPI,
-} from '../../api/itemAPI'
-import { useGroups } from '../useContext/groupContext'
-import noteItemPropTypes from 'prop-types'
+} from "../../api/itemAPI";
+import { useGroups } from "../useContext/GroupContext";
+import noteItemPropTypes from "prop-types";
 
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
   const [noteContent, setNoteContent] = useState(item?.note_content || '')
   const [noteType, setNoteType] = useState(item?.item_type || 1) //TODO 需要預設為1就好嗎？
   const [todoDoneStatus, setTodoDoneStatus] = useState(false)
+  const noteItemClass = !noteContent ? "new-noteItem" : "noteItem";
   const noteBgColor = '#f7f7f7' //暫無變換顏色功能
 
   const handleAddNote = async () => {
     const newNoteData = {
       note_content: noteContent,
       note_bgColor: noteBgColor,
-    }
-    const response = await postNoteAPI(groupId, newNoteData)
-    console.log(response)
+    };
+    const response = await postNoteAPI(groupId, newNoteData);
+    console.log(response);
 
     setGroups((prevGroups) =>
       prevGroups.map((group) =>
@@ -44,7 +45,7 @@ function Note({ item, groupId }) {
     )
     setNoteContent('')
   }
-  const handleChangeItemContent = (event) => {
+  const handleChangeItemContent = (event) => { //todo 用 useMemo 來優化 return 一個 callback function
     event.key !== 'Enter'
       ? setNoteContent(event.target.value)
       : // 編輯 note 內容而不是按下 Enter 鍵
@@ -64,7 +65,7 @@ function Note({ item, groupId }) {
   const handlePatchNoteContent = async () => {
     const patchNoteContent = { note_content: noteContent }
     try {
-      await patchNoteAPI(groupId, item?.item_id, patchNoteContent)
+      await patchNoteAPI(groupId, item?.item_id, patchNoteContent) //todo 參數三個以上時，把參數改成object，避免undefined參數導致參照錯誤
       console.log('Patch note content request sent successfully.')
     } catch (error) {
       console.log('Error patching note:', error)
@@ -111,16 +112,16 @@ function Note({ item, groupId }) {
       const patchAPI = noteType === 1 ? patchNoteAPI : patchTodoAPI
       const patchNoteType = { item_type: newNoteType }
 
-      await patchAPI(groupId, item?.item_id, patchNoteType)
+      await patchAPI(groupId, item?.item_id, patchNoteType);
       console.log(
         `Patch ${
-          newNoteType === 1 ? 'note' : 'todo'
+          newNoteType === 1 ? "note" : "todo"
         } type request sent successfully.`
-      )
+      );
 
-      setNoteType(newNoteType)
+      setNoteType(newNoteType);
     } catch (error) {
-      console.log('Error patching item type:', error)
+      console.log("Error patching item type:", error);
     }
   }
   const handlePatchDoneStatus = async (e) => {
@@ -142,24 +143,24 @@ function Note({ item, groupId }) {
             items: group.items.filter(
               (gItem) => gItem.item_id !== item.item_id
             ),
-          }
+          };
         }
-        return group
+        return group;
       })
-    )
+    );
 
     try {
-      await deleteItemFromGroupAPI(groupId, item.item_id)
+      await deleteItemFromGroupAPI(groupId, item.item_id);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <>
       <div
         key={item?.item_id}
-        className='noteItem'
+        className={noteItemClass}
         style={{ backgroundColor: item?.note_bgColor }}>
         {noteType === 2 && (
           <input
@@ -168,7 +169,7 @@ function Note({ item, groupId }) {
             onClick={(e) => handlePatchDoneStatus(e)}></input>
         )}
         <textarea
-          className={noteType === 1 ? 'note' : 'todo'}
+          className={noteType === 1 ? 'note' : todoDoneStatus === true ? 'checkedTodo' : 'todo'}
           value={noteContent}
           onChange={handleChangeItemContent}
           onKeyDown={handleChangeItemContent}
@@ -179,7 +180,7 @@ function Note({ item, groupId }) {
               切換
             </button>
             <button
-              className='deleteButton'
+              className="deleteButton"
               onClick={() => {
                 handleDeleteItem(groupId)
               }}>
@@ -189,9 +190,9 @@ function Note({ item, groupId }) {
         )}
       </div>
     </>
-  )
+  );
 }
 
-Note.propTypes = noteItemPropTypes
+Note.propTypes = noteItemPropTypes;
 
-export default Note
+export default Note;

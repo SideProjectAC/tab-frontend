@@ -222,18 +222,5 @@ export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
     chrome.tabs.create({ url: url, active: false });
   }
 
-  //debug用:單純新增一個group，之後會刪除
-  const handleAddGroup = async () => {
-    const newGroupData = { group_icon: randomEmoji(), group_title: "Untitled" };
-    const response = await postGroupAPI(newGroupData);
-    const newGroup = {
-      group_id: response.data.group_id,
-      group_icon: newGroupData.group_icon,
-      group_title: newGroupData.group_title,
-      items: [],
-    };
-    updateGroups(newGroup);
-  };
-
-  return { handleDragStart, handleDragOver, handleDrop, handleAddGroup };
+  return { handleDragStart, handleDragOver, handleDrop };
 };

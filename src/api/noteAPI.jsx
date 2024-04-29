@@ -1,14 +1,14 @@
-import axios from 'axios'
+import axios from "axios";
 
-const token = localStorage.getItem('authToken')
+const token = localStorage.getItem("authToken");
 
 const api = axios.create({
-  baseURL: 'http://localhost:5050',
+  baseURL: "https://tabcolab.live/api/1.0",
   headers: {
     Authorization: `Bearer ${token}`,
   },
-})
+});
 
 export async function postNoteAPI(group_id, newNoteData) {
-  return api.post(`/groups/${group_id}/notes`, newNoteData)
+  return api.post(`/groups/${group_id}/notes`, newNoteData);
 }

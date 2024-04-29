@@ -1,5 +1,23 @@
-.note {
+@import "../abstracts/colors";
+.new-noteItem {
+  opacity: 0;
+  background-color: var(--background-color);
+  &:hover {
+    opacity: 1;
+  }
+}
+.noteItem {
+  opacity: 1;
+  background-color: var(--background-color);
+}
+.note, .todo {
   border: none;
   border-radius: 5px;
   padding: 15px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  resize: none;
+}
+.checkedTodo {
+  text-decoration: line-through;
 }

@@ -11,16 +11,6 @@ chrome.runtime.onConnect.addListener((port) => {
   const tabUpdatedListener = (tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete") {
       chrome.tabs.get(tabId, (tab) => {
-        // const tabInfo = {
-        //   browserTab_id : updatedTab.id,
-        //   browserTab_favIconUrl: updatedTab.favIconUrl,
-        //   browserTab_title: updatedTab.title,
-        //   browserTab_url: updatedTab.url,
-        //   browserTab_active: updatedTab.active,
-        //   browserTab_groupId: updatedTab.groupId,
-        //   browserTab_index: updatedTab.index,
-        //   browserTab_status: updatedTab.status,
-        // }
         port.postMessage({ action: "tabUpdated", tab: tab });
       });
     }
@@ -51,4 +41,33 @@ chrome.runtime.onConnect.addListener((port) => {
     chrome.tabs.onMoved.removeListener(tabMovedListener);
   });
 });
-//popup
+
+//oauth
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "authenticate") {
+    const redirectUri = chrome.identity.getRedirectURL();
+    const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=560502229224-mi0fugbocfd28g611gsrhsmrai6l5ird.apps.googleusercontent.com&response_type=code&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=profile%20email`;
+    chrome.identity.launchWebAuthFlow(
+      { url: authUrl, interactive: true },
+      (responseUrl) => {
+        const url = new URL(responseUrl);
+        const code = url.searchParams.get("code");
+        sendResponse({ code: code });
+      }
+    );
+    return true;
+  }
+});
+
+//pin project
+let isFirstTabPinned = false;
+chrome.tabs.onCreated.addListener((tab) => {
+  if (!isFirstTabPinned && !tab.url) {
+    chrome.tabs.update(tab.id, { pinned: true }, () => {
+      isFirstTabPinned = true;
+    });
+  }
+});
