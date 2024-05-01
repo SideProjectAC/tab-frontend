@@ -6,24 +6,29 @@ const GroupsContext = createContext();
 
 export const GroupsProvider = ({ children }) => {
   const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function loadGroups() {
+    setIsLoading(true);
     try {
       const response = await getGroupAPI();
       // console.log('first Groups fetched: ', response.data);
       setGroups(response.data);
     } catch (error) {
       console.error("Error fetching groups", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     loadGroups();
-    console;
   }, []);
 
   return (
-    <GroupsContext.Provider value={{ groups, setGroups, loadGroups }}>
+    <GroupsContext.Provider
+      value={{ groups, setGroups, loadGroups, isLoading }}
+    >
       {children}
     </GroupsContext.Provider>
   );
