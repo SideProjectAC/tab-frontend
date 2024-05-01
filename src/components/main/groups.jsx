@@ -1,9 +1,7 @@
-import { useRef, useContext } from "react";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import { useRef } from "react";
 
+import GroupSkeleton from "./Skeleton";
 import { useGroups } from "../useContext/GroupContext";
-import { ThemeContext } from "../useContext/ThemeContext";
 import Group from "./Group";
 import { deleteGroupAPI } from "../../api/groupAPI";
 import { groupsPropTypes } from "./PropTypes";
@@ -12,10 +10,6 @@ Groups.propTypes = groupsPropTypes;
 
 function Groups({ handleDrop, handleDragOver, handleDragStart }) {
   const { groups, setGroups, isLoading } = useGroups();
-  const theme = useContext(ThemeContext);
-
-  const baseColor = theme.theme === "light" ? "#ebebeb" : "#373737";
-  const highlightColor = theme.theme === "light" ? "#f5f5f5" : "#5f5f5f";
 
   const newGroupId = useRef(null);
 
@@ -45,13 +39,7 @@ function Groups({ handleDrop, handleDragOver, handleDragStart }) {
     <>
       <div className="groups">
         {isLoading ? (
-          <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
-            <div className="skeleton-wrapper">
-              <Skeleton className="group-skeleton" />
-              <Skeleton className="group-skeleton" />
-              <Skeleton className="group-skeleton" />
-            </div>
-          </SkeletonTheme>
+          <GroupSkeleton />
         ) : (
           <div className="groupList">
             {groups.map((group) => (

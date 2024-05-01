@@ -1,0 +1,76 @@
+@import "../abstracts/colors";
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: var(--background-color);
+  }
+  100% {
+    background-color: var(--light-background-color);
+  }
+}
+
+.skeleton-group-wrapper {
+  display: flex;
+}
+
+.skeleton-group {
+  animation: skeleton-loading 0.5s linear infinite alternate;
+  margin: 5px 10px;
+  width: 300px;
+  height: 95%;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--secondary-background-color);
+  animation: spin 2s linear infinite;
+}
+
+.skeleton-groupInfo {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  .skeleton-groupIcon {
+    animation: skeleton-loading 0.5s linear infinite alternate;
+    background-color: var(--background-color);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    margin: 5px;
+  }
+
+  .skeleton-groupTitle {
+    animation: skeleton-loading 0.5s linear infinite alternate;
+    background-color: var(--background-color);
+    border-radius: 4px;
+    margin-left: 2px;
+    padding-left: 2px;
+    height: 25px;
+    width: 130px;
+    margin: 5px;
+  }
+  .skeleton-groupButton {
+    animation: skeleton-loading 0.5s linear infinite alternate;
+    background-color: var(--background-color);
+    height: 25px;
+    width: 50px;
+    margin: 5px;
+    margin-left: 15px;
+    border-radius: 5px;
+  }
+}
+
+.skeleton-tabList {
+  background-color: var(--secondary-background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.skeleton-tab {
+  animation: skeleton-loading 0.5s linear infinite alternate;
+  background-color: var(--background-color);
+  height: 60px;
+  width: 295px;
+  margin: 5px;
+  border-radius: 10px;
+}
