@@ -81,9 +81,11 @@ body {
 
         .searchResultsStyle {
           @include tabItemStyles;
+          background-color: var(--secondary-background-color);
           margin: 5px 0;
           border-radius: 10px;
           width: 400px;
+          box-shadow: 1px 0px 12px 1px rgba(0, 0, 0, 0.72);
         }
       }
     }
@@ -144,6 +146,7 @@ body {
     .newGroup {
       width: 100%;
       height: 100%;
+      min-width: 150px;
     }
   }
 }

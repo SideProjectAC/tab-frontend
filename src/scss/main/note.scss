@@ -10,7 +10,8 @@
   opacity: 1;
   background-color: var(--background-color);
 }
-.note, .todo {
+.note,
+.todo {
   border: none;
   border-radius: 5px;
   padding: 15px;
@@ -18,6 +19,13 @@
   color: var(--text-color);
   resize: none;
 }
+
 .checkedTodo {
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  resize: none;
   text-decoration: line-through;
 }

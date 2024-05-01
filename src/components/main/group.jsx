@@ -43,6 +43,7 @@ function Group({
 
   function handleKeyDown(e, groupId) {
     if (e.key === "Enter") {
+      if (e.isComposing || e.keyCode === 229) return;
       e.preventDefault();
       handleTitleUpdate(groupId);
       ignoreBlurRef.current = true;
