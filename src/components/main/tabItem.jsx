@@ -41,24 +41,25 @@ const TabItem = ({ tab, groupId, className }) => {
 
   return (
     <a onClick={activateTab}>
-      <li className={className ? `tabItem ${className}` : "tabItem"}>
-        <img src={favIconUrl} alt="Favicon" className="tabIcon" />
-        <div className="tabText">
+      <li className={className ? `tabItem ${className}` : 'tabItem'}>
+        <img src={favIconUrl} alt='Favicon' className='tabIcon' />
+        <div className='tabText'>
           <h3>{tab.browserTab_title}</h3>
           <p>{tab.browserTab_url}</p>
         </div>
-        <button
-          className="deleteButton"
-          onClick={(event) => {
-            event.stopPropagation();
-            handleDeleteTab(groupId);
-          }}
-        >
-          x
-        </button>
+        {className !== 'searchResultsStyle' && (
+          <button
+            className='deleteButton'
+            onClick={(event) => {
+              event.stopPropagation()
+              handleDeleteTab(groupId)
+            }}>
+            x
+          </button>
+        )}
       </li>
     </a>
-  );
+  )
 };
 TabItem.propTypes = tabItemPropTypes;
 export default TabItem;
