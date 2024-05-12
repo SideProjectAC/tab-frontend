@@ -67,7 +67,7 @@
       border-radius: 10px;
       color: var(--group-title-color);
       background-color: var(--background-color);
-      padding: 5px 10px;
+      padding: 3px 5px;
       position: absolute;
       right: 13%;
       &:hover {
@@ -90,6 +90,21 @@
     &:hover {
       .deleteButton {
         opacity: 1;
+      }
+    }
+  }
+}
+@media (max-width: 1200px) {
+  .group {
+    width: 200px;
+
+    .groupInfo {
+      .groupIcon {
+        font-size: 1.2rem;
+      }
+      .openAllButton {
+        right: 0px;
+        padding: 3px;
       }
     }
   }

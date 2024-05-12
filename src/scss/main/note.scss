@@ -6,9 +6,13 @@
     opacity: 1;
   }
 }
+
 .noteItem {
   opacity: 1;
   background-color: var(--background-color);
+  .deleteButton {
+    top: 20px;
+  }
 }
 .note,
 .todo {
@@ -28,4 +32,13 @@
   color: var(--text-color);
   resize: none;
   text-decoration: line-through;
+}
+.switchNoteButton {
+  border: none;
+  background-color: var(--background-color);
+  color: var(--selected);
+  &:hover {
+    cursor: pointer;
+    color: var(--text-color);
+  }
 }

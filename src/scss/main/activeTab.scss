@@ -3,7 +3,7 @@
 .activeWrapper {
   display: flex;
   flex-direction: column;
-  max-width: 13%;
+  max-width: 16%;
   height: 100%;
   margin-right: 1%;
   position: relative;
@@ -97,6 +97,7 @@
   width: 150px;
   font-size: 1.3rem;
   text-align: center;
+  overflow: hidden;
 }
 
 .activeList > .activeTab {
