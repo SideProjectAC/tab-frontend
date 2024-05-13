@@ -9,7 +9,7 @@ import {
 import { useGroups } from '../useContext/GroupContext'
 import noteItemPropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
@@ -198,7 +198,8 @@ function Note({ item, groupId }) {
       >
         {item && (
           <button className='switchNoteButton' onClick={handlePatchItemType}>
-            <FontAwesomeIcon icon={faCircleCheck} />
+            {noteType === 1 && <FontAwesomeIcon icon={faNoteSticky} />}
+            {noteType === 2 && <FontAwesomeIcon icon={faCircleCheck} />}
           </button>
         )}
         {noteType === 2 && (
