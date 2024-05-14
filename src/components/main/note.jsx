@@ -11,6 +11,31 @@ import noteItemPropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 
+// const debouncedHandleChange = debounce(async (value, setTitleMatchedItems) => {
+//   if (value === '') {
+//     setTitleMatchedItems([])
+//     // setNoResult(false)
+//     return
+//   }
+//   try {
+//     //TODO:設置item_type 參數在state（可考慮用物件儲存query與item_type）
+//     const titleMatchedItems = await getItemsByKeywordAPI(value)
+//     setTitleMatchedItems(titleMatchedItems)
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })
+
+// function debounce(fn, delay = 500) {
+//   let timer
+
+//   return (...args) => {
+//     clearTimeout(timer)
+//     timer = setTimeout(() => {
+//       fn(...args)
+//     }, delay)
+//   }
+// }
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
   const [noteContent, setNoteContent] = useState(item?.note_content || '')
@@ -18,7 +43,7 @@ function Note({ item, groupId }) {
   const [todoDoneStatus, setTodoDoneStatus] = useState(
     item?.doneStatus || false
   )
-  const noteItemClass = !noteContent ? 'new-noteItem' : 'noteItem'
+  const noteItemClass = noteContent ? 'noteItem' : 'new-noteItem'
   const noteBgColor = '#f7f7f7' //暫無變換顏色功能
 
   //Fix console.log API response and error
@@ -78,8 +103,8 @@ function Note({ item, groupId }) {
     )
     setNoteContent('')
   }
+  // const handleChangeItemContent = (event) => {
   const handleChangeItemContent = (event) => {
-    //todo 用 useMemo 來優化 return 一個 callback function
     event.key !== 'Enter'
       ? setNoteContent(event.target.value)
       : // 編輯 note 內容而不是按下 Enter 鍵
@@ -98,7 +123,6 @@ function Note({ item, groupId }) {
   }
   const handlePatchNoteContent = async () => {
     const patchNoteContent = { note_content: noteContent }
-    // console.log(groupId, item)
     try {
       await patchNoteAPI(groupId, item?.item_id, patchNoteContent) //todo 參數三個以上時，把參數改成object，避免undefined參數導致參照錯誤
     } catch (error) {
@@ -106,7 +130,6 @@ function Note({ item, groupId }) {
     }
   }
   const handlePatchTodoContent = async () => {
-    //todo 現：不管是note還是todo都是改noteContent，應改為改 todoContent（潛在問題：輸入 content 到一半按下切換鈕）
     const patchTodoContent = { note_content: noteContent }
     try {
       await patchTodoAPI(groupId, item?.item_id, patchTodoContent)
@@ -156,17 +179,6 @@ function Note({ item, groupId }) {
       console.log('Error patching item type:', error)
     }
   }
-  // const handlePatchDoneStatus = async (e) => {
-  //   console.log('check status:', e.target.checked)
-  //   setTodoDoneStatus(e.target.checked)
-  //   // const patchDoneStatus = { doneStatus: todoDoneStatus }
-  //   // try {
-  //   //   await patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
-  //   //   console.log(item)
-  //   // } catch (error) {
-  //     // console.log('Error patching done status:', error)
-  //   // }
-  // }
   const handleDeleteItem = async (groupId) => {
     setGroups((prev) =>
       prev.map((group) => {
@@ -213,7 +225,7 @@ function Note({ item, groupId }) {
           className={
             noteType === 1
               ? 'note'
-              : todoDoneStatus === true
+              : todoDoneStatus
               ? 'checkedTodo'
               : 'todo'
           }
