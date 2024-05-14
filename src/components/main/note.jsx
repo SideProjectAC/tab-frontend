@@ -27,23 +27,6 @@ function Note({ item, groupId }) {
   )
   const [isInitRender, setIsInitRender] = useState(true)
 
-  // //Fix console.log API response and error
-  // useEffect(() => {
-  //   if (noteType === 2 && item && item.item_id && groupId) {
-  //     const patchDoneStatus = { doneStatus: todoDoneStatus }
-  //     console.log('Patch Done Status:', patchDoneStatus) // Add this log statement
-  //     try {
-  //       patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
-  //         .then((response) => console.log('Patch Todo API Response:', response)) // Add this log statement
-  //         .catch((error) =>
-  //           console.error('Error patching todo -> note:', error)
-  //         ) // Add this catch statement
-  //     } catch (error) {
-  //       console.log('Error patching done status:', error)
-  //     }
-  //   }
-  // }, [todoDoneStatus, noteType, item, groupId])
-
   // 更改 DoneStatus 時，打 api 給後端
   useEffect(() => {
     if (isInitRender) {
@@ -86,6 +69,9 @@ function Note({ item, groupId }) {
   }
 
   const handleAddNote = async () => {
+    if (noteContent === '') {
+      return
+    }
     const newNoteData = {
       note_content: noteContent,
       note_bgColor: noteBgColor,
@@ -113,23 +99,7 @@ function Note({ item, groupId }) {
     )
     setNoteContent('')
   }
-  // const handleChangeItemContent = (event) => {
-  //   event.key !== 'Enter'
-  //     ? setNoteContent(event.target.value)
-  //     : // 編輯 note 內容而不是按下 Enter 鍵
-  //       (() => {
-  //         event.preventDefault()
-  //         // 如果是現存的 item
-  //         item
-  //           ? // 如果是 note
-  //             noteType === 1
-  //             ? handlePatchNoteContent()
-  //             : // 如果是 todo
-  //               handlePatchTodoContent()
-  //           : // 如果是新的 item
-  //             handleAddNote()
-  //       })()
-  // }
+
   const handlePatchNoteContent = async () => {
     const patchNoteContent = { note_content: noteContent }
     try {
@@ -148,10 +118,6 @@ function Note({ item, groupId }) {
   }
   const handlePatchItemType = async () => {
     try {
-      noteType === 1
-        ? await handlePatchNoteContent()
-        : await handlePatchTodoContent()
-
       const newNoteType = noteType === 1 ? 2 : 1
       const patchAPI = noteType === 1 ? patchNoteAPI : patchTodoAPI
       const patchNoteType = { item_type: newNoteType }
