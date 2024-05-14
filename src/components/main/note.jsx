@@ -1,79 +1,89 @@
 import { useState, useEffect } from 'react'
-import '../../scss/main/note.scss'
+import { useDebounceWithStatus } from './Library/hook/useDebounce'
+import { useGroups } from '../useContext/GroupContext'
 import {
   postNoteAPI,
   patchNoteAPI,
   deleteItemFromGroupAPI,
   patchTodoAPI,
 } from '../../api/itemAPI'
-import { useGroups } from '../useContext/GroupContext'
 import noteItemPropTypes from 'prop-types'
+import '../../scss/main/note.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 
-// const debouncedHandleChange = debounce(async (value, setTitleMatchedItems) => {
-//   if (value === '') {
-//     setTitleMatchedItems([])
-//     // setNoResult(false)
-//     return
-//   }
-//   try {
-//     //TODO:設置item_type 參數在state（可考慮用物件儲存query與item_type）
-//     const titleMatchedItems = await getItemsByKeywordAPI(value)
-//     setTitleMatchedItems(titleMatchedItems)
-//   } catch (error) {
-//     console.error(error)
-//   }
-// })
-
-// function debounce(fn, delay = 500) {
-//   let timer
-
-//   return (...args) => {
-//     clearTimeout(timer)
-//     timer = setTimeout(() => {
-//       fn(...args)
-//     }, delay)
-//   }
-// }
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
   const [noteContent, setNoteContent] = useState(item?.note_content || '')
   const [noteType, setNoteType] = useState(item?.item_type || 1) //TODO 需要預設為1就好嗎？
+  const noteItemClass = noteContent ? 'noteItem' : 'new-noteItem'
+  const noteBgColor = '#f7f7f7' //暫無變換顏色功能
   const [todoDoneStatus, setTodoDoneStatus] = useState(
     item?.doneStatus || false
   )
-  const noteItemClass = noteContent ? 'noteItem' : 'new-noteItem'
-  const noteBgColor = '#f7f7f7' //暫無變換顏色功能
+  const [debouncedNoteContent, isDebouncing] = useDebounceWithStatus(
+    noteContent,
+    500
+  )
+  const [isInitRender, setIsInitRender] = useState(true)
 
-  //Fix console.log API response and error
-  useEffect(() => {
-    if (noteType === 2 && item && item.item_id && groupId) {
-      const patchDoneStatus = { doneStatus: todoDoneStatus }
-      console.log('Patch Done Status:', patchDoneStatus) // Add this log statement
-      try {
-        patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
-          .then((response) => console.log('Patch Todo API Response:', response)) // Add this log statement
-          .catch((error) =>
-            console.error('Error patching todo -> note:', error)
-          ) // Add this catch statement
-      } catch (error) {
-        console.log('Error patching done status:', error)
-      }
-    }
-  }, [todoDoneStatus, noteType, item, groupId])
-
-  //Fix 原版
+  // //Fix console.log API response and error
   // useEffect(() => {
   //   if (noteType === 2 && item && item.item_id && groupId) {
   //     const patchDoneStatus = { doneStatus: todoDoneStatus }
+  //     console.log('Patch Done Status:', patchDoneStatus) // Add this log statement
   //     try {
   //       patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
+  //         .then((response) => console.log('Patch Todo API Response:', response)) // Add this log statement
+  //         .catch((error) =>
+  //           console.error('Error patching todo -> note:', error)
+  //         ) // Add this catch statement
   //     } catch (error) {
   //       console.log('Error patching done status:', error)
   //     }
-  //   } else return
-  // }, [todoDoneStatus])
+  //   }
+  // }, [todoDoneStatus, noteType, item, groupId])
+
+  // 更改 DoneStatus 時，打 api 給後端
+  useEffect(() => {
+    if (isInitRender) {
+      setIsInitRender(false)
+      return
+    }
+    if (noteType === 2 && item) {
+      const patchDoneStatus = { doneStatus: todoDoneStatus }
+      try {
+        patchTodoAPI(groupId, item?.item_id, patchDoneStatus)
+      } catch (error) {
+        console.log('Error patching done status:', error)
+      }
+    } else return
+  }, [todoDoneStatus])
+
+  // 更改 noteContent 時，在 debounce 後打 api 給後端
+  useEffect(() => {
+    if (isInitRender) {
+      setIsInitRender(false)
+      return
+    }
+    if (debouncedNoteContent !== item?.note_content) {
+      handleChangeItemContent()
+    }
+  }, [debouncedNoteContent])
+
+  const handleChangeItemContent = async () => {
+    if (!item) {
+      handleAddNote()
+    } else {
+      noteType === 1 ? handlePatchNoteContent() : handlePatchTodoContent()
+    }
+  }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleChangeItemContent()
+    }
+  }
 
   const handleAddNote = async () => {
     const newNoteData = {
@@ -104,23 +114,22 @@ function Note({ item, groupId }) {
     setNoteContent('')
   }
   // const handleChangeItemContent = (event) => {
-  const handleChangeItemContent = (event) => {
-    event.key !== 'Enter'
-      ? setNoteContent(event.target.value)
-      : // 編輯 note 內容而不是按下 Enter 鍵
-        (() => {
-          event.preventDefault()
-          // 如果是現存的 item
-          item
-            ? // 如果是 note
-              noteType === 1
-              ? handlePatchNoteContent()
-              : // 如果是 todo
-                handlePatchTodoContent()
-            : // 如果是新的 item
-              handleAddNote()
-        })()
-  }
+  //   event.key !== 'Enter'
+  //     ? setNoteContent(event.target.value)
+  //     : // 編輯 note 內容而不是按下 Enter 鍵
+  //       (() => {
+  //         event.preventDefault()
+  //         // 如果是現存的 item
+  //         item
+  //           ? // 如果是 note
+  //             noteType === 1
+  //             ? handlePatchNoteContent()
+  //             : // 如果是 todo
+  //               handlePatchTodoContent()
+  //           : // 如果是新的 item
+  //             handleAddNote()
+  //       })()
+  // }
   const handlePatchNoteContent = async () => {
     const patchNoteContent = { note_content: noteContent }
     try {
@@ -137,26 +146,6 @@ function Note({ item, groupId }) {
       console.log('Error patching todo:', error)
     }
   }
-  //FIX 這個版本可以快速切換，但是不一定能打出正確 API
-  // const handlePatchNoteType = async () => {
-  //   const patchAPI = noteType === 1 ? patchNoteAPI : patchTodoAPI
-  //   const newNoteType = noteType === 1 ? 2 : 1
-  //   setNoteType(newNoteType)
-  //   const patchNoteType = { item_type: newNoteType }
-  //   try {
-  //     // console.log(groupId, item?.item_id, patchNoteType)
-  //     await patchAPI(groupId, item.item_id, patchNoteType)
-  //     console.log(
-  //       `Patch ${
-  //         noteType === 1 ? 'note' : 'todo'
-  //       } type request sent successfully.`
-  //     )
-  //   } catch (error) {
-  //     console.log('Error patching item type:', error)
-  //   }
-  // }
-
-  //FIX 這個版本只有正確打出 API 才可以自由切換
   const handlePatchItemType = async () => {
     try {
       noteType === 1
@@ -200,7 +189,6 @@ function Note({ item, groupId }) {
       console.error(error)
     }
   }
-
   return (
     <>
       <div
@@ -223,15 +211,11 @@ function Note({ item, groupId }) {
         )}
         <textarea
           className={
-            noteType === 1
-              ? 'note'
-              : todoDoneStatus
-              ? 'checkedTodo'
-              : 'todo'
+            noteType === 1 ? 'note' : todoDoneStatus ? 'checkedTodo' : 'todo'
           }
           value={noteContent}
-          onChange={handleChangeItemContent}
-          onKeyDown={handleChangeItemContent}
+          onChange={(e) => setNoteContent(e.target.value)}
+          onKeyDown={handleKeyDown}
           // style={{ backgroundColor: item?.note_bgColor }} //暫無變換顏色功能因此使用scss即可
         ></textarea>
         {item && (

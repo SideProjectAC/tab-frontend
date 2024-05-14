@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react'
+import { useDebounceWithStatus } from './Library/hook/useDebounce'
 import { getItemsByKeywordAPI } from '../../api/searchAPI'
 import TabItem from './tabItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { useDebounceWithStatus } from './Library/hook/useDebounce'
 
 function SearchBar() {
   const [titleMatchedItems, setTitleMatchedItems] = useState([])
   const [query, setQuery] = useState('')
   const [debouncedQuery, isDebouncing] = useDebounceWithStatus(query, 500)
-  const handleChange = async (value) => {
-    if (value === '') {
+  const handleChange = async (query) => {
+    if (query === '') {
       setTitleMatchedItems([])
       return
     }
     try {
-      const titleMatchedItems = await getItemsByKeywordAPI(value)
+      const titleMatchedItems = await getItemsByKeywordAPI(query)
       setTitleMatchedItems(titleMatchedItems)
     } catch (error) {
       console.error(error)
