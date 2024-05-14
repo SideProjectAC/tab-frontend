@@ -4,32 +4,17 @@ import TabItem from './tabItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { useDebounceWithStatus } from './Library/hook/useDebounce'
-// const debouncedHandleChange = debounce(async (value, setTitleMatchedItems) => {
-//   if (value === '') {
-//     setTitleMatchedItems([])
-//     // setNoResult(false)
-//     return
-//   }
-// })
-
-// function debounce(fn, delay = 500) {
-//   let timer
-
-//   return (...args) => {
-//     clearTimeout(timer)
-//     timer = setTimeout(() => {
-//       fn(...args)
-//     }, delay)
-//   }
-// }
 
 function SearchBar() {
   const [titleMatchedItems, setTitleMatchedItems] = useState([])
   const [query, setQuery] = useState('')
   const [debouncedQuery, isDebouncing] = useDebounceWithStatus(query, 500)
   const handleChange = async (value) => {
+    if (value === '') {
+      setTitleMatchedItems([])
+      return
+    }
     try {
-      //TODO:設置item_type 參數在state（可考慮用物件儲存query與item_type）
       const titleMatchedItems = await getItemsByKeywordAPI(value)
       setTitleMatchedItems(titleMatchedItems)
     } catch (error) {
@@ -38,9 +23,7 @@ function SearchBar() {
   }
 
   useEffect(() => {
-    if (debouncedQuery) {
-      handleChange(debouncedQuery)
-    }
+    handleChange(debouncedQuery)
   }, [debouncedQuery])
 
   return (
