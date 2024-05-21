@@ -1,6 +1,6 @@
 import "../../scss/main/skeleton.scss";
 
-const SingleSeleton = () => {
+const SingleSkeleton = () => {
   return (
     <div className="skeleton-group">
       <div className="skeleton-groupInfo">
@@ -20,9 +20,9 @@ const SingleSeleton = () => {
 const GroupSkeleton = () => {
   return (
     <div className="skeleton-group-wrapper">
-      <SingleSeleton />
-      <SingleSeleton />
-      <SingleSeleton />
+      <SingleSkeleton />
+      <SingleSkeleton />
+      <SingleSkeleton />
     </div>
   );
 };

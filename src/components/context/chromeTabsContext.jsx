@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import { ChromeTabsProviderPropTypes } from '../propTypes/propTypes'
 
-const ChromeTabsContext = createContext()
+const chromeTabsContext = createContext()
 
 export const ChromeTabsProvider = ({ children }) => {
   const [chromeTabs, setChromeTabs] = useState([])
@@ -93,13 +93,13 @@ export const ChromeTabsProvider = ({ children }) => {
   }, [chromeTabs.length])
 
   return (
-    <ChromeTabsContext.Provider value={{ chromeTabs, setChromeTabs }}>
+    <chromeTabsContext.Provider value={{ chromeTabs, setChromeTabs }}>
       {children}
-    </ChromeTabsContext.Provider>
+    </chromeTabsContext.Provider>
   )
 }
 
 //Review this and corresponding new import
 ChromeTabsProvider.propTypes = ChromeTabsProviderPropTypes
 
-export const useChromeTabs = () => useContext(ChromeTabsContext)
+export const useChromeTabs = () => useContext(chromeTabsContext)

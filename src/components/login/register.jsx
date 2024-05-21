@@ -80,7 +80,7 @@ function Register() {
         {" "}
         register{" "}
       </button>
-      <Link to="/login">Login</Link>
+      <Link to="/Login">Login</Link>
       <GoogleLogin />
     </div>
   );

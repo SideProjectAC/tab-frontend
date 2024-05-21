@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import DragDropComponent from './components/main/drag'
-import { ChromeTabsProvider } from './components/context/ChromeTabsContext'
+import DragDropComponent from './components/main/Drag'
+import { ChromeTabsProvider } from './components/context/chromeTabsContext'
 import { GroupsProvider } from './components/context/GroupContext'
 import { ThemeProvider } from './components/context/themeContext'
 import {

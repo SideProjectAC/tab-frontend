@@ -3,8 +3,8 @@ import {
   deleteItemFromGroupAPI,
   patchItemToExistingGroupsAPI,
   postTabAPI,
-} from '../../api/itemAPI'
-import { postGroupAPI } from '../../api/groupAPI'
+} from '../../../api/itemAPI'
+import { postGroupAPI } from '../../../api/groupAPI'
 
 export const useDragDrop = (activeTabs, groups, setGroups, setActiveTabs) => {
   const originGroupIdRef = useRef()

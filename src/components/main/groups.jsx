@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import GroupSkeleton from './Skeleton'
+import GroupSkeleton from './GroupSkeleton'
 import { useGroups } from '../context/GroupContext'
 import Group from './Group'
 import { deleteGroupAPI } from '../../api/groupAPI'

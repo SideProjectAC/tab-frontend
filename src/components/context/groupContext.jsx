@@ -2,7 +2,7 @@ import { createContext, useState, useContext, useEffect } from 'react'
 import { getGroupAPI } from '../../api/groupAPI'
 import { GroupsProviderPropTypes } from '../propTypes/propTypes'
 
-const GroupsContext = createContext()
+const groupsContext = createContext()
 
 export const GroupsProvider = ({ children }) => {
   const [groups, setGroups] = useState([])
@@ -26,14 +26,14 @@ export const GroupsProvider = ({ children }) => {
   }, [])
 
   return (
-    <GroupsContext.Provider
+    <groupsContext.Provider
       value={{ groups, setGroups, loadGroups, isLoading }}>
       {children}
-    </GroupsContext.Provider>
+    </groupsContext.Provider>
   )
 }
 
 //Review this and corresponding new import
 GroupsProvider.propTypes = GroupsProviderPropTypes
 
-export const useGroups = () => useContext(GroupsContext)
+export const useGroups = () => useContext(groupsContext)

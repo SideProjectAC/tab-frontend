@@ -85,7 +85,7 @@ function Login() {
 
       <button className="login-button" onClick={handleSubmit}>
         {" "}
-        login{" "}
+        Login{" "}
       </button>
       <Link to="/register">Register</Link>
       <GoogleLogin />

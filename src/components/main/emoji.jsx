@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { useGroups } from '../context/GroupContext'
 import { patchGroupAPI } from '../../api/groupAPI'
 import { emojiPropTypes } from '../propTypes/propTypes'
-import { ThemeContext } from '../context/ThemeContext'
+import { themeContext } from '../context/themeContext'
 
 Emoji.propTypes = emojiPropTypes
 
@@ -29,7 +29,7 @@ function Emoji({ groupId, setShowEmojiGroupId }) {
     }
   }
 
-  const { theme } = useContext(ThemeContext)
+  const { theme } = useContext(themeContext)
 
   return (
     <EmojiPicker

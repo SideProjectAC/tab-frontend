@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { useChromeTabs } from '../context/ChromeTabsContext'
+import { useChromeTabs } from '../context/chromeTabsContext'
 import { useGroups } from '../context/GroupContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -7,11 +7,11 @@ import {
   faArrowRightFromBracket,
   faUser,
 } from '@fortawesome/free-solid-svg-icons'
-import { ThemeContext } from '../context/themeContext'
-import ActiveTabs from './ActiveTab'
+import { themeContext } from '../context/themeContext'
+import ActiveTabs from './ActiveTabs'
 import Groups from './Groups'
 import '../../scss/main/drag.scss'
-import { useDragDrop } from './HandleDragDrop'
+import { useDragDrop } from '../context/hook/useDragDrop'
 import SearchBar from './SearchBar'
 import UserInfo from './UserInfo'
 
@@ -19,7 +19,7 @@ function DragDropComponent() {
   const [activeTabs, setActiveTabs] = useState([])
   const { groups, setGroups } = useGroups()
   const { chromeTabs } = useChromeTabs()
-  const { theme, setTheme } = useContext(ThemeContext)
+  const { theme, setTheme } = useContext(themeContext)
   const [showUserInfo, setShowUserInfo] = useState()
 
   //有關dragDrop的function拉到 useDragDrop.jsx 裡面

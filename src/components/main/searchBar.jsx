@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDebounceWithStatus } from '../context/hook/useDebounce'
 import { getItemsByKeywordAPI } from '../../api/searchAPI'
-import TabItem from './tabItem'
+import TabItem from './TabItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
