@@ -4,7 +4,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import Tab from "./PopupTab";
 import PopupGroups from "./PopupShowGroups";
-import { popupContentPropTypes } from "../main/PropTypes";
+import { popupContentPropTypes } from '../main/propTypes/propTypes'
 Tab.propTypes = popupContentPropTypes;
 
 function PopupContent() {

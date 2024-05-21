@@ -1,14 +1,14 @@
-import EmojiPicker from "emoji-picker-react";
-import { useContext } from "react";
-import { useGroups } from "../useContext/GroupContext";
-import { patchGroupAPI } from "../../api/groupAPI";
-import { emojiPropTypes } from "./PropTypes";
-import { ThemeContext } from "../useContext/ThemeContext";
+import EmojiPicker from 'emoji-picker-react'
+import { useContext } from 'react'
+import { useGroups } from '../useContext/GroupContext'
+import { patchGroupAPI } from '../../api/groupAPI'
+import { emojiPropTypes } from './propTypes/propTypes'
+import { ThemeContext } from '../useContext/ThemeContext'
 
-Emoji.propTypes = emojiPropTypes;
+Emoji.propTypes = emojiPropTypes
 
 function Emoji({ groupId, setShowEmojiGroupId }) {
-  const { setGroups } = useGroups();
+  const { setGroups } = useGroups()
 
   const updateEmoji = async (groupId, emojiData) => {
     setGroups((prevGroups) =>
@@ -17,30 +17,30 @@ function Emoji({ groupId, setShowEmojiGroupId }) {
           ? { ...group, group_icon: emojiData.emoji }
           : group
       )
-    );
+    )
 
     try {
       const response = await patchGroupAPI(groupId, {
         group_icon: emojiData.emoji,
-      });
+      })
       // console.log('Group emoji updated successfully', response.data);
     } catch (error) {
-      console.error("Error updating groupEmoji", error);
+      console.error('Error updating groupEmoji', error)
     }
-  };
+  }
 
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext)
 
   return (
     <EmojiPicker
-      style={{ position: "absolute", zIndex: "100", top: "65px" }}
+      style={{ position: 'absolute', zIndex: '100', top: '65px' }}
       onEmojiClick={(emojiData) => {
-        updateEmoji(groupId, emojiData);
-        setShowEmojiGroupId(null);
+        updateEmoji(groupId, emojiData)
+        setShowEmojiGroupId(null)
       }}
       theme={theme}
     />
-  );
+  )
 }
 
-export default Emoji;
+export default Emoji

@@ -1,23 +1,23 @@
-import { deleteItemFromGroupAPI } from "../../api/itemAPI";
-import { useGroups } from "../useContext/GroupContext";
-import { tabItemPropTypes } from "./PropTypes";
-import "../../scss/main/item.scss";
+import { deleteItemFromGroupAPI } from '../../api/itemAPI'
+import { useGroups } from '../useContext/GroupContext'
+import { tabItemPropTypes } from './propTypes/propTypes'
+import '../../scss/main/item.scss'
 
 const TabItem = ({ tab, groupId, className }) => {
-  const { setGroups } = useGroups();
+  const { setGroups } = useGroups()
 
   const activateTab = async () => {
-    await chrome.tabs.create({ url: tab.browserTab_url, active: false });
-    await chrome.windows.update(tab.windowId, { focused: true });
-  };
+    await chrome.tabs.create({ url: tab.browserTab_url, active: false })
+    await chrome.windows.update(tab.windowId, { focused: true })
+  }
 
   function getFaviconURL(u) {
-    const url = new URL(chrome.runtime.getURL("/_favicon/"));
-    url.searchParams.set("pageUrl", u);
-    url.searchParams.set("size", "32");
-    return url.toString();
+    const url = new URL(chrome.runtime.getURL('/_favicon/'))
+    url.searchParams.set('pageUrl', u)
+    url.searchParams.set('size', '32')
+    return url.toString()
   }
-  const favIconUrl = getFaviconURL(tab.browserTab_url);
+  const favIconUrl = getFaviconURL(tab.browserTab_url)
 
   async function handleDeleteTab(groupId) {
     setGroups((prev) =>
@@ -26,16 +26,16 @@ const TabItem = ({ tab, groupId, className }) => {
           return {
             ...group,
             items: group.items.filter((gitem) => gitem.item_id !== tab.item_id),
-          };
+          }
         }
-        return group;
+        return group
       })
-    );
+    )
 
     try {
-      await deleteItemFromGroupAPI(groupId, tab.item_id);
+      await deleteItemFromGroupAPI(groupId, tab.item_id)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
@@ -60,6 +60,6 @@ const TabItem = ({ tab, groupId, className }) => {
       </li>
     </a>
   )
-};
-TabItem.propTypes = tabItemPropTypes;
-export default TabItem;
+}
+TabItem.propTypes = tabItemPropTypes
+export default TabItem
