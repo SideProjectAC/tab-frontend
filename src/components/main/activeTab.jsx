@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapPin } from '@fortawesome/free-solid-svg-icons'
 import { useState, useEffect, useCallback } from 'react'
 import { activeTabsPropTypes } from './propTypes/propTypes'
-import { useGroups } from '../useContext/GroupContext'
+import { useGroups } from '../context/GroupContext'
 import '../../scss/main/activeTab.scss'
 
 function ActiveTabItem(item) {

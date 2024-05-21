@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
-import { useGroups } from '../useContext/GroupContext'
-import TabItem from './TabItem'
+import { useGroups } from '../context/GroupContext'
+import TabItem from './tabItem'
 import Emoji from './Emoji'
 import Note from './Note'
 import { patchGroupAPI } from '../../api/groupAPI'

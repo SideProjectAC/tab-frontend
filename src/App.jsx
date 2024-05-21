@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import DragDropComponent from './components/main/drag'
-import { ChromeTabsProvider } from './components/useContext/ChromeTabsContext'
-import { GroupsProvider } from './components/useContext/GroupContext'
-import { ThemeProvider } from './components/useContext/ThemeContext'
+import { ChromeTabsProvider } from './components/context/ChromeTabsContext'
+import { GroupsProvider } from './components/context/GroupContext'
+import { ThemeProvider } from './components/context/themeContext'
 import {
   MemoryRouter as Router,
   Routes,

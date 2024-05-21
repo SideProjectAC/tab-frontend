@@ -1,5 +1,5 @@
 import PopupContent from "./PopupContent";
-import { ThemeProvider } from "../useContext/ThemeContext";
+import { ThemeProvider } from '../context/themeContext'
 import "../../scss/popup/popup.scss";
 
 function PopupDrag() {

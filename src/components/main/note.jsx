@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useDebounceWithStatus } from './Library/hook/useDebounce'
-import { useGroups } from '../useContext/GroupContext'
+import { useDebounceWithStatus } from '../context/hook/useDebounce'
+import { useGroups } from '../context/GroupContext'
 import {
   postNoteAPI,
   patchNoteAPI,

@@ -1,26 +1,26 @@
-import { useState, useEffect, useContext } from "react";
-import { useChromeTabs } from "../useContext/ChromeTabsContext";
-import { useGroups } from "../useContext/GroupContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect, useContext } from 'react'
+import { useChromeTabs } from '../context/ChromeTabsContext'
+import { useGroups } from '../context/GroupContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleHalfStroke,
   faArrowRightFromBracket,
   faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { ThemeContext } from "../useContext/ThemeContext";
-import ActiveTabs from "./ActiveTab";
-import Groups from "./Groups";
-import "../../scss/main/drag.scss";
-import { useDragDrop } from "./HandleDragDrop";
-import SearchBar from "./SearchBar";
-import UserInfo from "./UserInfo";
+} from '@fortawesome/free-solid-svg-icons'
+import { ThemeContext } from '../context/themeContext'
+import ActiveTabs from './ActiveTab'
+import Groups from './Groups'
+import '../../scss/main/drag.scss'
+import { useDragDrop } from './HandleDragDrop'
+import SearchBar from './SearchBar'
+import UserInfo from './UserInfo'
 
 function DragDropComponent() {
-  const [activeTabs, setActiveTabs] = useState([]);
-  const { groups, setGroups } = useGroups();
-  const { chromeTabs } = useChromeTabs();
-  const { theme, setTheme } = useContext(ThemeContext);
-  const [showUserInfo, setShowUserInfo] = useState();
+  const [activeTabs, setActiveTabs] = useState([])
+  const { groups, setGroups } = useGroups()
+  const { chromeTabs } = useChromeTabs()
+  const { theme, setTheme } = useContext(ThemeContext)
+  const [showUserInfo, setShowUserInfo] = useState()
 
   //有關dragDrop的function拉到 useDragDrop.jsx 裡面
   const { handleDragStart, handleDragOver, handleDrop } = useDragDrop(
@@ -28,55 +28,54 @@ function DragDropComponent() {
     groups,
     setGroups,
     setActiveTabs
-  );
+  )
 
   //切換theme
   const toggleTheme = () => {
     setTheme((prevTheme) => {
-      const newTheme = prevTheme === "light" ? "dark" : "light";
-      localStorage.setItem("theme", newTheme);
-      return newTheme;
-    });
-  };
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light'
+      localStorage.setItem('theme', newTheme)
+      return newTheme
+    })
+  }
 
   const logout = () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return;
-    localStorage.removeItem("authToken");
-    alert("Logout successfully");
-    location.reload();
-  };
+    const token = localStorage.getItem('authToken')
+    if (!token) return
+    localStorage.removeItem('authToken')
+    alert('Logout successfully')
+    location.reload()
+  }
 
   useEffect(() => {
     //setActiveTabs從chromeTabs取得目前正打開的ActiveTabs
-    setActiveTabs(chromeTabs);
+    setActiveTabs(chromeTabs)
     //設定theme
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [chromeTabs, theme]);
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [chromeTabs, theme])
 
   return (
     <>
-      <div className="wrapper">
+      <div className='wrapper'>
         <ActiveTabs
           activeTabs={activeTabs}
           handleDrop={handleDrop}
           handleDragStart={handleDragStart}
           handleDragOver={handleDragOver}
         />
-        <div className="mainRight">
-          <div className="header">
+        <div className='mainRight'>
+          <div className='header'>
             <SearchBar />
-            <div className="headerButtons">
-              <div className="iconWrapper themeIcon" onClick={toggleTheme}>
+            <div className='headerButtons'>
+              <div className='iconWrapper themeIcon' onClick={toggleTheme}>
                 <FontAwesomeIcon icon={faCircleHalfStroke} />
               </div>
-              <div className="iconWrapper logoutIcon" onClick={logout}>
+              <div className='iconWrapper logoutIcon' onClick={logout}>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </div>
               <div
-                className="iconWrapper userIcon"
-                onClick={() => setShowUserInfo(true)}
-              >
+                className='iconWrapper userIcon'
+                onClick={() => setShowUserInfo(true)}>
                 <FontAwesomeIcon icon={faUser} />
               </div>
             </div>
@@ -92,7 +91,7 @@ function DragDropComponent() {
         )}
       </div>
     </>
-  );
+  )
 }
 
-export default DragDropComponent;
+export default DragDropComponent
