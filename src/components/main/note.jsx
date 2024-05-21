@@ -27,7 +27,7 @@ function Note({ item, groupId }) {
   )
   const [isInitRender, setIsInitRender] = useState(true)
 
-  // 更改 DoneStatus 時，打 api 給後端
+  // 更改 todoDoneStatus 時，打 api 給後端
   useEffect(() => {
     if (isInitRender) {
       setIsInitRender(false)
@@ -53,18 +53,45 @@ function Note({ item, groupId }) {
       handleChangeItemContent()
     }
   }, [debouncedNoteContent])
+  // items 內容變動時，更新 groups
+  useEffect(() => {
+    if (!isInitRender) {
+      setGroups((prevGroups) => {
+        return prevGroups.map((group) => {
+          if (group.group_id === groupId) {
+            return {
+              ...group,
+              items: group.items.map((gItem) => {
+                if (gItem.item_id === item.item_id) {
+                  return {
+                    ...gItem,
+                    item_type: noteType,
+                    note_content: noteContent,
+                    ...(noteType === 2 && { doneStatus: todoDoneStatus }),
+                  }
+                }
+                return gItem
+              }),
+            }
+          }
+          return group
+        })
+      })
+    }
+  }, [debouncedNoteContent, noteType, todoDoneStatus])
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleChangeItemContent()
+    }
+  }
 
   const handleChangeItemContent = async () => {
     if (!item) {
       handleAddNote()
     } else {
       noteType === 1 ? handlePatchNoteContent() : handlePatchTodoContent()
-    }
-  }
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleChangeItemContent()
     }
   }
 
@@ -77,8 +104,6 @@ function Note({ item, groupId }) {
       note_bgColor: noteBgColor,
     }
     const response = await postNoteAPI(groupId, newNoteData)
-    console.log(response)
-
     setGroups((prevGroups) =>
       prevGroups.map((group) =>
         group.group_id === groupId
