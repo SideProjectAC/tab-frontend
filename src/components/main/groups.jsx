@@ -4,7 +4,7 @@ import GroupSkeleton from './Skeleton'
 import { useGroups } from '../context/GroupContext'
 import Group from './Group'
 import { deleteGroupAPI } from '../../api/groupAPI'
-import { groupsPropTypes } from './propTypes/propTypes'
+import { groupsPropTypes } from '../propTypes/propTypes'
 
 Groups.propTypes = groupsPropTypes
 

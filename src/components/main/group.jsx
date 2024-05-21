@@ -4,7 +4,7 @@ import TabItem from './tabItem'
 import Emoji from './Emoji'
 import Note from './Note'
 import { patchGroupAPI } from '../../api/groupAPI'
-import { groupPropTypes } from './propTypes/propTypes'
+import { groupPropTypes } from '../propTypes/propTypes'
 import '../../scss/main/group.scss'
 
 Group.propTypes = groupPropTypes

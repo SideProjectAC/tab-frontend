@@ -1,35 +1,35 @@
-import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-import Tab from "./PopupTab";
-import PopupGroups from "./PopupShowGroups";
-import { popupContentPropTypes } from '../main/propTypes/propTypes'
-Tab.propTypes = popupContentPropTypes;
+import Tab from './PopupTab'
+import PopupGroups from './PopupShowGroups'
+import { popupContentPropTypes } from '../propTypes/propTypes'
+Tab.propTypes = popupContentPropTypes
 
 function PopupContent() {
-  const [currentTab, setCurrentTab] = useState(null);
-  const [showGroups, setShowGroups] = useState(false);
-  const [note, setNote] = useState(null);
+  const [currentTab, setCurrentTab] = useState(null)
+  const [showGroups, setShowGroups] = useState(false)
+  const [note, setNote] = useState(null)
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const activeTab = tabs[0];
-      setCurrentTab(activeTab);
-    });
-  }, [currentTab]);
+      const activeTab = tabs[0]
+      setCurrentTab(activeTab)
+    })
+  }, [currentTab])
 
   const handleShowSave = () => {
-    if (note.length === 0) return;
-    setShowGroups(true);
-  };
+    if (note.length === 0) return
+    setShowGroups(true)
+  }
 
   return (
     <>
-      <div id="header">
+      <div id='header'>
         <FontAwesomeIcon
           icon={faXmark}
-          className="popup-button delete"
+          className='popup-button delete'
           onClick={() => window.close()}
         />
       </div>
@@ -44,17 +44,16 @@ function PopupContent() {
       {currentTab && <Tab currentTab={currentTab} />}
       <form>
         <textarea
-          className="popupNote"
+          className='popupNote'
           onChange={(e) => setNote(e.target.value)}
-          placeholder="New note"
-          value={note}
-        ></textarea>
+          placeholder='New note'
+          value={note}></textarea>
       </form>
-      <button className="popup-button save" onClick={handleShowSave}>
+      <button className='popup-button save' onClick={handleShowSave}>
         Save
       </button>
     </>
-  );
+  )
 }
 
-export default PopupContent;
+export default PopupContent

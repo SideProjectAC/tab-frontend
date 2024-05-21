@@ -42,3 +42,10 @@
     color: var(--text-color);
   }
 }
+
+.checkBox {
+  color: var(--selected);
+  &:hover {
+    cursor: pointer;
+  }
+}

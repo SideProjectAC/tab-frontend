@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react'
-import { ChromeTabsProviderPropTypes } from '../main/propTypes/propTypes'
+import { ChromeTabsProviderPropTypes } from '../propTypes/propTypes'
 
 const ChromeTabsContext = createContext()
 

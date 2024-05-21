@@ -7,10 +7,10 @@ import {
   deleteItemFromGroupAPI,
   patchTodoAPI,
 } from '../../api/itemAPI'
-import noteItemPropTypes from 'prop-types'
+import { noteItemPropTypes } from '../propTypes/propTypes'
 import '../../scss/main/note.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
+import { faList, faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 
 function Note({ item, groupId }) {
   const { setGroups } = useGroups()
@@ -164,13 +164,15 @@ function Note({ item, groupId }) {
       >
         {item && (
           <button className='switchNoteButton' onClick={handlePatchItemType}>
-            {noteType === 1 && <FontAwesomeIcon icon={faNoteSticky} />}
-            {noteType === 2 && <FontAwesomeIcon icon={faCircleCheck} />}
+            {noteType === 1 && (
+              <FontAwesomeIcon icon={faNoteSticky} size='xl' />
+            )}
+            {noteType === 2 && <FontAwesomeIcon icon={faList} size='xl' />}
           </button>
         )}
         {noteType === 2 && (
           <input
-            className='CheckBox'
+            className='checkBox'
             type='checkbox'
             checked={todoDoneStatus}
             onClick={(e) => setTodoDoneStatus(e.target.checked)}></input>
