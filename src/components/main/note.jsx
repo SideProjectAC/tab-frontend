@@ -41,7 +41,7 @@ function Note({ item, groupId }) {
         console.log('Error patching done status:', error)
       }
     } else return
-  }, [todoDoneStatus])
+  }, [item, groupId, isInitRender, noteType, todoDoneStatus])
 
   // 更改 noteContent 時，在 debounce 後打 api 給後端
   useEffect(() => {
@@ -52,7 +52,7 @@ function Note({ item, groupId }) {
     if (debouncedNoteContent !== item?.note_content) {
       handleChangeItemContent()
     }
-  }, [debouncedNoteContent])
+  }, [isInitRender,item?.note_content, debouncedNoteContent])
   // items 內容變動時，更新 groups
   useEffect(() => {
     if (!isInitRender) {
@@ -78,7 +78,7 @@ function Note({ item, groupId }) {
         })
       })
     }
-  }, [debouncedNoteContent, noteType, todoDoneStatus])
+  }, [setGroups, isInitRender, groupId, item?.item_id, noteContent, debouncedNoteContent, noteType, todoDoneStatus])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -129,6 +129,7 @@ function Note({ item, groupId }) {
     const patchNoteContent = { note_content: noteContent }
     try {
       await patchNoteAPI(groupId, item?.item_id, patchNoteContent) //todo 參數三個以上時，把參數改成object，避免undefined參數導致參照錯誤
+
     } catch (error) {
       console.log('Error patching note:', error)
     }
