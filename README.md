@@ -3,6 +3,8 @@
 **Chrome Extension for Enhanced Tab Management**.
 A powerful Chrome extension designed to revolutionize the way you manage your browser tabs. With TabColab, you can effortlessly group tabs by dragging, add detailed notes, and manage your todos directly from your browser. This tool is ideal for professionals, students, researchers, and anyone looking to boost their productivity and organize their browsing experience.
 
+https://github.com/user-attachments/assets/5c701828-a77b-4ba9-b3cc-85f6b585a465
+
 ## Features
 
 **1. Tab Grouping**
