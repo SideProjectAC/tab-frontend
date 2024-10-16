@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TabColab",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "icons": {
     "16": "img/tab.png",
     "48": "img/tab.png",
