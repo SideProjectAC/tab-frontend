@@ -62,7 +62,7 @@ function Note({ item, groupId }) {
             return {
               ...group,
               items: group.items.map((gItem) => {
-                if (gItem.item_id === item.item_id) {
+                if (gItem.item_id === item?.item_id) {
                   return {
                     ...gItem,
                     item_type: noteType,
